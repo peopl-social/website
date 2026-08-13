@@ -1,17 +1,21 @@
 :root {
-  --purple: #a991ff;
-  --purple-deep: #7656e8;
-  --purple-pale: #d8cdff;
-  --ink: #171518;
-  --cream: #fbf7ef;
-  --peach: #ffb38f;
-  --lime: #dfff72;
-  --white: #ffffff;
-  --muted: #5e5963;
+  --purple-dark: #5124BB;
+  --purple: #8930F6;
+  --purple-light: #AC5BF7;
+
+  --lavender: #D9BBFC;
+  --lavender-soft: #F1E4FE;
+  --background: #FAF4FF;
+
+  --lime: #DEF835;
+  --pink: #FF5F91;
+
+  --text: #282046;
+  --text-muted: #635D75;
   --display: "Bricolage Grotesque Variable", "Arial Black", sans-serif;
   --sans: "Manrope Variable", "Trebuchet MS", sans-serif;
-  --border: 3px solid var(--ink);
-  --shadow: 7px 7px 0 var(--ink);
+  --border: 3px solid var(--text);
+  --shadow: 7px 7px 0 var(--text);
 }
 
 * {
@@ -25,7 +29,7 @@ html {
 body {
   margin: 0;
   background: var(--purple);
-  color: var(--ink);
+  color: var(--text);
   font-family: var(--sans);
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
@@ -44,7 +48,7 @@ a {
 
 ::selection {
   background: var(--lime);
-  color: var(--ink);
+  color: var(--text);
 }
 
 .site-shell {
@@ -60,8 +64,8 @@ a {
   padding: 0.85rem 1rem;
   border: var(--border);
   border-radius: 0.6rem;
-  background: var(--cream);
-  box-shadow: 4px 4px 0 var(--ink);
+  background: var(--background);
+  box-shadow: 4px 4px 0 var(--text);
   font-size: 0.75rem;
   font-weight: 850;
   text-transform: uppercase;
@@ -92,8 +96,8 @@ a {
   padding: 0.55rem 0.7rem 0.55rem 1.2rem;
   border: var(--border);
   border-radius: 1.25rem;
-  background: var(--cream);
-  box-shadow: 0 6px 0 var(--ink);
+  background: var(--background);
+  box-shadow: 0 6px 0 var(--text);
 }
 
 .brand {
@@ -108,34 +112,22 @@ a {
   line-height: 1;
 }
 
-.brand-glyph {
-  position: relative;
-  display: grid;
-  width: 2.2rem;
-  height: 2.2rem;
-  place-items: center;
-  border: 2px solid var(--ink);
-  border-radius: 50%;
-  background: var(--purple);
+.brand-logo {
+  display: block;
+  flex: none;
+  width: 3.25rem;
+  height: 2.9rem;
+  object-fit: contain;
+  transition: transform 180ms ease;
 }
 
-.brand-glyph i {
-  width: 0.72rem;
-  height: 0.72rem;
-  border: 2px solid var(--ink);
-  border-radius: 50%;
-  background: var(--lime);
+.brand:hover .brand-logo {
+  transform: rotate(-4deg) scale(1.04);
 }
 
-.brand-glyph b {
-  position: absolute;
-  top: -0.18rem;
-  right: -0.2rem;
-  width: 0.58rem;
-  height: 0.58rem;
-  border: 2px solid var(--ink);
-  border-radius: 50%;
-  background: var(--peach);
+.brand--footer .brand-logo {
+  width: 4.25rem;
+  height: 3.75rem;
 }
 
 .site-nav {
@@ -226,21 +218,21 @@ a {
 }
 
 .button--peach {
-  background: var(--peach);
-  box-shadow: 4px 4px 0 var(--ink);
+  background: var(--pink);
+  box-shadow: 4px 4px 0 var(--text);
 }
 
 .button--peach:hover {
-  box-shadow: 1px 1px 0 var(--ink);
+  box-shadow: 1px 1px 0 var(--text);
 }
 
 .button--lime {
   background: var(--lime);
-  box-shadow: 6px 6px 0 var(--ink);
+  box-shadow: 6px 6px 0 var(--text);
 }
 
 .button--lime:hover {
-  box-shadow: 3px 3px 0 var(--ink);
+  box-shadow: 3px 3px 0 var(--text);
 }
 
 .button--large {
@@ -265,8 +257,8 @@ a {
   inset: 0;
   opacity: 0.24;
   background-image:
-    linear-gradient(rgba(23, 21, 24, 0.16) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(23, 21, 24, 0.16) 1px, transparent 1px);
+    linear-gradient(rgba(40, 32, 70, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(40, 32, 70, 0.16) 1px, transparent 1px);
   background-size: 3.2rem 3.2rem;
   -webkit-mask-image: linear-gradient(to bottom, transparent 4%, black 40%, transparent 95%);
   mask-image: linear-gradient(to bottom, transparent 4%, black 40%, transparent 95%);
@@ -281,7 +273,7 @@ a {
   width: clamp(3.75rem, 5.5vw, 5.5rem);
   aspect-ratio: 1;
   place-items: center;
-  background: var(--ink);
+  background: var(--text);
   clip-path: polygon(
     50% 0%,
     59% 34%,
@@ -316,7 +308,7 @@ a {
   z-index: 1;
   width: 18%;
   aspect-ratio: 1;
-  background: var(--purple-deep);
+  background: var(--purple-dark);
   transform: rotate(45deg);
 }
 
@@ -330,11 +322,11 @@ a {
 }
 
 .hero-sparkle--left::before {
-  background: var(--peach);
+  background: var(--pink);
 }
 
 .hero-sparkle--left span {
-  background: var(--cream);
+  background: var(--background);
 }
 
 .hero__inner {
@@ -368,11 +360,11 @@ a {
   z-index: 4;
   margin-block: 0.08em 0.03em;
   padding: 0.04em 0.18em 0.09em;
-  border: 0.035em solid var(--ink);
+  border: 0.035em solid var(--text);
   border-radius: 0.14em;
-  background: var(--cream);
-  box-shadow: 0.05em 0.05em 0 var(--ink);
-  color: var(--purple-deep);
+  background: var(--background);
+  box-shadow: 0.05em 0.05em 0 var(--text);
+  color: var(--purple-dark);
   line-height: 0.75;
   transform: rotate(-1.5deg);
 }
@@ -405,7 +397,7 @@ a {
 }
 
 .underlink {
-  border-bottom: 2px solid var(--ink);
+  border-bottom: 2px solid var(--text);
   font-size: 0.68rem;
   font-weight: 900;
   letter-spacing: 0.03em;
@@ -449,8 +441,8 @@ a {
   z-index: 7;
   overflow: hidden;
   border-block: var(--border);
-  background: var(--ink);
-  color: var(--cream);
+  background: var(--text);
+  color: var(--background);
   transform: rotate(-1deg) scale(1.02);
 }
 
@@ -481,7 +473,7 @@ a {
 
 .features {
   position: relative;
-  background: var(--cream);
+  background: var(--background);
 }
 
 .section-tag {
@@ -496,7 +488,7 @@ a {
   width: 2.65rem;
   height: 2.65rem;
   place-items: center;
-  border: 2px solid var(--ink);
+  border: 2px solid var(--text);
   border-radius: 50%;
   background: var(--purple);
   font-size: 0.62rem;
@@ -539,14 +531,14 @@ a {
 }
 
 .features__intro h2 span {
-  color: var(--purple-deep);
+  color: var(--purple-dark);
   font-style: italic;
 }
 
 .features__intro > p,
 .process__heading > p {
   margin: 0;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 0.95rem;
   font-weight: 560;
   line-height: 1.8;
@@ -575,7 +567,7 @@ a {
 }
 
 .feature-panel:hover {
-  box-shadow: 3px 3px 0 var(--ink);
+  box-shadow: 3px 3px 0 var(--text);
   transform: translate(4px, 4px);
 }
 
@@ -584,7 +576,7 @@ a {
 }
 
 .feature-panel--context {
-  background: var(--peach);
+  background: var(--pink);
 }
 
 .feature-panel--momentum {
@@ -598,7 +590,7 @@ a {
   align-items: center;
   justify-content: space-between;
   padding-bottom: 0.8rem;
-  border-bottom: 2px solid var(--ink);
+  border-bottom: 2px solid var(--text);
   font-size: 0.6rem;
   font-weight: 900;
   letter-spacing: 0.08em;
@@ -643,8 +635,8 @@ a {
   border: var(--border);
   border-radius: 50%;
   background:
-    linear-gradient(90deg, transparent 49.7%, rgba(23, 21, 24, 0.3) 50%, transparent 50.3%),
-    linear-gradient(transparent 49.7%, rgba(23, 21, 24, 0.3) 50%, transparent 50.3%);
+    linear-gradient(90deg, transparent 49.7%, rgba(40, 32, 70, 0.3) 50%, transparent 50.3%),
+    linear-gradient(transparent 49.7%, rgba(40, 32, 70, 0.3) 50%, transparent 50.3%);
   isolation: isolate;
   transform: translateX(-50%);
 }
@@ -652,7 +644,7 @@ a {
 .signal-art__ring {
   position: absolute;
   z-index: 2;
-  border: 2px solid rgba(23, 21, 24, 0.45);
+  border: 2px solid rgba(40, 32, 70, 0.45);
   border-radius: 50%;
 }
 
@@ -666,7 +658,7 @@ a {
 
 .signal-art__ring--three {
   inset: 46%;
-  background: var(--ink);
+  background: var(--text);
 }
 
 .signal-art__beam {
@@ -677,9 +669,9 @@ a {
   background: conic-gradient(
     from -35deg at 50% 50%,
     transparent 0deg 292deg,
-    rgba(223, 255, 114, 0.06) 304deg,
-    rgba(223, 255, 114, 0.55) 340deg,
-    rgba(223, 255, 114, 0.9) 357deg,
+    rgba(222, 249, 53, 0.06) 304deg,
+    rgba(222, 249, 53, 0.55) 340deg,
+    rgba(222, 249, 53, 0.9) 357deg,
     transparent 360deg
   );
   transform-origin: 50% 50%;
@@ -693,7 +685,7 @@ a {
   left: 50%;
   width: 47%;
   height: 2px;
-  background: linear-gradient(90deg, rgba(23, 21, 24, 0.65), transparent);
+  background: linear-gradient(90deg, rgba(40, 32, 70, 0.65), transparent);
   content: "";
   transform: rotate(-35deg);
   transform-origin: left center;
@@ -704,9 +696,9 @@ a {
   z-index: 3;
   width: 0.8rem;
   height: 0.8rem;
-  border: 2px solid var(--ink);
+  border: 2px solid var(--text);
   border-radius: 50%;
-  background: var(--peach);
+  background: var(--pink);
 }
 
 .signal-art__dot--one {
@@ -723,7 +715,7 @@ a {
 .signal-art__dot--three {
   right: 20%;
   bottom: 18%;
-  background: var(--cream);
+  background: var(--background);
 }
 
 .context-art {
@@ -739,8 +731,8 @@ a {
   display: block;
   padding: 0.25rem 0.65rem;
   border: var(--border);
-  background: var(--cream);
-  box-shadow: 4px 4px 0 var(--ink);
+  background: var(--background);
+  box-shadow: 4px 4px 0 var(--text);
   font-family: var(--display);
   font-size: 3.7rem;
   font-weight: 900;
@@ -774,7 +766,7 @@ a {
   left: 50%;
   width: 18rem;
   height: 8rem;
-  border: 3px dashed var(--ink);
+  border: 3px dashed var(--text);
   border-radius: 50%;
   transform: translate(-50%, -50%) rotate(-12deg);
 }
@@ -803,8 +795,8 @@ a {
   height: 3.2rem;
   border: var(--border);
   border-radius: 999px;
-  background: var(--cream);
-  box-shadow: 5px 5px 0 var(--ink);
+  background: var(--background);
+  box-shadow: 5px 5px 0 var(--text);
   transform: translateY(-50%) rotate(-16deg);
 }
 
@@ -818,7 +810,7 @@ a {
   border: var(--border);
   border-radius: 50%;
   background: var(--purple);
-  box-shadow: 4px 4px 0 var(--ink);
+  box-shadow: 4px 4px 0 var(--text);
   font-family: var(--display);
   font-size: 1.5rem;
   font-style: normal;
@@ -833,13 +825,13 @@ a {
 .momentum-art__node--two {
   top: 36%;
   left: 39%;
-  background: var(--peach);
+  background: var(--pink);
 }
 
 .momentum-art__node--three {
   top: 18%;
   right: 2%;
-  background: var(--cream);
+  background: var(--background);
 }
 
 .momentum-art__arrow {
@@ -870,7 +862,7 @@ a {
   bottom: -11rem;
   width: 36rem;
   height: 36rem;
-  border: 3px dashed rgba(23, 21, 24, 0.35);
+  border: 3px dashed rgba(40, 32, 70, 0.35);
   border-radius: 50%;
   content: "";
 }
@@ -886,7 +878,7 @@ a {
 .declaration__burst span {
   position: absolute;
   inset: 4%;
-  background: var(--ink);
+  background: var(--text);
   clip-path: polygon(
     50% 0%,
     61% 28%,
@@ -937,12 +929,12 @@ a {
 
 .declaration__copy h2 span {
   display: block;
-  color: var(--cream);
+  color: var(--background);
   text-shadow:
-    -2px -2px 0 var(--ink),
-    2px -2px 0 var(--ink),
-    -2px 2px 0 var(--ink),
-    2px 2px 0 var(--ink);
+    -2px -2px 0 var(--text),
+    2px -2px 0 var(--text),
+    -2px 2px 0 var(--text),
+    2px 2px 0 var(--text);
 }
 
 .declaration__notes {
@@ -965,9 +957,9 @@ a {
 
 .declaration__chips span {
   padding: 0.58rem 0.8rem;
-  border: 2px solid var(--ink);
+  border: 2px solid var(--text);
   border-radius: 999px;
-  background: var(--cream);
+  background: var(--background);
   font-size: 0.56rem;
   font-weight: 900;
   letter-spacing: 0.04em;
@@ -976,7 +968,7 @@ a {
 
 .process {
   padding-bottom: clamp(5.5rem, 7vw, 7rem);
-  background: var(--cream);
+  background: var(--background);
 }
 
 .process__heading {
@@ -987,7 +979,7 @@ a {
 }
 
 .process__heading h2 span {
-  color: var(--purple-deep);
+  color: var(--purple-dark);
   font-style: italic;
 }
 
@@ -1048,7 +1040,7 @@ a {
   display: block;
   max-width: 36rem;
   margin-top: 1rem;
-  color: var(--muted);
+  color: var(--text-muted);
   font-size: 0.78rem;
   font-weight: 580;
   line-height: 1.7;
@@ -1061,8 +1053,8 @@ a {
   overflow: hidden;
   border: var(--border);
   border-radius: 1rem;
-  background: var(--purple-pale);
-  box-shadow: 5px 5px 0 var(--ink);
+  background: var(--lavender);
+  box-shadow: 5px 5px 0 var(--text);
 }
 
 .process-art--connect i {
@@ -1071,13 +1063,13 @@ a {
   height: 3.4rem;
   border: var(--border);
   border-radius: 50%;
-  background: var(--cream);
+  background: var(--background);
 }
 
 .process-art--connect i:nth-child(1) {
   top: 1.2rem;
   left: 1.4rem;
-  background: var(--peach);
+  background: var(--pink);
 }
 
 .process-art--connect i:nth-child(2) {
@@ -1099,7 +1091,7 @@ a {
   left: 50%;
   width: 70%;
   height: 2px;
-  background: var(--ink);
+  background: var(--text);
   content: "";
   transform: translate(-50%, -50%) rotate(28deg);
 }
@@ -1115,16 +1107,16 @@ a {
   z-index: 2;
   width: 1.1rem;
   height: 1.1rem;
-  border: 2px solid var(--ink);
+  border: 2px solid var(--text);
   border-radius: 50%;
-  background: var(--ink);
+  background: var(--text);
   transform: translate(-50%, -50%);
 }
 
 .process-art--understand {
   display: grid;
   place-items: center;
-  background: var(--peach);
+  background: var(--pink);
 }
 
 .process-art--understand span,
@@ -1136,7 +1128,7 @@ a {
   place-items: center;
   border: var(--border);
   border-radius: 50%;
-  background: var(--cream);
+  background: var(--background);
   font-family: var(--display);
   font-size: 2.6rem;
   font-weight: 900;
@@ -1156,7 +1148,7 @@ a {
 .process-art--understand i {
   width: 65%;
   height: 4.2rem;
-  border-bottom: 3px dashed var(--ink);
+  border-bottom: 3px dashed var(--text);
   border-radius: 50%;
   transform: rotate(16deg);
 }
@@ -1188,8 +1180,8 @@ a {
   position: relative;
   overflow: hidden;
   border-top: var(--border);
-  background: var(--ink);
-  color: var(--cream);
+  background: var(--text);
+  color: var(--background);
 }
 
 .principles__header {
@@ -1200,7 +1192,7 @@ a {
 }
 
 .section-tag--dark span {
-  border-color: var(--cream);
+  border-color: var(--background);
   background: var(--purple);
 }
 
@@ -1226,9 +1218,9 @@ a {
 .principles-grid article {
   min-height: 19rem;
   padding: 1.5rem;
-  border: 2px solid var(--cream);
+  border: 2px solid var(--background);
   border-radius: 1rem;
-  background: rgba(255, 255, 255, 0.035);
+  background: rgba(250, 244, 255, 0.035);
   transition:
     background-color 220ms ease,
     color 220ms ease,
@@ -1237,7 +1229,7 @@ a {
 
 .principles-grid article:hover {
   background: var(--purple);
-  color: var(--ink);
+  color: var(--text);
   transform: translateY(-0.45rem);
 }
 
@@ -1259,13 +1251,13 @@ a {
 
 .principles-grid p {
   margin: 1.15rem 0 0;
-  color: rgba(251, 247, 239, 0.63);
+  color: rgba(250, 244, 255, 0.63);
   font-size: 0.76rem;
   line-height: 1.75;
 }
 
 .principles-grid article:hover p {
-  color: rgba(23, 21, 24, 0.72);
+  color: rgba(40, 32, 70, 0.72);
 }
 
 .closing {
@@ -1278,7 +1270,7 @@ a {
   overflow: hidden;
   padding: 7rem 1.25rem;
   border-top: var(--border);
-  background: var(--peach);
+  background: var(--pink);
   text-align: center;
 }
 
@@ -1288,7 +1280,7 @@ a {
   left: 50%;
   width: min(86vw, 68rem);
   aspect-ratio: 1.7;
-  border: 3px dashed rgba(23, 21, 24, 0.32);
+  border: 3px dashed rgba(40, 32, 70, 0.32);
   border-radius: 50%;
   content: "";
   transform: translate(-50%, -50%) rotate(-5deg);
@@ -1305,12 +1297,12 @@ a {
 }
 
 .closing h2 span {
-  color: var(--cream);
+  color: var(--background);
   text-shadow:
-    -2px -2px 0 var(--ink),
-    2px -2px 0 var(--ink),
-    -2px 2px 0 var(--ink),
-    2px 2px 0 var(--ink);
+    -2px -2px 0 var(--text),
+    2px -2px 0 var(--text),
+    -2px 2px 0 var(--text),
+    2px 2px 0 var(--text);
 }
 
 .closing__body {
@@ -1336,7 +1328,7 @@ a {
 
 .closing__squiggle path {
   fill: none;
-  stroke: var(--ink);
+  stroke: var(--text);
   stroke-dasharray: 10 8;
   stroke-linecap: round;
   stroke-width: 3;
@@ -1658,9 +1650,9 @@ a {
     font-size: 1.15rem;
   }
 
-  .brand-glyph {
+  .brand-logo {
     width: 1.75rem;
-    height: 1.75rem;
+    height: 1.6rem;
   }
 
   .button--header {
