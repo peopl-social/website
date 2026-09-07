@@ -2,15 +2,13 @@
   "name": "peopl-web",
   "private": true,
   "type": "module",
-  "engines": {
-    "node": ">=22.0.0"
-  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "typecheck": "nuxi typecheck"
+    "typecheck": "nuxi typecheck",
+    "prepare": "vp config"
   },
   "dependencies": {
     "animejs": "^4.5.0",
@@ -21,6 +19,18 @@
   },
   "devDependencies": {
     "typescript": "5.9.3",
+    "vite": "catalog:",
+    "vite-plus": "catalog:",
     "vue-tsc": "3.3.11"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.3.4",
+      "onFail": "download"
+    }
+  },
+  "engines": {
+    "node": ">=22.0.0"
   }
 }
