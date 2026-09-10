@@ -1155,25 +1155,30 @@ h3,
 
 .manifesto {
   display: grid;
-  grid-template-columns: minmax(12rem, 0.42fr) minmax(0, 1fr);
-  gap: clamp(2rem, 8vw, 9rem);
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.5rem;
   padding-top: clamp(7rem, 13vw, 12rem);
   padding-bottom: clamp(7rem, 14vw, 13rem);
 }
 
 .manifesto-intro {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 2rem;
   padding-top: 0.6rem;
 }
 
 .manifesto-intro p:last-child {
-  max-width: 10rem;
-  margin: 1.5rem 0 0;
+  max-width: 25rem;
+  margin: 0;
   color: var(--orange);
   font-size: 0.95rem;
 }
 
 .manifesto-content {
-  max-width: 54rem;
+  width: 100%;
+  max-width: none;
 }
 
 .manifesto-title {
@@ -1201,6 +1206,7 @@ h3,
 .manifesto-poster {
   position: relative;
   display: grid;
+  width: 100%;
   min-height: 23rem;
   align-items: end;
   margin-top: 4rem;
@@ -2694,9 +2700,13 @@ h3,
     gap: 2.6rem;
   }
 
+  .manifesto-intro {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
   .manifesto-intro p:last-child {
-    max-width: 18rem;
-    margin-top: 1rem;
+    max-width: 29rem;
   }
 
   .story-header {
