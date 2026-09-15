@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Motion } from "motion-v";
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
+import { useI18n } from "#imports";
 import FeatureSprite from "../components/FeatureSprite.vue";
 import PageCat from "../components/PageCat.vue";
 
@@ -17,6 +18,8 @@ const avatarMoods = ref(["happy", "cool", "surprised", "happy"]);
 const waitlistEmail = ref("");
 const isJoined = ref(false);
 let cleanupMotion: (() => void) | undefined;
+const { $getLocale, $switchLocale, $t } = useI18n();
+const currentLocale = computed(() => $getLocale());
 
 const orbitPeople = [
   { initial: "A", name: "Ava", status: "nearby", color: "orange" },
@@ -111,6 +114,10 @@ const choosePerson = (index: number) => {
 
 const choosePersona = (index: number) => {
   activePersona.value = index;
+};
+
+const switchLocale = () => {
+  $switchLocale(currentLocale.value === "fr" ? "en" : "fr");
 };
 
 const toggleQuietMode = () => {
@@ -226,6 +233,15 @@ onBeforeUnmount(() => {
         >
 
         <button
+          class="locale-switch"
+          type="button"
+          :aria-label="`Switch to ${currentLocale === 'fr' ? 'English' : 'French'}`"
+          @click="switchLocale"
+        >
+          {{ currentLocale === "fr" ? "FR" : "EN" }}
+        </button>
+
+        <button
           class="nav-menu-button"
           :class="{ 'is-open': menuOpen }"
           type="button"
@@ -265,7 +281,7 @@ onBeforeUnmount(() => {
             :animate="{ opacity: 1, y: 0 }"
             :transition="revealTransition(0.05)"
           >
-            {{ currentPersona.shortLabel }} / peopl.
+            {{ $t("hero.kicker", { persona: currentPersona.shortLabel }) }}
           </Motion>
 
           <Motion
@@ -286,7 +302,7 @@ onBeforeUnmount(() => {
             :animate="{ opacity: 1, y: 0 }"
             :transition="revealTransition(0.27)"
           >
-            peopl. is a softer way to stay close to the people who make your days feel like yours.
+            {{ $t("hero.lead") }}
           </Motion>
 
           <Motion
@@ -344,7 +360,7 @@ onBeforeUnmount(() => {
                 label="message friend"
               />
             </span>
-            <span>For the group chat you actually want to open.</span>
+            <span>{{ $t("hero.proof") }}</span>
           </Motion>
         </div>
 
