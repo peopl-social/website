@@ -1,20 +1,21 @@
 <script setup lang="ts">
-type PhoneVariant = 'home' | 'circle' | 'plan' | 'recap'
+type PhoneVariant = "home" | "circle" | "plan" | "recap" | "problem";
 
 const props = withDefaults(
   defineProps<{
-    variant?: PhoneVariant
-    label?: string
-    compact?: boolean
+    variant?: PhoneVariant;
+    label?: string;
+    compact?: boolean;
   }>(),
   {
-    variant: 'home',
-    label: 'peopl. app preview',
+    variant: "home",
+    label: "peopl. app preview",
     compact: false,
   },
-)
+);
 
-const mockupSource = 'https://www.webmobilefirst.com/img/mockups/mockup-apple-iphone-16-2024-transparent.png'
+const mockupSource =
+  "https://www.webmobilefirst.com/img/mockups/mockup-apple-iphone-16-2024-transparent.png";
 </script>
 
 <template>
@@ -29,121 +30,162 @@ const mockupSource = 'https://www.webmobilefirst.com/img/mockups/mockup-apple-ip
     <div class="phone-screen" aria-hidden="true">
       <Transition name="screen-swap" mode="out-in">
         <div :key="props.variant" class="phone-screen-content">
-      <div class="status-row">
-        <span>9:41</span>
-        <span class="status-icons"><i /><i /><i /></span>
-      </div>
-
-      <template v-if="props.variant === 'home'">
-        <div class="screen-heading">
-          <div>
-            <span class="screen-eyebrow">Saturday, 09:41</span>
-            <strong>Good morning, Mia</strong>
+          <div class="status-row">
+            <span>9:41</span>
+            <span class="status-icons"><i /><i /><i /></span>
           </div>
-          <span class="screen-avatar">m</span>
-        </div>
 
-        <div class="home-message">
-          <span>make a little room</span>
-          <strong>for the good stuff.</strong>
-        </div>
-
-        <div class="home-pulse" aria-hidden="true">
-          <span class="pulse-ring" />
-          <span class="pulse-ring pulse-ring-two" />
-        </div>
-
-        <div class="home-card">
-          <div class="card-overline"><span>your people</span><span>07 close</span></div>
-          <div class="card-row">
-            <div class="avatar-stack">
-              <span class="mini-avatar avatar-a">A</span>
-              <span class="mini-avatar avatar-b">J</span>
-              <span class="mini-avatar avatar-c">R</span>
-              <span class="mini-avatar avatar-d">+</span>
+          <template v-if="props.variant === 'home'">
+            <div class="screen-heading">
+              <div>
+                <span class="screen-eyebrow">Saturday, 09:41</span>
+                <strong>Good morning, Mia</strong>
+              </div>
+              <span class="screen-avatar">m</span>
             </div>
-          </div>
-        </div>
 
-        <div class="home-list">
-          <div class="list-item"><span>thursday dinner?</span><small>3</small></div>
-          <div class="list-item"><span>new voice note</span><small>now</small></div>
-        </div>
-      </template>
+            <div class="home-message">
+              <span>make a little room</span>
+              <strong>for the good stuff.</strong>
+            </div>
 
-      <template v-else-if="props.variant === 'circle'">
-        <div class="screen-heading">
-          <div>
-            <span class="screen-eyebrow">the circle</span>
-            <strong>who’s around?</strong>
-          </div>
-          <span class="screen-symbol">⌁</span>
-        </div>
+            <div class="home-pulse" aria-hidden="true">
+              <span class="pulse-ring" />
+              <span class="pulse-ring pulse-ring-two" />
+            </div>
 
-        <div class="circle-map">
-          <span class="map-line map-line-one" />
-          <span class="map-line map-line-two" />
-          <span class="map-orb orb-one">A</span>
-          <span class="map-orb orb-two">J</span>
-          <span class="map-orb orb-three">R</span>
-          <span class="map-orb orb-four">S</span>
-          <span class="map-me">you</span>
-        </div>
+            <div class="home-card">
+              <div class="card-overline"><span>your people</span><span>07 close</span></div>
+              <div class="card-row">
+                <div class="avatar-stack">
+                  <span class="mini-avatar avatar-a">A</span>
+                  <span class="mini-avatar avatar-b">J</span>
+                  <span class="mini-avatar avatar-c">R</span>
+                  <span class="mini-avatar avatar-d">+</span>
+                </div>
+              </div>
+            </div>
 
-        <div class="circle-status">
-          <div class="card-overline"><span>nearby now</span></div>
-          <div class="circle-status-copy"><strong>4 people</strong><span>within your little orbit</span></div>
-          <div class="status-avatars"><span class="status-avatar avatar-a">A</span><span class="status-avatar avatar-b">J</span><span class="status-avatar avatar-c">R</span><span class="status-avatar avatar-d">S</span></div>
-        </div>
-      </template>
+            <div class="home-list">
+              <div class="list-item"><span>thursday dinner?</span><small>3</small></div>
+              <div class="list-item"><span>new voice note</span><small>now</small></div>
+            </div>
+          </template>
 
-      <template v-else-if="props.variant === 'plan'">
-        <div class="screen-heading light-heading">
-          <div>
-            <span class="screen-eyebrow">small plans</span>
-            <strong>make it happen</strong>
-          </div>
-          <span class="screen-symbol">＋</span>
-        </div>
+          <template v-else-if="props.variant === 'problem'">
+            <div class="screen-heading">
+              <div>
+                <span class="screen-eyebrow">the problem</span>
+                <strong>too much social.</strong>
+              </div>
+              <span class="screen-symbol">!</span>
+            </div>
 
-        <div class="plan-date">
-          <span>THU</span>
-          <strong>18</strong>
-          <span>SEP</span>
-        </div>
+            <div class="problem-screen-message">
+              <span>too many tabs</span>
+              <strong>not enough<br />actual life.</strong>
+            </div>
 
-        <div class="plan-card plan-card-primary">
-          <div class="plan-card-head"><span>6:30 PM</span><span class="plan-tag">open</span></div>
-          <strong>sunset walk + something cold</strong>
-          <div class="plan-card-foot"><span class="plan-face face-one">M</span><span class="plan-face face-two">J</span><span>+ 2 maybes</span></div>
-        </div>
+            <div class="problem-notification-stack">
+              <div class="problem-notification">
+                <span>group chat</span><strong>47 new messages</strong>
+              </div>
+              <div class="problem-notification">
+                <span>your feed</span><strong>nothing you meant to save</strong>
+              </div>
+              <div class="problem-notification muted">
+                <span>real life</span><strong>still waiting</strong>
+              </div>
+            </div>
+          </template>
 
-        <div class="plan-card plan-card-secondary">
-          <div class="plan-card-head"><span>tomorrow</span></div>
-          <strong>send the voice note</strong>
-        </div>
-      </template>
+          <template v-else-if="props.variant === 'circle'">
+            <div class="screen-heading">
+              <div>
+                <span class="screen-eyebrow">the circle</span>
+                <strong>who’s around?</strong>
+              </div>
+              <span class="screen-symbol">⌁</span>
+            </div>
 
-      <template v-else>
-        <div class="screen-heading">
-          <div>
-            <span class="screen-eyebrow">a little recap</span>
-            <strong>last weekend</strong>
-          </div>
-          <span class="screen-symbol">✦</span>
-        </div>
+            <div class="circle-map">
+              <span class="map-line map-line-one" />
+              <span class="map-line map-line-two" />
+              <span class="map-orb orb-one">A</span>
+              <span class="map-orb orb-two">J</span>
+              <span class="map-orb orb-three">R</span>
+              <span class="map-orb orb-four">S</span>
+              <span class="map-me">you</span>
+            </div>
 
-        <div class="recap-intro"><strong>the ones worth<br />remembering.</strong><span>12 moments · 3 people</span></div>
+            <div class="circle-status">
+              <div class="card-overline"><span>nearby now</span></div>
+              <div class="circle-status-copy">
+                <strong>4 people</strong><span>within your little orbit</span>
+              </div>
+              <div class="status-avatars">
+                <span class="status-avatar avatar-a">A</span
+                ><span class="status-avatar avatar-b">J</span
+                ><span class="status-avatar avatar-c">R</span
+                ><span class="status-avatar avatar-d">S</span>
+              </div>
+            </div>
+          </template>
 
-        <div class="recap-grid">
-          <div class="recap-photo recap-photo-one" />
-          <div class="recap-photo recap-photo-two" />
-          <div class="recap-photo recap-photo-three" />
-          <div class="recap-photo recap-photo-four" />
-        </div>
+          <template v-else-if="props.variant === 'plan'">
+            <div class="screen-heading light-heading">
+              <div>
+                <span class="screen-eyebrow">small plans</span>
+                <strong>make it happen</strong>
+              </div>
+              <span class="screen-symbol">＋</span>
+            </div>
 
-        <div class="recap-footer"><span>made with your people</span><span>♡</span></div>
-      </template>
+            <div class="plan-date">
+              <span>THU</span>
+              <strong>18</strong>
+              <span>SEP</span>
+            </div>
+
+            <div class="plan-card plan-card-primary">
+              <div class="plan-card-head">
+                <span>6:30 PM</span><span class="plan-tag">open</span>
+              </div>
+              <strong>sunset walk + something cold</strong>
+              <div class="plan-card-foot">
+                <span class="plan-face face-one">M</span><span class="plan-face face-two">J</span
+                ><span>+ 2 maybes</span>
+              </div>
+            </div>
+
+            <div class="plan-card plan-card-secondary">
+              <div class="plan-card-head"><span>tomorrow</span></div>
+              <strong>send the voice note</strong>
+            </div>
+          </template>
+
+          <template v-else>
+            <div class="screen-heading">
+              <div>
+                <span class="screen-eyebrow">a little recap</span>
+                <strong>last weekend</strong>
+              </div>
+              <span class="screen-symbol">✦</span>
+            </div>
+
+            <div class="recap-intro">
+              <strong>the ones worth<br />remembering.</strong><span>12 moments · 3 people</span>
+            </div>
+
+            <div class="recap-grid">
+              <div class="recap-photo recap-photo-one" />
+              <div class="recap-photo recap-photo-two" />
+              <div class="recap-photo recap-photo-three" />
+              <div class="recap-photo recap-photo-four" />
+            </div>
+
+            <div class="recap-footer"><span>made with your people</span><span>♡</span></div>
+          </template>
         </div>
       </Transition>
     </div>
@@ -198,7 +240,9 @@ const mockupSource = 'https://www.webmobilefirst.com/img/mockups/mockup-apple-ip
 
 .screen-swap-enter-active,
 .screen-swap-leave-active {
-  transition: opacity 420ms var(--ease-out), transform 520ms var(--ease-out);
+  transition:
+    opacity 420ms var(--ease-out),
+    transform 520ms var(--ease-out);
 }
 
 .screen-swap-enter-from {
@@ -228,7 +272,7 @@ const mockupSource = 'https://www.webmobilefirst.com/img/mockups/mockup-apple-ip
   justify-content: space-between;
   padding-inline: 1%;
   color: rgb(var(--violet-rgb) / 0.72);
-  font-family: 'Geologica', sans-serif;
+  font-family: "Geologica", sans-serif;
   font-size: 0.76em;
   font-weight: 650;
 }
@@ -282,11 +326,75 @@ const mockupSource = 'https://www.webmobilefirst.com/img/mockups/mockup-apple-ip
 
 .screen-heading strong {
   max-width: 10rem;
-  font-family: 'Geologica', sans-serif;
+  font-family: "Geologica", sans-serif;
   font-size: 1.36em;
   font-weight: 590;
   letter-spacing: -0.09em;
   line-height: 0.95;
+}
+
+.problem-screen-message {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 22%;
+  font-family: "Geologica", sans-serif;
+  font-size: 1.55em;
+  letter-spacing: -0.1em;
+  line-height: 0.92;
+}
+
+.problem-screen-message span {
+  color: var(--orange);
+}
+
+.problem-screen-message strong {
+  font: inherit;
+}
+
+.problem-notification-stack {
+  display: grid;
+  gap: 0.65rem;
+  margin-top: auto;
+}
+
+.problem-notification {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.7rem 0.75rem;
+  border-radius: 0.9rem;
+  background: rgb(var(--violet-rgb) / 0.1);
+  color: var(--ink);
+  transform: rotate(-2deg);
+}
+
+.problem-notification:nth-child(2) {
+  transform: rotate(2deg);
+  background: rgb(var(--orange-rgb) / 0.14);
+}
+
+.problem-notification.muted {
+  background: var(--ink);
+  color: var(--paper);
+  transform: rotate(-1deg);
+}
+
+.problem-notification span {
+  color: rgb(var(--violet-rgb) / 0.62);
+  font-size: 0.68em;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.problem-notification.muted span {
+  color: rgb(var(--paper-rgb) / 0.62);
+}
+
+.problem-notification strong {
+  font-family: "Geologica", sans-serif;
+  font-size: 0.88em;
+  font-weight: 590;
+  letter-spacing: -0.06em;
+  line-height: 1;
 }
 
 .screen-avatar,
@@ -299,7 +407,7 @@ const mockupSource = 'https://www.webmobilefirst.com/img/mockups/mockup-apple-ip
   border-radius: 50%;
   background: var(--green);
   color: var(--ink);
-  font-family: 'Geologica', sans-serif;
+  font-family: "Geologica", sans-serif;
   font-size: 1.1em;
   font-weight: 700;
 }
@@ -316,7 +424,7 @@ const mockupSource = 'https://www.webmobilefirst.com/img/mockups/mockup-apple-ip
   display: grid;
   gap: 0.15rem;
   margin-top: 20%;
-  font-family: 'Geologica', sans-serif;
+  font-family: "Geologica", sans-serif;
   font-size: 2.08em;
   font-weight: 580;
   letter-spacing: -0.11em;
@@ -542,7 +650,7 @@ const mockupSource = 'https://www.webmobilefirst.com/img/mockups/mockup-apple-ip
 }
 
 .circle-status-copy strong {
-  font-family: 'Geologica', sans-serif;
+  font-family: "Geologica", sans-serif;
   font-size: 1.35em;
   letter-spacing: -0.09em;
 }
@@ -571,7 +679,7 @@ const mockupSource = 'https://www.webmobilefirst.com/img/mockups/mockup-apple-ip
 .plan-date strong {
   justify-self: center;
   color: var(--green);
-  font-family: 'Geologica', sans-serif;
+  font-family: "Geologica", sans-serif;
   font-size: 4em;
   font-weight: 570;
   letter-spacing: -0.12em;
@@ -590,7 +698,7 @@ const mockupSource = 'https://www.webmobilefirst.com/img/mockups/mockup-apple-ip
 
 .plan-card strong {
   max-width: 11ch;
-  font-family: 'Geologica', sans-serif;
+  font-family: "Geologica", sans-serif;
   font-size: 1.36em;
   font-weight: 580;
   letter-spacing: -0.09em;
@@ -638,7 +746,7 @@ const mockupSource = 'https://www.webmobilefirst.com/img/mockups/mockup-apple-ip
 }
 
 .recap-intro strong {
-  font-family: 'Geologica', sans-serif;
+  font-family: "Geologica", sans-serif;
   font-size: 2em;
   font-weight: 580;
   letter-spacing: -0.11em;
@@ -667,15 +775,15 @@ const mockupSource = 'https://www.webmobilefirst.com/img/mockups/mockup-apple-ip
 
 .recap-photo-one {
   grid-row: span 2;
-  background-image: url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=500&q=80');
+  background-image: url("https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=500&q=80");
 }
 
 .recap-photo-two {
-  background-image: url('https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=400&q=80');
+  background-image: url("https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=400&q=80");
 }
 
 .recap-photo-three {
-  background-image: url('https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=400&q=80');
+  background-image: url("https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&w=400&q=80");
 }
 
 .recap-photo-four {

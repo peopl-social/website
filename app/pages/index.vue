@@ -7,6 +7,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "#imports";
 import FeatureSprite from "../components/FeatureSprite.vue";
 import PageCat from "../components/PageCat.vue";
+import PhoneMockup from "../components/PhoneMockup.vue";
 
 const pageRoot = ref<HTMLElement | null>(null);
 const menuOpen = ref(false);
@@ -213,8 +214,6 @@ onBeforeUnmount(() => {
     :class="`persona-theme-${activePersona}`"
     :data-active-persona="currentPersona.key"
   >
-    <PageCat />
-
     <header class="site-header">
       <nav class="site-nav" aria-label="Primary navigation">
         <a class="nav-brand" href="#top" aria-label="peopl. home" @click="closeMenu">
@@ -228,7 +227,7 @@ onBeforeUnmount(() => {
           >
         </div>
 
-        <a class="nav-link nav-join-link" href="#join" @click.prevent="scrollToSection('join')"
+        <a class="nav-cta nav-join-link" href="#join" @click.prevent="scrollToSection('join')"
           >Get updates</a
         >
 
@@ -329,39 +328,6 @@ onBeforeUnmount(() => {
               </button>
             </form>
           </Motion>
-
-          <Motion
-            as="div"
-            class="hero-proof"
-            :initial="{ opacity: 0, y: 18 }"
-            :animate="{ opacity: 1, y: 0 }"
-            :transition="revealTransition(0.53)"
-          >
-            <span class="hero-proof-sprites" aria-hidden="true">
-              <FeatureSprite
-                class="proof-sprite proof-sprite-one"
-                color="orange"
-                mood="board"
-                size="sm"
-                label="moodboard friend"
-              />
-              <FeatureSprite
-                class="proof-sprite proof-sprite-two"
-                color="green"
-                mood="event"
-                size="sm"
-                label="event friend"
-              />
-              <FeatureSprite
-                class="proof-sprite proof-sprite-three"
-                color="violet"
-                mood="message"
-                size="sm"
-                label="message friend"
-              />
-            </span>
-            <span>{{ $t("hero.proof") }}</span>
-          </Motion>
         </div>
 
         <div class="hero-visual" aria-label="Preview of the peopl. app">
@@ -435,7 +401,14 @@ onBeforeUnmount(() => {
       </section>
 
       <section id="why" class="manifesto section-shell" aria-labelledby="manifesto-title">
-        <div class="manifesto-intro"></div>
+        <div class="manifesto-intro">
+          <p class="section-kicker">The problem</p>
+          <PhoneMockup
+            class="manifesto-phone"
+            variant="problem"
+            label="A peopl. view of the problem we solve"
+          />
+        </div>
 
         <div class="manifesto-content">
           <Motion
