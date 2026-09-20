@@ -1,7 +1,7 @@
 export default defineNuxtConfig({
   compatibilityDate: "2026-09-03",
   devtools: { enabled: false },
-  modules: ["motion-v/nuxt", "nuxt-i18n-micro", "@comark/nuxt"],
+  modules: ["nuxt-i18n-micro", "@comark/nuxt"],
   i18n: {
     locales: [
       { code: "en", iso: "en-US", dir: "ltr", displayName: "English" },
@@ -18,17 +18,43 @@ export default defineNuxtConfig({
       htmlAttrs: {
         lang: "en",
       },
-      title: "peopl. — make room for your people",
+      title: "peopl. — a private social app for your actual friends",
       meta: [
         {
           name: "description",
           content:
-            "peopl. is a softer way to stay close to the people who make your days feel like yours.",
+            "peopl. is a private social app for your actual friends — not followers. Share moodboards, plan real gatherings, and message each other without another endless feed. Join the early list.",
         },
         { name: "theme-color", content: "#fff2ec" },
         { name: "color-scheme", content: "light" },
+        { property: "og:site_name", content: "peopl." },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: "https://peopl.social" },
+        { property: "og:title", content: "peopl. — make room for your people" },
+        {
+          property: "og:description",
+          content:
+            "A private social app for your actual friends — not followers. Moodboards, gatherings, and messages that stay between you. Join the early list.",
+        },
+        { property: "og:image", content: "https://peopl.social/og.png" },
+        { property: "og:image:width", content: "1200" },
+        { property: "og:image:height", content: "630" },
+        {
+          property: "og:image:alt",
+          content:
+            "peopl. — make room for your people. A private social app for your actual friends.",
+        },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: "peopl. — make room for your people" },
+        {
+          name: "twitter:description",
+          content:
+            "A private social app for your actual friends — not followers. Moodboards, gatherings, and messages that stay between you.",
+        },
+        { name: "twitter:image", content: "https://peopl.social/og.png" },
       ],
       link: [
+        { rel: "canonical", href: "https://peopl.social" },
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
         { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
         {
@@ -40,7 +66,7 @@ export default defineNuxtConfig({
   },
   nitro: {
     prerender: {
-      routes: ["/", "/about"],
+      routes: ["/", "/about", "/privacy", "/terms"],
     },
   },
 });
