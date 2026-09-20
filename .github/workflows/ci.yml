@@ -25,6 +25,9 @@ jobs:
       - name: Install dependencies
         run: vp install --frozen-lockfile
 
+      - name: Generate Nuxt types
+        run: vp run prepare
+
       - name: Check code quality
         run: vp check
 
