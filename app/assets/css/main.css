@@ -496,6 +496,13 @@ h3,
   box-shadow: 0 1.4rem 4rem rgb(var(--mauve-rgb) / 0.19);
 }
 
+.mobile-locale-switch {
+  justify-self: start;
+  margin-bottom: 0.3rem;
+  border-color: rgb(var(--mauve-rgb) / 0.22);
+  background: rgb(var(--paper-rgb) / 0.7);
+}
+
 .mobile-menu-link {
   padding: 1.15rem 0.9rem;
   border-bottom: 1px solid var(--line);
@@ -932,13 +939,110 @@ h3,
 .hero-phone-wrap {
   position: relative;
   z-index: 3;
-  width: clamp(16.5rem, 29vw, 22.5rem);
-  transform: translateY(0.65rem) rotate(4deg);
+  width: clamp(17.5rem, 27vw, 23.75rem);
+  transform: translateY(0.35rem) rotate(3deg);
   transition: transform 900ms var(--ease-out);
 }
 
 .hero-phone-wrap:hover {
   transform: translateY(-0.6rem) rotate(1deg);
+}
+
+.hero-phone-scene {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  width: min(100%, 38rem);
+  min-height: 43rem;
+  place-items: center;
+}
+
+.hero-phone-scene::before {
+  position: absolute;
+  z-index: -1;
+  width: min(30rem, 84%);
+  aspect-ratio: 1;
+  border: 1px solid rgb(var(--mauve-rgb) / 0.15);
+  border-radius: 50%;
+  content: "";
+  transform: rotate(-12deg);
+}
+
+.phone-scroll-rail {
+  position: absolute;
+  z-index: 5;
+  top: 14%;
+  right: 8.1%;
+  width: 0.38rem;
+  height: 62%;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 0.18);
+}
+
+.phone-scroll-thumb {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 31%;
+  border-radius: inherit;
+  background: rgb(0 0 0 / 0.72);
+  animation: phone-scroll-thumb-pull 4.8s var(--ease-soft) infinite;
+}
+
+.hero-scroll-buddy {
+  position: absolute !important;
+  z-index: 7;
+  top: 8%;
+  right: -0.85rem;
+  transform: scale(0.45) rotate(12deg) !important;
+  transform-origin: center;
+  animation: hero-scroll-buddy-pull 4.8s var(--ease-soft) infinite;
+}
+
+.hero-comment-sprite {
+  position: absolute !important;
+  z-index: 5;
+}
+
+.hero-phone-scene .sprite-look-up {
+  bottom: 7%;
+  left: 6%;
+  transform: scale(0.74) rotate(-10deg) !important;
+}
+
+.hero-phone-scene .sprite-tiny-phone {
+  right: 0;
+  bottom: 14%;
+  transform: scale(0.68) rotate(9deg) !important;
+}
+
+.tiny-phone-prop {
+  position: absolute;
+  right: 6.2%;
+  bottom: 20.8%;
+  z-index: 7;
+  width: 1.28rem;
+  height: 2rem;
+  padding: 0.14rem;
+  border: 0.11rem solid var(--ink);
+  border-radius: 0.34rem;
+  background: var(--paper);
+  box-shadow: 0.1rem 0.13rem 0 rgb(0 0 0 / 0.12);
+  transform: rotate(-11deg);
+}
+
+.tiny-phone-prop span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 0.32rem;
+  background:
+    linear-gradient(var(--orange), var(--orange)) 50% 18% / 62% 0.12rem no-repeat,
+    linear-gradient(var(--green), var(--green)) 50% 39% / 76% 0.12rem no-repeat,
+    linear-gradient(var(--violet), var(--violet)) 50% 60% / 52% 0.12rem no-repeat,
+    rgb(var(--paper-rgb) / 0.8);
 }
 
 .hero-sprite-stack {
@@ -967,34 +1071,6 @@ h3,
   top: 0.2rem;
   right: -0.2rem;
   transform: rotate(8deg);
-}
-
-.hero-signal {
-  position: absolute;
-  z-index: 4;
-  bottom: 4%;
-  left: -7%;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.72rem 0.9rem;
-  border: 1px solid rgb(var(--mauve-rgb) / 0.14);
-  border-radius: 999px;
-  background: rgb(var(--paper-rgb) / 0.8);
-  box-shadow: 0 1rem 2rem rgb(var(--mauve-rgb) / 0.12);
-  backdrop-filter: blur(0.8rem);
-  font-size: 0.75rem;
-  font-weight: 680;
-  transform: rotate(-7deg);
-}
-
-.signal-pulse {
-  width: 0.65rem;
-  height: 0.65rem;
-  border-radius: 50%;
-  background: var(--green);
-  box-shadow: 0 0 0 0.35rem rgb(var(--green-rgb) / 0.22);
-  animation: signal-pulse 2.2s ease-out infinite;
 }
 
 .story-signal {
@@ -1132,54 +1208,6 @@ h3,
 
 .details-section {
   position: relative;
-}
-
-.hero-note {
-  position: absolute;
-  z-index: 5;
-  display: grid;
-  gap: 0.2rem;
-  min-width: 9.2rem;
-  padding: 0.9rem 1rem;
-  border: 1px solid rgb(var(--mauve-rgb) / 0.12);
-  border-radius: 1.15rem;
-  background: rgb(var(--paper-rgb) / 0.86);
-  box-shadow: 0 1rem 2.4rem rgb(var(--mauve-rgb) / 0.14);
-  backdrop-filter: blur(1rem);
-  color: var(--ink);
-  transform: rotate(-7deg);
-}
-
-.hero-note small {
-  color: var(--orange);
-  font-size: 0.68rem;
-  font-weight: 650;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-}
-
-.hero-note strong {
-  font-family: "Geologica", sans-serif;
-  font-size: 1rem;
-  font-weight: 560;
-  letter-spacing: -0.06em;
-}
-
-.hero-note-top {
-  top: 16%;
-  left: 4%;
-}
-
-.hero-note-bottom {
-  right: 1%;
-  bottom: 14%;
-  background: var(--violet);
-  color: var(--paper);
-  transform: rotate(7deg);
-}
-
-.hero-note-bottom small {
-  color: rgb(var(--paper-rgb) / 0.7);
 }
 
 .ticker-band {
@@ -2720,6 +2748,33 @@ h3,
   }
 }
 
+@keyframes phone-scroll-thumb-pull {
+  0%,
+  12% {
+    transform: translateY(0);
+  }
+
+  55%,
+  100% {
+    transform: translateY(222%);
+  }
+}
+
+@keyframes hero-scroll-buddy-pull {
+  0% {
+    top: 3%;
+  }
+
+  13% {
+    top: 8%;
+  }
+
+  55%,
+  100% {
+    top: 53%;
+  }
+}
+
 @media (max-width: 1020px) {
   .hero {
     grid-template-columns: minmax(0, 0.98fr) minmax(300px, 0.82fr);
@@ -2728,14 +2783,6 @@ h3,
 
   .hero-title {
     font-size: clamp(4rem, 8.8vw, 6.9rem);
-  }
-
-  .hero-note-top {
-    left: -2%;
-  }
-
-  .hero-note-bottom {
-    right: -3%;
   }
 
   .story-layout {
@@ -2749,7 +2796,8 @@ h3,
   }
 
   .nav-links,
-  .site-nav > .nav-cta {
+  .site-nav > .nav-cta,
+  .site-nav > .locale-switch {
     display: none;
   }
 
@@ -2776,21 +2824,12 @@ h3,
   }
 
   .hero-phone-wrap {
-    width: min(18rem, 60vw);
+    width: min(19rem, 60vw);
   }
 
-  .hero-sprite-stack {
-    transform: scale(0.9);
-  }
-
-  .hero-note-top {
-    top: 10%;
-    left: 12%;
-  }
-
-  .hero-note-bottom {
-    right: 10%;
-    bottom: 9%;
+  .hero-phone-scene {
+    width: min(100%, 34rem);
+    min-height: 39rem;
   }
 
   .manifesto,
@@ -2969,32 +3008,40 @@ h3,
   }
 
   .hero-phone-wrap {
-    width: min(16rem, 65vw);
+    width: min(17rem, 62vw);
   }
 
-  .hero-sprite-stack {
-    transform: scale(0.75);
+  .hero-phone-scene {
+    width: min(100%, 29rem);
+    min-height: 32rem;
   }
 
-  .hero-signal {
-    left: 2%;
+  .phone-scroll-rail {
+    right: 8.2%;
+    width: 0.32rem;
+  }
+
+  .hero-scroll-buddy {
+    right: -1.35rem;
+    transform: scale(0.36) rotate(12deg) !important;
+  }
+
+  .hero-phone-scene .sprite-look-up {
     bottom: 3%;
-    transform: rotate(-7deg) scale(0.86);
+    left: -0.8rem;
+    transform: scale(0.58) rotate(-10deg) !important;
   }
 
-  .hero-note {
-    min-width: 7.7rem;
-    padding: 0.72rem 0.8rem;
+  .hero-phone-scene .sprite-tiny-phone {
+    right: -1.1rem;
+    bottom: 10%;
+    transform: scale(0.55) rotate(9deg) !important;
   }
 
-  .hero-note-top {
-    top: 8%;
-    left: 2%;
-  }
-
-  .hero-note-bottom {
-    right: 0;
-    bottom: 6%;
+  .tiny-phone-prop {
+    right: 4%;
+    bottom: 16.5%;
+    transform: rotate(-11deg) scale(0.78);
   }
 
   .ticker-band {
@@ -3200,21 +3247,11 @@ h3,
   }
 
   .hero-orbit,
+  .phone-scroll-thumb,
+  .hero-scroll-buddy,
   .ticker-track,
   .ticker-star {
     animation: none;
-  }
-}
-
-@keyframes signal-pulse {
-  0% {
-    box-shadow: 0 0 0 0 rgb(var(--green-rgb) / 0.34);
-  }
-  70% {
-    box-shadow: 0 0 0 0.7rem rgb(var(--green-rgb) / 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgb(var(--green-rgb) / 0);
   }
 }
 
@@ -3232,61 +3269,5 @@ h3,
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
-  }
-}
-
-.profile-sticker-cloud {
-  position: absolute;
-  z-index: 5;
-  inset: 0;
-  pointer-events: none;
-}
-
-.cloud-sticker {
-  position: absolute;
-  display: grid;
-  width: 2.7rem;
-  height: 2.7rem;
-  place-items: center;
-  border: 2px solid var(--ink);
-  border-radius: 0.8rem;
-  background: var(--paper);
-  color: var(--ink);
-  font-size: 1.15rem;
-  font-weight: 800;
-  box-shadow: 0.25rem 0.3rem 0 rgb(0 0 0 / 0.12);
-  animation: profile-sticker-float 4.5s ease-in-out infinite alternate;
-}
-
-.cloud-sticker.sticker-1 {
-  top: 7%;
-  left: 16%;
-  transform: rotate(-12deg);
-}
-.cloud-sticker.sticker-2 {
-  top: 28%;
-  right: 3%;
-  transform: rotate(10deg);
-  animation-delay: -1.2s;
-}
-.cloud-sticker.sticker-3 {
-  bottom: 23%;
-  left: 2%;
-  transform: rotate(7deg);
-  animation-delay: -2.3s;
-}
-.cloud-sticker.sticker-4 {
-  right: 14%;
-  bottom: 8%;
-  transform: rotate(-8deg);
-  animation-delay: -0.6s;
-}
-
-@keyframes profile-sticker-float {
-  from {
-    margin-top: 0;
-  }
-  to {
-    margin-top: -0.5rem;
   }
 }

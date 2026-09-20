@@ -6,6 +6,7 @@ import { Motion } from "motion-v";
 import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "#imports";
 import FeatureSprite from "../components/FeatureSprite.vue";
+import MoodboardSection from "../components/MoodboardSection.vue";
 import PageCat from "../components/PageCat.vue";
 import PhoneMockup from "../components/PhoneMockup.vue";
 
@@ -14,20 +15,12 @@ const menuOpen = ref(false);
 const menuPanelReady = ref(false);
 const activePersona = ref(1);
 const quietMode = ref(false);
-const activePerson = ref(0);
 const avatarMoods = ref(["happy", "cool", "surprised", "happy"]);
 const waitlistEmail = ref("");
 const isJoined = ref(false);
 let cleanupMotion: (() => void) | undefined;
 const { $getLocale, $switchLocale, $t } = useI18n();
 const currentLocale = computed(() => $getLocale());
-
-const orbitPeople = [
-  { initial: "A", name: "Ava", status: "nearby", color: "orange" },
-  { initial: "J", name: "Jules", status: "planning", color: "violet" },
-  { initial: "R", name: "Rae", status: "free tonight", color: "green" },
-  { initial: "S", name: "Sam", status: "sent a note", color: "sky" },
-];
 
 const personas = [
   {
@@ -109,14 +102,6 @@ const scrollToSection = (id: string) => {
   closeMenu();
 };
 
-const choosePerson = (index: number) => {
-  activePerson.value = index;
-};
-
-const choosePersona = (index: number) => {
-  activePersona.value = index;
-};
-
 const switchLocale = () => {
   $switchLocale(currentLocale.value === "fr" ? "en" : "fr");
 };
@@ -166,16 +151,6 @@ onMounted(() => {
 
   gsap.registerPlugin(ScrollTrigger);
   const context = gsap.context(() => {
-    gsap.from(".hero-note", {
-      opacity: 0,
-      y: 18,
-      rotate: 0,
-      duration: 1.1,
-      stagger: 0.12,
-      ease: "power3.out",
-      delay: 0.7,
-    });
-
     gsap.to(".hero-aura", {
       y: -26,
       scale: 1.06,
@@ -222,6 +197,9 @@ onBeforeUnmount(() => {
 
         <div class="nav-links">
           <a class="nav-link" href="#why" @click.prevent="scrollToSection('why')">The problem</a>
+          <a class="nav-link" href="#moodboard" @click.prevent="scrollToSection('moodboard')"
+            >Moodboard</a
+          >
           <a class="nav-link" href="#features" @click.prevent="scrollToSection('features')"
             >Features</a
           >
@@ -263,7 +241,16 @@ onBeforeUnmount(() => {
         @keydown.esc="closeMenu"
       >
         <div class="mobile-menu-panel" :class="{ 'is-ready': menuPanelReady }">
+          <button
+            class="locale-switch mobile-locale-switch"
+            type="button"
+            :aria-label="`Switch to ${currentLocale === 'fr' ? 'English' : 'French'}`"
+            @click="switchLocale"
+          >
+            {{ currentLocale === "fr" ? "FR" : "EN" }}
+          </button>
           <a class="mobile-menu-link" href="#why" @click="closeMenu">The problem</a>
+          <a class="mobile-menu-link" href="#moodboard" @click="closeMenu">Moodboard</a>
           <a class="mobile-menu-link" href="#features" @click="closeMenu">Features</a>
           <a class="mobile-menu-link" href="#join" @click="closeMenu">Join the list</a>
         </div>
@@ -273,16 +260,6 @@ onBeforeUnmount(() => {
     <main>
       <section id="top" class="hero section-shell" aria-labelledby="hero-title">
         <div class="hero-copy">
-          <Motion
-            as="p"
-            class="section-kicker hero-kicker"
-            :initial="{ opacity: 0, y: 20 }"
-            :animate="{ opacity: 1, y: 0 }"
-            :transition="revealTransition(0.05)"
-          >
-            {{ $t("hero.kicker", { persona: currentPersona.shortLabel }) }}
-          </Motion>
-
           <Motion
             as="h1"
             id="hero-title"
@@ -332,70 +309,38 @@ onBeforeUnmount(() => {
 
         <div class="hero-visual" aria-label="Preview of the peopl. app">
           <div class="hero-aura" aria-hidden="true" />
-          <div class="hero-orbit" aria-label="People in your orbit">
-            <span class="orbit-label">your people / now</span>
-            <button
-              v-for="(person, index) in orbitPeople"
-              :key="person.initial"
-              class="orbit-person"
-              :class="[`is-${person.color}`, { 'is-active': activePerson === index }]"
-              type="button"
-              :aria-label="`${person.name}, ${person.status}`"
-              @click="choosePerson(index)"
-            >
-              <span class="orbit-person-dot">{{ person.initial }}</span>
-              <span class="orbit-person-label">{{ person.name }}</span>
-            </button>
-          </div>
+          <div class="hero-phone-scene">
+            <div class="hero-phone-wrap">
+              <PhoneMockup variant="users" label="A peopl. preview titled our users" />
+              <div class="phone-scroll-rail" aria-hidden="true">
+                <span class="phone-scroll-thumb" />
+              </div>
+              <FeatureSprite
+                class="hero-scroll-buddy"
+                color="green"
+                mood="message"
+                size="sm"
+                label="tiny friend pulling the phone scroll"
+              />
+            </div>
 
-          <div
-            class="hero-sprite-stack"
-            aria-label="A few of the people and ideas peopl. makes room for"
-          >
             <FeatureSprite
-              class="hero-sprite sprite-main"
+              class="hero-comment-sprite sprite-look-up"
               color="orange"
               mood="board"
-              size="lg"
-              label="moodboard friend"
+              size="sm"
+              label="friend admiring the app"
             />
             <FeatureSprite
-              class="hero-sprite sprite-left"
-              color="green"
+              class="hero-comment-sprite sprite-tiny-phone"
+              color="violet"
               mood="event"
               size="sm"
-              label="event friend"
+              label="friend using a tiny phone"
             />
-            <FeatureSprite
-              class="hero-sprite sprite-right"
-              color="violet"
-              mood="message"
-              size="sm"
-              label="message friend"
-            />
-          </div>
-
-          <div class="hero-signal" aria-hidden="true">
-            <span class="signal-pulse" />
-            <span>{{ currentPersona.profileNote }}</span>
-          </div>
-
-          <div class="profile-sticker-cloud" aria-hidden="true">
-            <span
-              v-for="(sticker, index) in currentPersona.stickers"
-              :key="`${currentPersona.key}-${sticker}`"
-              :class="`cloud-sticker sticker-${index + 1}`"
-              >{{ sticker }}</span
-            >
-          </div>
-
-          <div class="hero-note hero-note-top">
-            <small>right now</small>
-            <strong>4 people nearby</strong>
-          </div>
-          <div class="hero-note hero-note-bottom">
-            <small>tiny nudge</small>
-            <strong>Thursday dinner?</strong>
+            <div class="tiny-phone-prop" aria-hidden="true">
+              <span />
+            </div>
           </div>
         </div>
       </section>
@@ -447,6 +392,8 @@ onBeforeUnmount(() => {
           </Motion>
         </div>
       </section>
+
+      <MoodboardSection />
 
       <section id="features" class="details-section section-shell" aria-labelledby="details-title">
         <div class="details-heading">
@@ -683,6 +630,7 @@ onBeforeUnmount(() => {
       </div>
       <nav class="footer-links" aria-label="Footer navigation">
         <a class="footer-link" href="/privacy">Privacy policy</a>
+        <a class="footer-link" href="/terms">Terms of service</a>
         <a class="footer-link" href="mailto:law@peopl.app">Law enforcement</a>
         <a class="footer-link" href="mailto:support@peopl.app">Support</a>
       </nav>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-type PhoneVariant = "home" | "circle" | "plan" | "recap" | "problem";
+type PhoneVariant = "home" | "users" | "circle" | "plan" | "recap" | "problem";
 
 const props = withDefaults(
   defineProps<{
@@ -16,6 +16,37 @@ const props = withDefaults(
 
 const mockupSource =
   "https://www.webmobilefirst.com/img/mockups/mockup-apple-iphone-16-2024-transparent.png";
+
+const userPlaceholders = [
+  {
+    initial: "A",
+    name: "Ava",
+    note: "started a board for rooftop dinner",
+    comment: "this feels like our group chat got a tiny garden",
+    color: "orange",
+  },
+  {
+    initial: "J",
+    name: "Jules",
+    note: "saved three places for later",
+    comment: "finally, plans without forty-seven pings",
+    color: "violet",
+  },
+  {
+    initial: "M",
+    name: "Mina",
+    note: "sent a soft nudge",
+    comment: "the app remembers the feeling better than I do",
+    color: "green",
+  },
+  {
+    initial: "R",
+    name: "Rae",
+    note: "made the weekend visible",
+    comment: "cute enough to open, calm enough to keep",
+    color: "sky",
+  },
+] as const;
 </script>
 
 <template>
@@ -69,6 +100,38 @@ const mockupSource =
             <div class="home-list">
               <div class="list-item"><span>thursday dinner?</span><small>3</small></div>
               <div class="list-item"><span>new voice note</span><small>now</small></div>
+            </div>
+          </template>
+
+          <template v-else-if="props.variant === 'users'">
+            <div class="screen-heading users-heading">
+              <div>
+                <span class="screen-eyebrow">peopl. preview</span>
+                <strong>our users</strong>
+              </div>
+            </div>
+
+            <div class="users-scroll-window">
+              <div class="users-scroll-track">
+                <template v-for="loop in 2" :key="loop">
+                  <article
+                    v-for="person in userPlaceholders"
+                    :key="`${loop}-${person.initial}`"
+                    class="user-card"
+                    :class="`is-${person.color}`"
+                  >
+                    <span class="user-photo">
+                      <span class="user-photo-shine" />
+                      <span class="user-avatar">{{ person.initial }}</span>
+                    </span>
+                    <span class="user-copy">
+                      <strong>{{ person.name }}</strong>
+                      <small>{{ person.note }}</small>
+                      <em>“{{ person.comment }}”</em>
+                    </span>
+                  </article>
+                </template>
+              </div>
             </div>
           </template>
 
@@ -557,6 +620,187 @@ const mockupSource =
   font-size: 0.8em;
 }
 
+.users-heading {
+  margin-top: 12%;
+  margin-right: 0.85em;
+}
+
+.users-heading strong {
+  font-size: 2.15em;
+}
+
+.users-scroll-window {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  min-height: 0;
+  margin-top: 1.05em;
+  margin-right: 0.65em;
+  overflow: hidden;
+  border-radius: 1.35em;
+}
+
+.users-scroll-window::before,
+.users-scroll-window::after {
+  position: absolute;
+  right: 0;
+  left: 0;
+  z-index: 2;
+  height: 2.1em;
+  content: "";
+  pointer-events: none;
+}
+
+.users-scroll-window::before {
+  top: 0;
+  background: linear-gradient(var(--paper), rgb(var(--paper-rgb) / 0));
+}
+
+.users-scroll-window::after {
+  bottom: 0;
+  background: linear-gradient(rgb(var(--paper-rgb) / 0), var(--paper));
+}
+
+.users-scroll-track {
+  display: grid;
+  gap: 0.9em;
+  padding: 0.2em 0.15em 1em 0;
+  animation: phone-user-scroll 8s var(--ease-soft) infinite;
+}
+
+.user-card {
+  display: grid;
+  min-height: 12.2em;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 0.72em;
+  padding: 0.78em;
+  border: 1px solid rgb(var(--mauve-rgb) / 0.16);
+  border-radius: 1.15em;
+  background: rgb(var(--paper-rgb) / 0.78);
+  box-shadow: 0 0.7rem 1.35rem rgb(var(--mauve-rgb) / 0.13);
+}
+
+.user-card:nth-child(even) {
+  transform: rotate(1.2deg);
+}
+
+.user-card:nth-child(odd) {
+  transform: rotate(-1deg);
+}
+
+.user-photo {
+  position: relative;
+  display: grid;
+  min-height: 6.9em;
+  overflow: hidden;
+  place-items: center;
+  border: 1px solid rgb(var(--ink-rgb, 0 0 0) / 0.12);
+  border-radius: 0.86em;
+  background:
+    radial-gradient(circle at 30% 24%, rgb(var(--paper-rgb) / 0.86), transparent 23%),
+    radial-gradient(circle at 72% 36%, rgb(var(--paper-rgb) / 0.6), transparent 21%),
+    linear-gradient(145deg, rgb(var(--orange-rgb) / 0.52), rgb(var(--violet-rgb) / 0.36));
+}
+
+.user-photo-shine {
+  position: absolute;
+  inset: 12% 14% auto auto;
+  width: 24%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgb(var(--paper-rgb) / 0.72);
+}
+
+.user-avatar {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 4.2em;
+  height: 4.2em;
+  place-items: center;
+  border: 0.28em solid var(--paper);
+  border-radius: 50%;
+  color: var(--ink);
+  font-family: "Geologica", sans-serif;
+  font-size: 1.05em;
+  font-weight: 740;
+  box-shadow: 0 0.55rem 1rem rgb(var(--mauve-rgb) / 0.17);
+}
+
+.user-card.is-orange .user-photo {
+  background:
+    radial-gradient(circle at 30% 24%, rgb(var(--paper-rgb) / 0.86), transparent 23%),
+    radial-gradient(circle at 72% 36%, rgb(var(--paper-rgb) / 0.6), transparent 21%),
+    linear-gradient(145deg, rgb(var(--orange-rgb) / 0.66), rgb(var(--pink-rgb) / 0.35));
+}
+
+.user-card.is-orange .user-avatar {
+  background: rgb(var(--orange-rgb) / 0.72);
+}
+
+.user-card.is-violet .user-photo {
+  background:
+    radial-gradient(circle at 30% 24%, rgb(var(--paper-rgb) / 0.86), transparent 23%),
+    radial-gradient(circle at 72% 36%, rgb(var(--paper-rgb) / 0.58), transparent 21%),
+    linear-gradient(145deg, rgb(var(--violet-rgb) / 0.68), rgb(var(--sky-rgb) / 0.32));
+}
+
+.user-card.is-violet .user-avatar {
+  background: rgb(var(--violet-rgb) / 0.72);
+  color: var(--paper);
+}
+
+.user-card.is-green .user-photo {
+  background:
+    radial-gradient(circle at 30% 24%, rgb(var(--paper-rgb) / 0.86), transparent 23%),
+    radial-gradient(circle at 72% 36%, rgb(var(--paper-rgb) / 0.6), transparent 21%),
+    linear-gradient(145deg, rgb(var(--green-rgb) / 0.58), rgb(var(--orange-rgb) / 0.3));
+}
+
+.user-card.is-green .user-avatar {
+  background: rgb(var(--green-rgb) / 0.72);
+}
+
+.user-card.is-sky .user-photo {
+  background:
+    radial-gradient(circle at 30% 24%, rgb(var(--paper-rgb) / 0.86), transparent 23%),
+    radial-gradient(circle at 72% 36%, rgb(var(--paper-rgb) / 0.6), transparent 21%),
+    linear-gradient(145deg, rgb(var(--sky-rgb) / 0.68), rgb(var(--green-rgb) / 0.26));
+}
+
+.user-card.is-sky .user-avatar {
+  background: rgb(var(--sky-rgb) / 0.72);
+}
+
+.user-copy {
+  display: grid;
+  min-width: 0;
+  gap: 0.22em;
+}
+
+.user-copy strong {
+  font-family: "Geologica", sans-serif;
+  font-size: 1.28em;
+  font-weight: 630;
+  letter-spacing: -0.08em;
+  line-height: 1;
+}
+
+.user-copy small {
+  color: rgb(var(--violet-rgb) / 0.54);
+  font-size: 0.72em;
+  font-weight: 650;
+  line-height: 1.1;
+}
+
+.user-copy em {
+  color: var(--ink);
+  font-size: 0.74em;
+  font-style: normal;
+  font-weight: 590;
+  line-height: 1.1;
+}
+
 .circle-map {
   position: relative;
   flex: 1;
@@ -802,6 +1046,16 @@ const mockupSource =
   text-transform: uppercase;
 }
 
+@keyframes phone-user-scroll {
+  from {
+    transform: translateY(-50%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 600px) {
   .phone-screen-content {
     font-size: clamp(0.58rem, 2.6vw, 0.75rem);
@@ -811,6 +1065,10 @@ const mockupSource =
 @media (prefers-reduced-motion: reduce) {
   .phone-mockup * {
     transition-duration: 0.001ms !important;
+  }
+
+  .users-scroll-track {
+    animation: none !important;
   }
 }
 </style>

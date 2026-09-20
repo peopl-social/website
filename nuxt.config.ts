@@ -40,7 +40,7 @@ export default defineNuxtConfig({
   },
   nitro: {
     prerender: {
-      routes: ["/", "/about"],
+      routes: ["/", "/about", "/privacy", "/terms"],
     },
   },
 });
