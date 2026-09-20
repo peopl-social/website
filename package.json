@@ -16,6 +16,7 @@
     "animejs": "^4.5.0",
     "comark-content": "^0.4.0",
     "gsap": "^3.15.0",
+    "h3": "1.15.11",
     "motion-v": "^2.4.2",
     "nuxt": "4.5.2",
     "nuxt-i18n-micro": "^3.29.2",

@@ -136,6 +136,9 @@ importers:
       gsap:
         specifier: ^3.15.0
         version: 3.15.0
+      h3:
+        specifier: 1.15.11
+        version: 1.15.11
       motion-v:
         specifier: ^2.4.2
         version: 2.4.2(@vueuse/core@14.4.0(vue@3.5.42(typescript@5.9.3)))(vue@3.5.42(typescript@5.9.3))
