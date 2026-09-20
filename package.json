@@ -8,7 +8,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "typecheck": "nuxi typecheck",
-    "prepare": "vp config"
+    "prepare": "nuxi prepare && vp config"
   },
   "dependencies": {
     "@comark/nuxt": "^0.7.0",
