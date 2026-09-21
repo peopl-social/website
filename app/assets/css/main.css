@@ -2035,3 +2035,33 @@ section[id] {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* ------------------------------- meet IRL -------------------------------- */
+
+#meet {
+  border-top: 1px solid var(--line);
+}
+
+.pillar-tag {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0 0.9rem;
+  padding: 0.32rem 0.7rem;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  background: var(--green);
+  color: var(--ink);
+  font-size: 0.7rem;
+  font-weight: 760;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.chapter-bridge .pillar-tag {
+  background: var(--violet);
+  color: var(--paper);
+}
+
+.chapter-market .pillar-tag {
+  background: var(--orange);
+}

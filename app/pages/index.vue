@@ -3,8 +3,11 @@ import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "#imports";
 import BoardCard from "../components/BoardCard.vue";
 import type { BoardFriend } from "../components/BoardCard.vue";
+import EventBridge from "../components/EventBridge.vue";
 import GatheringCard from "../components/GatheringCard.vue";
+import MarketplacePickup from "../components/MarketplacePickup.vue";
 import PhoneMockup from "../components/PhoneMockup.vue";
+import WeeklyDeck from "../components/WeeklyDeck.vue";
 
 const pageRoot = ref<HTMLElement | null>(null);
 const menuOpen = ref(false);
@@ -145,7 +148,7 @@ onMounted(() => {
     { rootMargin: "-40% 0px -55% 0px" },
   );
 
-  for (const id of ["why", "features", "join"]) {
+  for (const id of ["why", "features", "meet", "join"]) {
     const section = document.getElementById(id);
     if (section) sectionObserver.observe(section);
   }
@@ -182,6 +185,14 @@ onBeforeUnmount(() => {
             href="#features"
             @click="closeMenu"
             >Features</a
+          >
+          <a
+            class="nav-link"
+            :class="{ 'is-active': activeSection === 'meet' }"
+            :aria-current="activeSection === 'meet' ? 'true' : undefined"
+            href="#meet"
+            @click="closeMenu"
+            >Meet IRL</a
           >
         </div>
 
@@ -227,6 +238,7 @@ onBeforeUnmount(() => {
         <div class="mobile-menu-panel" :class="{ 'is-ready': menuPanelReady }">
           <a class="mobile-menu-link" href="#why" @click="closeMenu">The problem</a>
           <a class="mobile-menu-link" href="#features" @click="closeMenu">Features</a>
+          <a class="mobile-menu-link" href="#meet" @click="closeMenu">Meet IRL</a>
           <a class="mobile-menu-link" href="#join" @click="closeMenu">Join the early list</a>
         </div>
       </div>
@@ -528,6 +540,83 @@ onBeforeUnmount(() => {
         </article>
       </section>
 
+      <section id="meet" class="features section-shell" aria-labelledby="meet-title">
+        <header class="features-header">
+          <div>
+            <p class="section-kicker">Meet IRL · dating, events, marketplace</p>
+            <h2 id="meet-title" class="features-title reveal">Less swiping. More showing up.</h2>
+          </div>
+          <p class="features-intro reveal">
+            peopl. starts with close friends — then gives you three low-pressure ways to meet new
+            people in real life. No endless feed, no stranger-DMs at 2 AM.
+          </p>
+        </header>
+
+        <article class="chapter chapter-deck" aria-labelledby="chapter-deck-title">
+          <div class="chapter-copy">
+            <p class="pillar-tag">01 · Slow dating</p>
+            <h3 id="chapter-deck-title">Ten profiles a week. Then the deck locks.</h3>
+            <p>
+              Every week you unlock a hand-picked batch of 10. Read them properly, keep the ones
+              that feel right — then the dating deck locks until next cycle. Scarcity on purpose.
+            </p>
+            <ul class="chapter-points">
+              <li>10 profiles, weekly — no infinite swipe</li>
+              <li>invite a match to a public event, skip bar small-talk</li>
+              <li>
+                optional verified-socials link, so there&rsquo;s a safe familiar place to connect
+              </li>
+            </ul>
+          </div>
+          <div class="chapter-demo">
+            <WeeklyDeck />
+            <p class="chapter-demo-caption">a weekly deck — read with intention, then go outside</p>
+          </div>
+        </article>
+
+        <article class="chapter chapter-bridge" aria-labelledby="chapter-bridge-title">
+          <div class="chapter-copy">
+            <p class="pillar-tag">02 · Event-first matching</p>
+            <h3 id="chapter-bridge-title">From matches to co-attendees.</h3>
+            <p>
+              Life drawing, pottery, film screenings, gallery openings, trail runs, festivals — pick
+              what you&rsquo;d go to anyway. When two people want the same event, they pair as
+              co-attendees with a temporary thread for logistics only.
+            </p>
+            <ul class="chapter-points">
+              <li>universal spectrum — not just sports</li>
+              <li>joint-attendee bridge on shared interest</li>
+              <li>context chat: where to meet, transit, tickets — then it expires</li>
+            </ul>
+          </div>
+          <div class="chapter-demo">
+            <EventBridge />
+            <p class="chapter-demo-caption">a plan first, a conversation with a reason</p>
+          </div>
+        </article>
+
+        <article class="chapter chapter-market" aria-labelledby="chapter-market-title">
+          <div class="chapter-copy">
+            <p class="pillar-tag">03 · Hyper-local marketplace</p>
+            <h3 id="chapter-market-title">Buy the bread. Meet the baker.</h3>
+            <p>
+              Trainers, yoga teachers, art instructors and guides list sessions. Neighbours list
+              sourdough, kombucha, ceramics, spare tickets. Pickup happens at community meetups —
+              the transaction becomes a touchpoint.
+            </p>
+            <ul class="chapter-points">
+              <li>services &amp; coaching, listed on the event map</li>
+              <li>artisanal &amp; second-hand goods, pickup only</li>
+              <li>e.g. sourdough pickup at the Saturday coffee &amp; sketch walk</li>
+            </ul>
+          </div>
+          <div class="chapter-demo">
+            <MarketplacePickup />
+            <p class="chapter-demo-caption">no shipping — just neighbours and shared tables</p>
+          </div>
+        </article>
+      </section>
+
       <section id="trust" class="trust section-shell" aria-labelledby="trust-title">
         <div class="trust-inner">
           <p class="section-kicker">The fine print</p>
@@ -609,6 +698,7 @@ onBeforeUnmount(() => {
             <p class="footer-heading">Explore</p>
             <a class="footer-link" href="#why">The problem</a>
             <a class="footer-link" href="#features">Features</a>
+            <a class="footer-link" href="#meet">Meet IRL</a>
             <a class="footer-link" href="#join">Get updates</a>
           </div>
           <div class="footer-group">
