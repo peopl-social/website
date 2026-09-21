@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import LIcon from "./LIcon.vue";
 
 const joined = ref(false);
 </script>
@@ -26,7 +27,8 @@ const joined = ref(false);
         :aria-pressed="joined"
         @click="joined = !joined"
       >
-        {{ joined ? "Paired ✓" : "Join together" }}
+        {{ joined ? "Paired" : "Join together" }}
+        <LIcon v-if="joined" name="check" />
       </button>
     </div>
 
@@ -34,7 +36,9 @@ const joined = ref(false);
       <p class="bridge-thread-title">temporary thread · only about this event</p>
       <p class="message-bubble is-incoming">in for 11? i can bring aprons</p>
       <p class="message-bubble is-outgoing">yes — meeting at north gate, tram 4?</p>
-      <p class="bridge-expiry">disappears 24h after the workshop · tickets: 2/2 ✓</p>
+      <p class="bridge-expiry">
+        disappears 24h after the workshop · tickets: 2/2 <LIcon name="check" />
+      </p>
     </div>
   </div>
 </template>
@@ -118,6 +122,10 @@ const joined = ref(false);
   color: var(--paper);
 }
 .bridge-join {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
   min-height: 2.5rem;
   border: 0.13rem solid var(--ink);
   border-radius: 999px;

@@ -5,6 +5,7 @@ import BoardCard from "../components/BoardCard.vue";
 import type { BoardFriend } from "../components/BoardCard.vue";
 import EventBridge from "../components/EventBridge.vue";
 import GatheringCard from "../components/GatheringCard.vue";
+import LIcon from "../components/LIcon.vue";
 import MarketplacePickup from "../components/MarketplacePickup.vue";
 import PhoneMockup from "../components/PhoneMockup.vue";
 import WeeklyDeck from "../components/WeeklyDeck.vue";
@@ -17,7 +18,17 @@ const isJoined = ref(false);
 const activeFriend = ref(0);
 const activeSection = ref("");
 const activeVisibility = ref("private");
+const activeStory = ref(0);
+const progressBar = ref<HTMLElement | null>(null);
 let sectionObserver: IntersectionObserver | undefined;
+let storyObserver: IntersectionObserver | undefined;
+let progressRaf = 0;
+let onScrollTick: (() => void) | undefined;
+const magnetics: Array<{
+  el: HTMLElement;
+  move: (event: MouseEvent) => void;
+  reset: () => void;
+}> = [];
 
 const { $getLocale, $switchLocale, $t } = useI18n();
 const currentLocale = computed(() => $getLocale());
@@ -102,6 +113,29 @@ const nearbyPlans = [
   { name: "rooftop, bring a jacket", when: "friday" },
 ];
 
+const storySteps = [
+  {
+    kicker: "Step 1 · Close",
+    title: "Mara shares a board",
+    copy: "A half-finished thought, a voice memo, three stickers. Only her people can see it — no audience, no performance.",
+  },
+  {
+    kicker: "Step 2 · Yours to open",
+    title: "She chooses the door",
+    copy: "Just us tonight. Link-only tomorrow. Every board gets a visibility, changeable whenever the feeling changes.",
+  },
+  {
+    kicker: "Step 3 · Outside",
+    title: "Jules makes a plan",
+    copy: "Sunset walk, river gate, 6:30. The gathering gets its own place — not a 300-message thread nobody can find.",
+  },
+  {
+    kicker: "Step 4 · Real life",
+    title: "Two strangers show up",
+    copy: "Ana and Theo both wanted the pottery workshop. They pair as co-attendees, sort logistics in a thread that expires — and meet at the kiln house, not in a DM.",
+  },
+];
+
 const closeMenu = () => {
   menuPanelReady.value = false;
   menuOpen.value = false;
@@ -131,6 +165,17 @@ const switchLocale = () => {
   $switchLocale(currentLocale.value === "fr" ? "en" : "fr");
 };
 
+const scrollToStory = (index: number) => {
+  activeStory.value = index;
+  const step = document.querySelector(`[data-story-index="${index}"]`);
+  if (!step) return;
+  if (window.__lenis) {
+    window.__lenis.scrollTo(step as HTMLElement, { offset: -120 });
+    return;
+  }
+  step.scrollIntoView({ behavior: "smooth", block: "center" });
+};
+
 const submitWaitlist = () => {
   if (!waitlistEmail.value || isJoined.value) return;
   isJoined.value = true;
@@ -148,20 +193,78 @@ onMounted(() => {
     { rootMargin: "-40% 0px -55% 0px" },
   );
 
-  for (const id of ["why", "features", "meet", "join"]) {
+  for (const id of ["why", "features", "meet", "safety", "join"]) {
     const section = document.getElementById(id);
     if (section) sectionObserver.observe(section);
+  }
+
+  storyObserver = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          const index = Number((entry.target as HTMLElement).dataset.storyIndex);
+          if (!Number.isNaN(index)) activeStory.value = index;
+        }
+      }
+    },
+    { rootMargin: "-45% 0px -45% 0px" },
+  );
+
+  for (const step of document.querySelectorAll("[data-story-index]")) {
+    storyObserver.observe(step);
+  }
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const updateProgress = () => {
+    progressRaf = 0;
+    const bar = progressBar.value;
+    if (!bar) return;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.transform = `scaleX(${max > 0 ? Math.min(1, window.scrollY / max) : 0})`;
+  };
+  onScrollTick = () => {
+    if (progressRaf) return;
+    progressRaf = requestAnimationFrame(updateProgress);
+  };
+  window.addEventListener("scroll", onScrollTick, { passive: true });
+  updateProgress();
+
+  if (!reduceMotion && window.matchMedia("(pointer: fine)").matches) {
+    for (const el of document.querySelectorAll<HTMLElement>(".button-primary, .nav-cta")) {
+      const move = (event: MouseEvent) => {
+        const rect = el.getBoundingClientRect();
+        const x = event.clientX - (rect.left + rect.width / 2);
+        const y = event.clientY - (rect.top + rect.height / 2);
+        el.style.transform = `translate(${(x * 0.12).toFixed(1)}px, ${(y * 0.18).toFixed(1)}px)`;
+      };
+      const reset = () => {
+        el.style.transform = "";
+      };
+      el.addEventListener("mousemove", move);
+      el.addEventListener("mouseleave", reset);
+      magnetics.push({ el, move, reset });
+    }
   }
 });
 
 onBeforeUnmount(() => {
   sectionObserver?.disconnect();
+  storyObserver?.disconnect();
+  if (onScrollTick) window.removeEventListener("scroll", onScrollTick);
+  if (progressRaf) cancelAnimationFrame(progressRaf);
+  for (const { el, move, reset } of magnetics) {
+    el.removeEventListener("mousemove", move);
+    el.removeEventListener("mouseleave", reset);
+  }
+  magnetics.length = 0;
 });
 </script>
 
 <template>
   <div ref="pageRoot" class="site-shell">
     <a class="skip-link" href="#main">Skip to content</a>
+    <div class="scroll-progress" aria-hidden="true"><span ref="progressBar" /></div>
 
     <header class="site-header">
       <nav class="site-nav" aria-label="Primary">
@@ -184,7 +287,7 @@ onBeforeUnmount(() => {
             :aria-current="activeSection === 'features' ? 'true' : undefined"
             href="#features"
             @click="closeMenu"
-            >Features</a
+            >How it works</a
           >
           <a
             class="nav-link"
@@ -193,6 +296,14 @@ onBeforeUnmount(() => {
             href="#meet"
             @click="closeMenu"
             >Meet IRL</a
+          >
+          <a
+            class="nav-link"
+            :class="{ 'is-active': activeSection === 'safety' }"
+            :aria-current="activeSection === 'safety' ? 'true' : undefined"
+            href="#safety"
+            @click="closeMenu"
+            >Safety</a
           >
         </div>
 
@@ -237,8 +348,9 @@ onBeforeUnmount(() => {
       >
         <div class="mobile-menu-panel" :class="{ 'is-ready': menuPanelReady }">
           <a class="mobile-menu-link" href="#why" @click="closeMenu">The problem</a>
-          <a class="mobile-menu-link" href="#features" @click="closeMenu">Features</a>
+          <a class="mobile-menu-link" href="#features" @click="closeMenu">How it works</a>
           <a class="mobile-menu-link" href="#meet" @click="closeMenu">Meet IRL</a>
+          <a class="mobile-menu-link" href="#safety" @click="closeMenu">Safety & FAQ</a>
           <a class="mobile-menu-link" href="#join" @click="closeMenu">Join the early list</a>
         </div>
       </div>
@@ -248,7 +360,7 @@ onBeforeUnmount(() => {
       <section id="top" class="hero section-shell" aria-labelledby="hero-title">
         <div class="hero-copy">
           <p class="section-kicker hero-kicker hero-reveal">
-            Early access &middot; a private social app
+            Early access &middot; private first, real life always
           </p>
 
           <h1 id="hero-title" class="hero-title hero-reveal">
@@ -290,52 +402,52 @@ onBeforeUnmount(() => {
         <div class="hero-visual">
           <div class="hero-wash" aria-hidden="true" />
 
-          <article class="fragment fragment-board">
-            <Transition name="board-swap" mode="out-in">
-              <BoardCard :key="currentFriend.name" :friend="currentFriend" size="sm" />
-            </Transition>
-          </article>
+          <div class="hero-phone-wrap">
+            <div class="hero-phone">
+              <span class="hero-notch" aria-hidden="true" />
+              <div class="hero-screen">
+                <p class="hero-screen-top"><span>9:41</span><span>peopl.</span></p>
+                <Transition name="board-swap" mode="out-in">
+                  <BoardCard :key="currentFriend.name" :friend="currentFriend" size="sm" />
+                </Transition>
+                <div class="hero-screen-plan">
+                  <span>THU 6:30 &middot; RIVER GATE</span>
+                  <strong>sunset walk + something cold</strong>
+                  <em>5 going — you too</em>
+                </div>
+              </div>
+            </div>
 
-          <div class="fragment fragment-people">
-            <p class="fragment-title">your people &middot; {{ friends.length }} close</p>
-            <ul class="people-list">
-              <li v-for="(friend, index) in friends" :key="friend.name">
-                <button
-                  class="people-row"
-                  :class="[`is-${friend.color}`, { 'is-active': activeFriend === index }]"
-                  type="button"
-                  :aria-pressed="activeFriend === index"
-                  @click="chooseFriend(index)"
-                >
-                  <span class="people-avatar" aria-hidden="true">{{ friend.initial }}</span>
-                  <span class="people-meta">
-                    <strong>{{ friend.name }}</strong>
-                    <small>{{ friend.status }}</small>
-                  </span>
-                </button>
-              </li>
-            </ul>
-            <p class="fragment-hint">tap a friend to see their board</p>
+            <div class="board-tabs hero-tabs" role="group" aria-label="Preview a friend's board">
+              <button
+                v-for="(friend, index) in friends"
+                :key="friend.name"
+                class="board-tab"
+                :class="[`is-${friend.color}`, { 'is-active': activeFriend === index }]"
+                type="button"
+                :aria-pressed="activeFriend === index"
+                @click="chooseFriend(index)"
+              >
+                <span class="board-tab-avatar" aria-hidden="true">{{ friend.initial }}</span>
+                {{ friend.name }}
+              </button>
+            </div>
           </div>
 
-          <div class="fragment fragment-message">
-            <p class="fragment-title">with Jules &middot; end-to-end encrypted</p>
-            <div class="message-bubble is-incoming">are we still on for thursday?</div>
-            <div class="message-bubble is-outgoing">yes — bringing the good bread</div>
-          </div>
-
-          <div class="fragment fragment-event">
-            <GatheringCard size="sm" />
-          </div>
-
-          <p class="fragment-note note-board" aria-hidden="true">
-            every friend has a board, <em>not a feed</em>
-          </p>
-          <p class="fragment-note note-event" aria-hidden="true">
-            plans live here, <em>not in a 300-message thread</em>
-          </p>
+          <p class="hero-note">this is the whole app. <em>no feed.</em></p>
         </div>
       </section>
+
+      <div class="ticker" aria-hidden="true">
+        <div class="ticker-track">
+          <div v-for="copy in [1, 2]" :key="copy" class="ticker-group">
+            <span>life drawing</span><i>&#10022;</i> <span>pottery workshops</span><i>&#10022;</i>
+            <span>film screenings</span><i>&#10022;</i> <span>gallery openings</span><i>&#10022;</i>
+            <span>trail runs</span><i>&#10022;</i> <span>sourdough pickup</span><i>&#10022;</i>
+            <span>sunrise yoga</span><i>&#10022;</i> <span>music festivals</span><i>&#10022;</i>
+          </div>
+        </div>
+      </div>
 
       <section id="why" class="problem section-shell" aria-labelledby="problem-title">
         <div class="problem-content">
@@ -353,29 +465,30 @@ onBeforeUnmount(() => {
           <ul class="problem-ledger reveal">
             <li class="ledger-row">
               <span class="ledger-old">Feeds optimize for attention</span>
-              <span class="ledger-arrow" aria-hidden="true">&rarr;</span>
+              <span class="ledger-arrow" aria-hidden="true"><LIcon name="arrow-right" /></span>
               <span class="ledger-new">Boards your friends actually fill</span>
             </li>
             <li class="ledger-row">
               <span class="ledger-old">Plans get buried in chat</span>
-              <span class="ledger-arrow" aria-hidden="true">&rarr;</span>
+              <span class="ledger-arrow" aria-hidden="true"><LIcon name="arrow-right" /></span>
               <span class="ledger-new">Gatherings with their own place</span>
             </li>
             <li class="ledger-row">
               <span class="ledger-old">Private moments next to public posts</span>
-              <span class="ledger-arrow" aria-hidden="true">&rarr;</span>
+              <span class="ledger-arrow" aria-hidden="true"><LIcon name="arrow-right" /></span>
               <span class="ledger-new">Visibility you choose, per board</span>
             </li>
             <li class="ledger-row">
               <span class="ledger-old">An audience of strangers</span>
-              <span class="ledger-arrow" aria-hidden="true">&rarr;</span>
+              <span class="ledger-arrow" aria-hidden="true"><LIcon name="arrow-right" /></span>
               <span class="ledger-new">The handful who actually know you</span>
             </li>
           </ul>
 
           <p class="problem-close reveal">
             peopl. is deliberately built for a much smaller graph — the people you&rsquo;d actually
-            call.
+            call. Private first. And when you want more than your circle, every new meeting starts
+            in real life: a public event, a shared table — never a stranger&rsquo;s DMs.
           </p>
         </div>
 
@@ -387,12 +500,13 @@ onBeforeUnmount(() => {
       <section id="features" class="features section-shell" aria-labelledby="features-title">
         <header class="features-header">
           <div>
-            <p class="section-kicker">What peopl. does</p>
-            <h2 id="features-title" class="features-title reveal">Built around real life.</h2>
+            <p class="section-kicker">How it works · private first</p>
+            <h2 id="features-title" class="features-title reveal">Start close. Then be brave.</h2>
           </div>
           <p class="features-intro reveal">
-            Four ideas, one small product. Together they add up to less scrolling and more seeing
-            your people.
+            Four ideas for your inner circle — boards, doors, gatherings, private messages. Then,
+            when you&rsquo;re ready, three gentle ways to meet new people. One arc: less scrolling,
+            more showing up.
           </p>
         </header>
 
@@ -401,8 +515,8 @@ onBeforeUnmount(() => {
             <span class="journey-index" aria-hidden="true">{{ index + 1 }}</span>
             <span class="journey-label">{{ step }}</span>
             <span v-if="index < journeySteps.length - 1" class="journey-arrow" aria-hidden="true"
-              >&rarr;</span
-            >
+              ><LIcon name="arrow-right"
+            /></span>
           </li>
         </ol>
 
@@ -522,9 +636,7 @@ onBeforeUnmount(() => {
               <div class="message-bubble is-outgoing">
                 yes. telling you the whole story tomorrow
               </div>
-              <p class="thread-tag">
-                <span aria-hidden="true">&#10003;</span> end-to-end encrypted
-              </p>
+              <p class="thread-tag"><LIcon name="check" /> end-to-end encrypted</p>
             </div>
 
             <div class="relay" aria-label="How messages travel">
@@ -540,10 +652,75 @@ onBeforeUnmount(() => {
         </article>
       </section>
 
+      <section id="story" class="story section-shell" aria-labelledby="story-title">
+        <header class="story-header">
+          <div>
+            <p class="section-kicker">One evening on peopl.</p>
+            <h2 id="story-title" class="story-title reveal">Watch a Thursday happen.</h2>
+          </div>
+          <p class="story-intro reveal">
+            Private first, brave second — the whole arc in four moments. Scroll slowly.
+          </p>
+        </header>
+
+        <div class="story-layout">
+          <div class="story-visual">
+            <div class="story-scenes" aria-hidden="true">
+              <div class="story-scene" :class="{ 'is-active': activeStory === 0 }">
+                <p class="story-scene-kicker">Mara&rsquo;s board · just us</p>
+                <p class="story-scene-note">finished the demo. feel weird about it. proud?</p>
+                <p class="story-scene-sub">☾ ♡ ✦ · late-night voice memo 0:12</p>
+              </div>
+              <div class="story-scene" :class="{ 'is-active': activeStory === 1 }">
+                <p class="story-scene-kicker">the door · link only</p>
+                <p class="story-scene-note">Share by link. Off feeds, off search.</p>
+                <p class="story-scene-sub">change it whenever · it&rsquo;s yours</p>
+              </div>
+              <div class="story-scene" :class="{ 'is-active': activeStory === 2 }">
+                <p class="story-scene-kicker">gathering · thu 6:30 PM</p>
+                <p class="story-scene-note">sunset walk + something cold</p>
+                <p class="story-scene-sub">river gate · 5 going — you too</p>
+              </div>
+              <div class="story-scene" :class="{ 'is-active': activeStory === 3 }">
+                <p class="story-scene-kicker">co-attendees · kiln house</p>
+                <p class="story-scene-note">Ana + Theo · pottery, Sat 11 AM</p>
+                <p class="story-scene-sub">thread expires after the workshop ✓</p>
+              </div>
+            </div>
+            <div class="story-dots" role="group" aria-label="Jump to a story moment">
+              <button
+                v-for="(step, index) in storySteps"
+                :key="step.title"
+                class="story-dot"
+                :class="{ 'is-active': activeStory === index }"
+                type="button"
+                :aria-label="`${step.kicker}: ${step.title}`"
+                :aria-current="activeStory === index ? 'true' : undefined"
+                @click="scrollToStory(index)"
+              />
+            </div>
+          </div>
+
+          <ol class="story-steps">
+            <li
+              v-for="(step, index) in storySteps"
+              :key="step.title"
+              class="story-step"
+              :class="{ 'is-active': activeStory === index }"
+              :data-story-index="index"
+            >
+              <span class="story-step-kicker">{{ step.kicker }}</span>
+              <h3>{{ step.title }}</h3>
+              <p>{{ step.copy }}</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
       <section id="meet" class="features section-shell" aria-labelledby="meet-title">
         <header class="features-header">
           <div>
-            <p class="section-kicker">Meet IRL · dating, events, marketplace</p>
+            <p class="section-kicker">Be brave · dating, events, marketplace</p>
             <h2 id="meet-title" class="features-title reveal">Less swiping. More showing up.</h2>
           </div>
           <p class="features-intro reveal">
@@ -615,6 +792,101 @@ onBeforeUnmount(() => {
             <p class="chapter-demo-caption">no shipping — just neighbours and shared tables</p>
           </div>
         </article>
+      </section>
+
+      <section id="safety" class="safety section-shell" aria-labelledby="safety-title">
+        <header class="safety-header">
+          <div>
+            <p class="section-kicker">Safety · by design, not by policy page</p>
+            <h2 id="safety-title" class="safety-title reveal">
+              Brave doesn&rsquo;t mean reckless.
+            </h2>
+          </div>
+          <p class="safety-intro reveal">
+            Meeting new people takes guts. So the risky parts are designed out — not warned about
+            afterwards.
+          </p>
+        </header>
+
+        <ul class="safety-grid reveal">
+          <li class="safety-card">
+            <span class="safety-card-icon" aria-hidden="true"><LIcon name="map-pin" /></span>
+            <strong>Public first meets</strong>
+            <p>Dates and handoffs start at events and meetups — never a private address.</p>
+          </li>
+          <li class="safety-card">
+            <span class="safety-card-icon" aria-hidden="true"><LIcon name="message-circle" /></span>
+            <strong>No stranger DMs</strong>
+            <p>New threads are scoped to one event and expire after it. No 2 AM cold messages.</p>
+          </li>
+          <li class="safety-card">
+            <span class="safety-card-icon" aria-hidden="true"><LIcon name="link" /></span>
+            <strong>Verified socials, optional</strong>
+            <p>
+              Link profiles you already have, so there&rsquo;s a familiar place to connect — only if
+              you want.
+            </p>
+          </li>
+          <li class="safety-card">
+            <span class="safety-card-icon" aria-hidden="true"><LIcon name="shopping-bag" /></span>
+            <strong>Pickup, not post</strong>
+            <p>
+              Marketplace deals happen at community meetups. No shipping, no doorsteps, no strangers
+              at your door.
+            </p>
+          </li>
+          <li class="safety-card">
+            <span class="safety-card-icon" aria-hidden="true"><LIcon name="eye" /></span>
+            <strong>You hold the doors</strong>
+            <p>Per-board visibility, block and report one tap away. Change your mind anytime.</p>
+          </li>
+          <li class="safety-card">
+            <span class="safety-card-icon" aria-hidden="true"><LIcon name="lock" /></span>
+            <strong>Encrypted underneath</strong>
+            <p>
+              Messages travel through a relay that carries them without being able to read them.
+            </p>
+          </li>
+        </ul>
+
+        <div class="faq">
+          <h3 class="faq-title reveal">Asked already</h3>
+          <details class="faq-item reveal">
+            <summary>Is peopl. a dating app?</summary>
+            <p>
+              It&rsquo;s a private social app with a slow-dating corner. Ten profiles a week, the
+              deck locks, and matches meet at public events — never in a DM thread that goes
+              nowhere.
+            </p>
+          </details>
+          <details class="faq-item reveal">
+            <summary>When can I get in — and where?</summary>
+            <p>
+              We&rsquo;re opening city by city during early access. Join the list and we&rsquo;ll
+              invite you when your neighbourhood lights up.
+            </p>
+          </details>
+          <details class="faq-item reveal">
+            <summary>Which platforms? Does it cost anything?</summary>
+            <p>
+              iOS and Android are the plan, and the waitlist keeps you posted. Early access is free.
+            </p>
+          </details>
+          <details class="faq-item reveal">
+            <summary>Who runs the events?</summary>
+            <p>
+              Hosts from the community — instructors, guides, neighbours. Public places, attendee
+              caps, and reporting built in from the start.
+            </p>
+          </details>
+          <details class="faq-item reveal">
+            <summary>What happens to my data?</summary>
+            <p>
+              Your email is only used for early-access invites and peopl. updates. Messages are
+              end-to-end encrypted. The rest is in the privacy policy — short, readable, honest.
+            </p>
+          </details>
+        </div>
       </section>
 
       <section id="trust" class="trust section-shell" aria-labelledby="trust-title">
@@ -697,8 +969,9 @@ onBeforeUnmount(() => {
           <div class="footer-group">
             <p class="footer-heading">Explore</p>
             <a class="footer-link" href="#why">The problem</a>
-            <a class="footer-link" href="#features">Features</a>
+            <a class="footer-link" href="#features">How it works</a>
             <a class="footer-link" href="#meet">Meet IRL</a>
+            <a class="footer-link" href="#safety">Safety</a>
             <a class="footer-link" href="#join">Get updates</a>
           </div>
           <div class="footer-group">

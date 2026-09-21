@@ -23,7 +23,7 @@ export default defineNuxtConfig({
         {
           name: "description",
           content:
-            "peopl. is a private social app for your actual friends — not followers. Share moodboards, plan real gatherings, and message each other without another endless feed. Join the early list.",
+            "peopl. is a private social app for your actual friends — not followers. Share boards, plan gatherings, message privately — then meet new people in real life. Join the early list.",
         },
         { name: "theme-color", content: "#fff2ec" },
         { name: "color-scheme", content: "light" },
@@ -34,7 +34,7 @@ export default defineNuxtConfig({
         {
           property: "og:description",
           content:
-            "A private social app for your actual friends — not followers. Moodboards, gatherings, and messages that stay between you. Join the early list.",
+            "A private social app for your actual friends — not followers. Boards, gatherings, and private messages — then slow dating, shared events, and neighbours you'll actually see. Join the early list.",
         },
         { property: "og:image", content: "https://peopl.social/og.png" },
         { property: "og:image:width", content: "1200" },
@@ -49,7 +49,7 @@ export default defineNuxtConfig({
         {
           name: "twitter:description",
           content:
-            "A private social app for your actual friends — not followers. Moodboards, gatherings, and messages that stay between you.",
+            "A private social app for your actual friends — not followers. Boards, gatherings, private messages — then slow dating, shared events, and neighbours you'll actually see.",
         },
         { name: "twitter:image", content: "https://peopl.social/og.png" },
       ],
@@ -59,9 +59,11 @@ export default defineNuxtConfig({
         { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
         {
           rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=Afacad+Flux:slnt,wght@0,100..1000;1,100..1000&family=Geologica:wght@100..900&display=swap",
+          href: "https://fonts.googleapis.com/css2?family=Afacad+Flux:slnt,wght@0,100..1000;1,100..1000&family=Caveat:wght@500;600;700&family=Geologica:wght@100..900&display=swap",
         },
+        { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
       ],
+      script: [{ src: "/vendor/lenis.min.js", defer: true }],
     },
   },
   nitro: {

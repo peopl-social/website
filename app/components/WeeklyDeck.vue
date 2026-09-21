@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import LIcon from "./LIcon.vue";
 
 const profiles = [
   { name: "Ana", initial: "A", color: "orange", detail: "life drawing · sourdough · slow Sundays" },
@@ -41,7 +42,11 @@ const resetDemo = () => {
           <strong>{{ profile.name }}</strong>
           <small>{{ profile.detail }}</small>
         </span>
-        <span class="deck-state">{{ index < reviewed ? "read ✓" : "to read" }}</span>
+        <span class="deck-state"
+          ><LIcon v-if="index < reviewed" name="check" />{{
+            index < reviewed ? "read" : "to read"
+          }}</span
+        >
       </li>
       <li v-for="n in 7" :key="`locked-${n}`" class="deck-card is-locked" aria-hidden="true">
         <span class="deck-avatar">·</span>
@@ -168,6 +173,9 @@ const resetDemo = () => {
   white-space: nowrap;
 }
 .deck-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
   flex: 0 0 auto;
   font-size: 0.7rem;
   font-weight: 700;
