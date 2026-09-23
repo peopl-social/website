@@ -1,11 +1,24 @@
 <script setup lang="ts">
+import type { Component } from "vue";
 import { MotionConfig, motion } from "motion-v";
 import { TabsContent, TabsIndicator, TabsList, TabsRoot, TabsTrigger } from "reka-ui";
 import FeatureOverlay from "~/components/FeatureOverlay.vue";
-import FriendAvatar from "~/components/FriendAvatar.vue";
-import { friends, springs, type ScreenId } from "~/utils/demo";
+import DevicePhone from "~/components/phone/DevicePhone.vue";
+import ScreenBoards from "~/components/phone/ScreenBoards.vue";
+import ScreenDoors from "~/components/phone/ScreenDoors.vue";
+import ScreenMessages from "~/components/phone/ScreenMessages.vue";
+import ScreenPlans from "~/components/phone/ScreenPlans.vue";
+import { springs, type ScreenId } from "~/utils/demo";
 
 const { screen } = useDemoState();
+
+// The hero phone follows the tab picked in "What's in the app".
+const phoneScreens: Record<ScreenId, Component> = {
+  boards: ScreenBoards,
+  doors: ScreenDoors,
+  plans: ScreenPlans,
+  messages: ScreenMessages,
+};
 
 const screens = [
   {
@@ -70,8 +83,6 @@ onMounted(() => {
   wide.addEventListener("change", syncOrientation);
 });
 onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
-
-const picnicCrew = [friends.mara, friends.jules, friends.rae, friends.theo];
 </script>
 
 <template>
@@ -102,9 +113,9 @@ const picnicCrew = [friends.mara, friends.jules, friends.rae, friends.theo];
           <div class="absolute inset-0 -z-10 bg-ink/55" aria-hidden="true" />
 
           <div
-            class="shell flex min-h-[min(100svh,60rem)] flex-col justify-end gap-10 pt-36 pb-12 sm:pb-16 lg:flex-row lg:items-end lg:justify-between lg:pb-20"
+            class="shell grid min-h-[min(100svh,62rem)] items-center gap-12 pt-32 pb-14 sm:pb-20 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-16 lg:pt-28 lg:pb-16 xl:gap-x-24"
           >
-            <div>
+            <div class="self-end lg:self-center">
               <h1
                 id="hero-title"
                 class="text-[clamp(3rem,6.4vw,6rem)] leading-[0.95] font-bold tracking-[-0.035em] text-paper"
@@ -128,28 +139,20 @@ const picnicCrew = [friends.mara, friends.jules, friends.rae, friends.theo];
               </div>
             </div>
 
-            <motion.div
-              class="hidden items-center gap-3 self-end rounded-full bg-surface py-1.5 pr-5 pl-1.5 shadow-[0_14px_34px_-14px_oklch(22.5%_0.02_45/0.6)] lg:flex"
-              :initial="{ opacity: 0, y: 8 }"
-              :animate="{ opacity: 1, y: 0 }"
-              :transition="{ ...springs.soft, delay: 0.3 }"
-              aria-hidden="true"
-            >
-              <span class="flex">
-                <FriendAvatar
-                  v-for="(friend, index) in picnicCrew"
-                  :key="friend.id"
-                  :friend="friend"
-                  size="sm"
-                  ring
-                  :class="index > 0 && '-ml-2'"
-                />
-              </span>
-              <span class="leading-tight">
-                <span class="block text-[0.9375rem] font-semibold text-ink">Picnic, Saturday</span>
-                <span class="block text-[0.8125rem] text-muted">8 of your people went</span>
-              </span>
-            </motion.div>
+            <!-- The phone: the same app preview as before, now over the photo -->
+            <div class="hidden justify-center lg:flex" role="region" aria-label="App preview">
+              <DevicePhone :screen="screen">
+                <motion.div
+                  :key="screen"
+                  class="h-full"
+                  :initial="switched ? { opacity: 0, y: 14 } : false"
+                  :animate="{ opacity: 1, y: 0 }"
+                  :transition="springs.soft"
+                >
+                  <component :is="phoneScreens[screen]" />
+                </motion.div>
+              </DevicePhone>
+            </div>
           </div>
         </div>
       </section>

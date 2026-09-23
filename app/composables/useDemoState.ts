@@ -7,5 +7,6 @@ export function useDemoState() {
     hearted: useState<boolean>("demo-hearted", () => false),
     door: useState<DoorId>("demo-door", () => "friends"),
     joined: useState<boolean>("demo-joined", () => false),
+    replied: useState<boolean>("demo-replied", () => false),
   };
 }

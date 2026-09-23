@@ -165,6 +165,23 @@
     text-decoration-color: currentColor;
   }
 
+  /* Scales the fixed 360x780 phone design down on shorter screens. */
+  .phone-scale {
+    zoom: 1;
+  }
+
+  @media (max-height: 940px) {
+    .phone-scale {
+      zoom: 0.86;
+    }
+  }
+
+  @media (max-height: 820px) {
+    .phone-scale {
+      zoom: 0.76;
+    }
+  }
+
   /* Markdown pages (about, privacy, terms) */
   .prose {
     max-width: 38rem;
