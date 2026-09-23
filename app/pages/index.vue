@@ -116,16 +116,15 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
                 id="hero-title"
                 class="text-[clamp(3rem,6.4vw,6rem)] leading-[0.95] font-bold tracking-[-0.035em] text-paper"
               >
-                Make room for
-                <span class="hero-underline block whitespace-nowrap text-orange-500"
-                  >your people.</span
-                >
+              Real people<span class="hero-underline block whitespace-nowrap text-orange-500"
+                  >.</span> Real plans<span class="hero-underline block whitespace-nowrap text-orange-500"
+                  >.</span> Real life<span class="hero-underline block whitespace-nowrap text-orange-500"
+                  >.</span>
               </h1>
               <p
                 class="mt-7 max-w-[34ch] text-[1.25rem] leading-[1.45] text-paper/85 sm:text-[1.375rem]"
               >
-                peopl. is a private social app for the friends you actually have. Share the small
-                stuff, make plans, and talk without an audience.
+   The social app that gets you off your screen and into the same room. Verified humans, shared events, and a neighborhood marketplace. All in one place.
               </p>
               <div class="mt-9">
                 <WaitlistForm id="hero" tone="dark" />
@@ -169,11 +168,10 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
             id="how-title"
             class="text-[clamp(2.25rem,4.5vw,3.5rem)] font-bold tracking-[-0.03em]"
           >
-            What's in the app
+            Dating apps broke meeting people.
           </h2>
           <p class="mt-4 max-w-[40ch] text-[1.125rem] text-ink-soft">
-            Four things, made for a handful of people instead of an audience. They're built to get
-            you into the same room.
+            Swipe fatigue, ghosting, bots, and endless chats that never become anything. Sound familiar?
           </p>
 
           <TabsList

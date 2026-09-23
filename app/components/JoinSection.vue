@@ -8,7 +8,7 @@
               id="join-title"
               class="text-[clamp(2.5rem,6vw,4.75rem)] leading-[0.95] font-bold tracking-[-0.035em]"
             >
-              Save your spot<span class="text-orange-500">.</span>
+              Stop swiping<span class="text-orange-500">.</span> Start showing up<span class="text-orange-500">.</span>
             </h2>
             <p class="mt-5 max-w-[34ch] text-[1.1875rem] text-paper/75">
               We'll send one email when there's an invite for your city. That's it.
