@@ -95,10 +95,10 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
     <SiteNav />
 
     <main id="main">
-      <!-- Hero: full-width photo behind the floating nav -->
+      <!-- Hero: photo card below the nav, sized to end just above the bottom of the screen -->
       <section
         id="top"
-        class="mx-auto -mt-[4.25rem] max-w-[84rem] px-3 pt-2 sm:px-5 sm:pt-3"
+        class="mx-auto max-w-[90rem] px-3 pt-3 sm:px-5"
         aria-labelledby="hero-title"
       >
         <div class="relative isolate overflow-hidden rounded-xl bg-ink">
@@ -113,7 +113,7 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
           <div class="absolute inset-0 -z-10 bg-ink/55" aria-hidden="true" />
 
           <div
-            class="shell grid min-h-[min(100svh,62rem)] items-center gap-12 pt-32 pb-14 sm:pb-20 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-16 lg:pt-28 lg:pb-16 xl:gap-x-24"
+            class="shell grid items-center gap-12 py-12 sm:py-16 lg:h-[calc(100svh-6.25rem)] lg:min-h-[34rem] lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-16 lg:py-8 xl:gap-x-24"
           >
             <div class="lg:self-center">
               <h1
