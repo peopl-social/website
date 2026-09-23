@@ -98,7 +98,7 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
       <!-- Hero: full-width photo behind the floating nav -->
       <section
         id="top"
-        class="-mt-[4.25rem] px-2 pt-2 sm:px-3 sm:pt-3"
+        class="mx-auto -mt-[4.25rem] max-w-[84rem] px-3 pt-2 sm:px-5 sm:pt-3"
         aria-labelledby="hero-title"
       >
         <div class="relative isolate overflow-hidden rounded-xl bg-ink">
