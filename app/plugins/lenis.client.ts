@@ -13,6 +13,6 @@ export default defineNuxtPlugin(() => {
   window.__lenis = new Lenis({
     autoRaf: true,
     lerp: 0.12,
-    anchors: { offset: -72 },
+    anchors: { offset: -88 },
   });
 });

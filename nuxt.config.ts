@@ -55,7 +55,7 @@ export default defineNuxtConfig({
   },
   nitro: {
     prerender: {
-      routes: ["/", "/about", "/privacy", "/terms"],
+      routes: ["/", "/people", "/about", "/privacy", "/terms"],
     },
     storage: {
       waitlist: { driver: "fs", base: "./.data/waitlist" },

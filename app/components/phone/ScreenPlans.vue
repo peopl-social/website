@@ -71,7 +71,7 @@ const going = computed(() => {
 
         <motion.button
           type="button"
-          class="flex h-9 shrink-0 items-center gap-1.5 rounded-sm px-3.5 font-display text-[14px] font-semibold whitespace-nowrap transition-colors"
+          class="flex h-9 shrink-0 items-center gap-1.5 rounded-full px-4 font-display text-[14px] font-semibold whitespace-nowrap transition-colors"
           :class="
             joined
               ? 'border border-line-strong bg-surface text-ink hover:bg-sunk'

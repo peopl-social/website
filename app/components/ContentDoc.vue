@@ -38,13 +38,17 @@ useSeoMeta({
 
 <template>
   <div class="min-h-svh">
-    <header class="shell flex h-16 items-center justify-between">
-      <NuxtLink to="/" class="rounded-xs text-[1.625rem] leading-none" aria-label="peopl. home">
-        <Wordmark />
-      </NuxtLink>
-      <NuxtLink to="/#join" class="btn btn-primary min-h-10 px-4 text-[0.9375rem]"
-        >Join the list</NuxtLink
+    <header class="shell sticky top-0 z-40 pt-3">
+      <div
+        class="flex h-14 items-center justify-between rounded-full border border-line/70 bg-surface/85 pr-2 pl-6 backdrop-blur-md"
       >
+        <NuxtLink to="/" class="rounded-full text-[1.5rem] leading-none" aria-label="peopl. home">
+          <Wordmark />
+        </NuxtLink>
+        <NuxtLink to="/#join" class="btn btn-primary min-h-10 px-5 text-[0.9375rem]"
+          >Join the list</NuxtLink
+        >
+      </div>
     </header>
 
     <main class="shell pt-16 pb-24 sm:pt-24">
@@ -55,7 +59,7 @@ useSeoMeta({
         {{ contentPage.data.description }}
       </p>
 
-      <article class="prose mt-12 border-t border-line pt-10">
+      <article class="prose mt-12 rounded-xl border border-line bg-surface p-7 sm:p-12">
         <MarkdownDocument :value="{ nodes: contentPage.nodes }" />
       </article>
 

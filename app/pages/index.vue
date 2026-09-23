@@ -67,7 +67,7 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
   <MotionConfig reduced-motion="user">
     <a
       href="#main"
-      class="fixed top-3 left-3 z-50 -translate-y-20 rounded-sm bg-ink px-4 py-2 text-paper focus:translate-y-0"
+      class="fixed top-3 left-3 z-50 -translate-y-20 rounded-full bg-ink px-5 py-2 text-paper focus:translate-y-0"
       >Skip to content</a
     >
     <SiteNav />
@@ -83,7 +83,7 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
         <!-- Hero -->
         <section
           id="top"
-          class="flex flex-col justify-center pt-12 pb-20 sm:pt-20 lg:col-start-1 lg:row-start-1 lg:min-h-[calc(100svh-4rem)] lg:py-16"
+          class="flex flex-col justify-center pt-12 pb-20 sm:pt-20 lg:col-start-1 lg:row-start-1 lg:min-h-[calc(100svh-4.75rem)] lg:py-16"
           aria-labelledby="hero-title"
         >
           <h1
@@ -125,29 +125,33 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
           </p>
 
           <TabsList
-            class="relative mt-8 flex gap-1 overflow-x-auto rounded-md bg-sunk p-1 lg:mt-12 lg:flex-col lg:gap-0 lg:overflow-visible lg:rounded-none lg:bg-transparent lg:p-0"
+            class="relative mt-8 flex gap-1 overflow-x-auto rounded-full bg-sunk p-1 lg:mt-12 lg:flex-col lg:gap-2 lg:overflow-visible lg:rounded-none lg:bg-transparent lg:p-0"
             aria-label="App features"
           >
             <TabsIndicator
-              class="absolute top-1 left-0 h-[calc(100%-0.5rem)] w-(--reka-tabs-indicator-size) translate-x-(--reka-tabs-indicator-position) rounded-sm bg-surface shadow-[0_1px_2px_oklch(22.5%_0.02_45/0.12)] transition-[width,transform] duration-300 ease-(--ease-out) lg:hidden"
+              class="absolute top-1 left-0 h-[calc(100%-0.5rem)] w-(--reka-tabs-indicator-size) translate-x-(--reka-tabs-indicator-position) rounded-full bg-surface shadow-[0_1px_3px_oklch(22.5%_0.02_45/0.14)] transition-[width,transform] duration-300 ease-(--ease-out) lg:hidden"
             />
             <TabsTrigger
               v-for="item in screens"
               :key="item.id"
               :value="item.id"
-              class="group relative z-10 flex-1 rounded-sm px-3 py-2 text-center font-display text-[0.9375rem] font-semibold whitespace-nowrap text-muted lg:whitespace-normal transition-colors data-[state=active]:text-ink lg:rounded-none lg:border-t lg:border-line lg:py-6 lg:pr-4 lg:pl-6 lg:text-left lg:last:border-b"
+              class="group relative z-10 flex-1 rounded-full px-3 py-2 text-center font-display text-[0.9375rem] font-semibold whitespace-nowrap text-muted transition-colors data-[state=active]:text-ink lg:rounded-lg lg:px-7 lg:py-6 lg:text-left lg:whitespace-normal lg:hover:bg-sunk/60"
             >
               <motion.span
                 v-if="screen === item.id"
-                layout-id="tour-bar"
-                class="absolute top-6 bottom-6 left-0 hidden w-[3px] rounded-full bg-violet-500 lg:block"
+                layout-id="tour-card"
+                class="absolute inset-0 -z-10 hidden rounded-lg border border-line bg-surface shadow-[0_12px_30px_-18px_oklch(22.5%_0.02_45/0.3)] lg:block"
                 :transition="springs.snappy"
                 aria-hidden="true"
               />
               <span class="lg:hidden">{{ item.label }}</span>
               <span class="hidden lg:block">
                 <span
-                  class="block text-[1.625rem] leading-tight tracking-[-0.02em] text-ink/45 transition-colors group-hover:text-ink/75 group-data-[state=active]:text-ink"
+                  class="inline-flex rounded-full bg-sunk px-3 py-1 text-[0.8125rem] font-semibold text-muted transition-colors group-data-[state=active]:bg-violet-50 group-data-[state=active]:text-violet-700"
+                  >{{ item.label }}</span
+                >
+                <span
+                  class="mt-3 block text-[1.625rem] leading-tight tracking-[-0.02em] text-ink/45 transition-colors group-hover:text-ink/75 group-data-[state=active]:text-ink"
                   >{{ item.title }}</span
                 >
                 <span

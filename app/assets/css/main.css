@@ -38,10 +38,11 @@
   --font-display: "Geologica", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Afacad Flux", ui-sans-serif, system-ui, sans-serif;
 
-  --radius-xs: 6px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
+  --radius-xs: 10px;
+  --radius-sm: 14px;
+  --radius-md: 22px;
+  --radius-lg: 32px;
+  --radius-xl: 44px;
 
   --shadow-phone:
     0 1px 0 oklch(22.5% 0.02 45 / 0.04), 0 30px 60px -20px oklch(22.5% 0.02 45 / 0.28),
@@ -56,7 +57,7 @@
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
-    scroll-padding-top: 5rem;
+    scroll-padding-top: 5.5rem;
   }
 
   body {
@@ -99,7 +100,6 @@
   :focus-visible {
     outline: 2px solid var(--color-violet-500);
     outline-offset: 3px;
-    border-radius: var(--radius-xs);
   }
 
   ::selection {
@@ -123,8 +123,8 @@
     justify-content: center;
     gap: 0.5rem;
     min-height: 2.875rem;
-    padding: 0 1.25rem;
-    border-radius: var(--radius-sm);
+    padding: 0 1.5rem;
+    border-radius: 999px;
     font-family: var(--font-display);
     font-weight: 600;
     font-size: 1rem;

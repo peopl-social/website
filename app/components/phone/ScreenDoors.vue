@@ -62,7 +62,7 @@ function select(value: unknown) {
           aria-hidden="true"
         />
         <span
-          class="relative grid size-9 shrink-0 place-items-center rounded-sm bg-sunk text-ink-soft transition-colors group-data-[state=on]:bg-violet-500 group-data-[state=on]:text-white"
+          class="relative grid size-9 shrink-0 place-items-center rounded-full bg-sunk text-ink-soft transition-colors group-data-[state=on]:bg-violet-500 group-data-[state=on]:text-white"
         >
           <component :is="option.icon" :size="18" :stroke-width="2" aria-hidden="true" />
         </span>

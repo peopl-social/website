@@ -52,30 +52,34 @@ const questions = [
         </p>
       </div>
 
-      <AccordionRoot type="single" collapsible class="border-t border-ink">
+      <AccordionRoot type="single" collapsible class="flex flex-col gap-2">
         <AccordionItem
           v-for="(item, index) in questions"
           :key="item.q"
           :value="`q${index}`"
-          class="border-b border-line"
+          class="rounded-lg border border-line bg-surface transition-[border-color,box-shadow] duration-200 data-[state=open]:border-line-strong data-[state=open]:shadow-[0_14px_30px_-20px_oklch(22.5%_0.02_45/0.3)]"
         >
           <AccordionHeader as="h3">
             <AccordionTrigger
-              class="group flex w-full items-center justify-between gap-6 py-5 text-left font-display text-[1.25rem] font-semibold tracking-[-0.015em] transition-colors hover:text-orange-700"
+              class="group flex w-full items-center justify-between gap-6 rounded-lg py-5 pr-4 pl-7 text-left font-display text-[1.1875rem] font-semibold tracking-[-0.015em] transition-colors hover:text-orange-700"
             >
               {{ item.q }}
-              <Plus
-                :size="20"
-                :stroke-width="2.25"
-                class="shrink-0 text-muted transition-transform duration-300 ease-(--ease-out) group-data-[state=open]:rotate-45 group-data-[state=open]:text-ink"
+              <span
+                class="grid size-9 shrink-0 place-items-center rounded-full bg-sunk text-muted transition-colors group-hover:text-ink group-data-[state=open]:bg-orange-500 group-data-[state=open]:text-ink"
                 aria-hidden="true"
-              />
+              >
+                <Plus
+                  :size="18"
+                  :stroke-width="2.5"
+                  class="transition-transform duration-300 ease-(--ease-out) group-data-[state=open]:rotate-45"
+                />
+              </span>
             </AccordionTrigger>
           </AccordionHeader>
           <AccordionContent
             class="overflow-hidden data-[state=closed]:animate-[accordion-up_220ms_var(--ease-out)] data-[state=open]:animate-[accordion-down_260ms_var(--ease-out)]"
           >
-            <p class="max-w-[60ch] pb-6 text-[1.0625rem] text-ink-soft">{{ item.a }}</p>
+            <p class="max-w-[60ch] px-7 pb-6 text-[1.0625rem] text-ink-soft">{{ item.a }}</p>
           </AccordionContent>
         </AccordionItem>
       </AccordionRoot>

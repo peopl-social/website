@@ -2,7 +2,7 @@
   <section id="join" class="scroll-mt-20 pb-6 sm:pb-10" aria-labelledby="join-title">
     <div class="shell">
       <div
-        class="grid gap-10 rounded-lg bg-ink px-6 py-14 text-paper sm:px-12 sm:py-16 lg:grid-cols-2 lg:items-end lg:gap-16 lg:px-16 lg:py-20"
+        class="grid gap-10 rounded-xl bg-ink px-6 py-14 text-paper sm:px-12 sm:py-16 lg:grid-cols-2 lg:items-end lg:gap-16 lg:px-16 lg:py-20"
       >
         <div>
           <h2

@@ -21,7 +21,7 @@ const dark = computed(() => props.tone === "dark");
       <motion.div
         v-if="done"
         key="done"
-        class="flex min-h-12 items-center gap-3 rounded-sm px-4 py-3"
+        class="flex min-h-12 items-center gap-3 rounded-full py-2.5 pr-5 pl-2.5"
         :class="dark ? 'bg-ink-soft text-paper' : 'bg-surface text-ink ring-1 ring-line'"
         role="status"
         :initial="{ opacity: 0, y: 8 }"
@@ -53,7 +53,7 @@ const dark = computed(() => props.tone === "dark");
           autocomplete="email"
           placeholder="you@email.com"
           required
-          class="h-12 w-full min-w-0 rounded-sm border px-4 text-[1.0625rem] transition-[border-color,box-shadow] duration-150 outline-none placeholder:text-muted focus-visible:outline-none sm:flex-1"
+          class="h-12 w-full min-w-0 rounded-full border px-5 text-[1.0625rem] transition-[border-color,box-shadow] duration-150 outline-none placeholder:text-muted focus-visible:outline-none sm:flex-1"
           :class="[
             dark
               ? 'border-ink-soft bg-ink text-paper focus:border-orange-500 focus:ring-2 focus:ring-orange-500/30'

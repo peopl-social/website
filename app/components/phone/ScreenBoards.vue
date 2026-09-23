@@ -69,7 +69,7 @@ const others = [
         finished the demo. feel weird about it. proud?
       </p>
 
-      <div class="mt-4 flex items-center gap-3 rounded-sm bg-sunk py-2 pr-3 pl-2">
+      <div class="mt-4 flex items-center gap-3 rounded-full bg-sunk py-1.5 pr-4 pl-1.5">
         <motion.button
           type="button"
           class="grid size-9 shrink-0 place-items-center rounded-full bg-ink text-paper"
