@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import { MotionConfig, motion } from "motion-v";
 import { TabsContent, TabsIndicator, TabsList, TabsRoot, TabsTrigger } from "reka-ui";
-import DevicePhone from "~/components/phone/DevicePhone.vue";
-import ScreenBoards from "~/components/phone/ScreenBoards.vue";
-import ScreenDoors from "~/components/phone/ScreenDoors.vue";
-import ScreenMessages from "~/components/phone/ScreenMessages.vue";
-import ScreenPlans from "~/components/phone/ScreenPlans.vue";
-import { springs, type ScreenId } from "~/utils/demo";
+import FeatureOverlay from "~/components/FeatureOverlay.vue";
+import FriendAvatar from "~/components/FriendAvatar.vue";
+import { friends, springs, type ScreenId } from "~/utils/demo";
 
 const { screen } = useDemoState();
 
@@ -16,34 +13,46 @@ const screens = [
     label: "Boards",
     title: "One board each, not a feed.",
     body: "Everyone keeps a single board for notes and voice memos. Friends check in when they want to. Nothing ranks it and nothing refreshes it.",
-    component: ScreenBoards,
+    image: "/people/boards.jpg",
+    alt: "Three friends laughing together, close up",
+    position: "50% 40%",
+    overlay: "bottom",
   },
   {
     id: "doors",
     label: "Doors",
     title: "You decide who gets in.",
     body: "Every board has a door: just you, close friends, or anyone with the link. Change it whenever you like.",
-    component: ScreenDoors,
+    image: "/people/doors.jpg",
+    alt: "Friends standing close with their arms around each other",
+    position: "50% 45%",
+    overlay: "bottom",
   },
   {
     id: "plans",
     label: "Plans",
     title: "Turn a maybe into a plan.",
     body: "Post a time and a place. Friends tap in, and everyone can see who's coming.",
-    component: ScreenPlans,
+    image: "/people/plans.jpg",
+    alt: "Friends eating and talking around a long table on a patio",
+    position: "50% 55%",
+    overlay: "bottom",
   },
   {
     id: "messages",
     label: "Messages",
     title: "Talk without an audience.",
     body: "Messages are end-to-end encrypted. Our servers pass them along without being able to read them.",
-    component: ScreenMessages,
+    image: "/people/messages.jpg",
+    alt: "Three friends laughing together on a city street",
+    position: "50% 35%",
+    overlay: "top",
   },
 ] as const;
 
 const activeScreen = computed(() => screens.find((item) => item.id === screen.value) ?? screens[0]);
 
-// Only animate screens after the first switch, so the hero phone is visible without JS.
+// Only animate overlays after the first switch, so the first one is visible without JS.
 const switched = ref(false);
 function onScreenChange(value: string | number) {
   switched.value = true;
@@ -61,6 +70,8 @@ onMounted(() => {
   wide.addEventListener("change", syncOrientation);
 });
 onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
+
+const picnicCrew = [friends.mara, friends.jules, friends.rae, friends.theo];
 </script>
 
 <template>
@@ -73,46 +84,88 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
     <SiteNav />
 
     <main id="main">
+      <!-- Hero: full-width photo behind the floating nav -->
+      <section
+        id="top"
+        class="-mt-[4.25rem] px-2 pt-2 sm:px-3 sm:pt-3"
+        aria-labelledby="hero-title"
+      >
+        <div class="relative isolate overflow-hidden rounded-xl bg-ink">
+          <img
+            src="/people/picnic.jpg"
+            alt=""
+            class="absolute inset-0 -z-10 size-full object-cover object-[50%_72%]"
+            fetchpriority="high"
+            decoding="async"
+          />
+          <!-- Flat tint so the text stays readable over the photo -->
+          <div class="absolute inset-0 -z-10 bg-ink/55" aria-hidden="true" />
+
+          <div
+            class="shell flex min-h-[min(100svh,60rem)] flex-col justify-end gap-10 pt-36 pb-12 sm:pb-16 lg:flex-row lg:items-end lg:justify-between lg:pb-20"
+          >
+            <div>
+              <h1
+                id="hero-title"
+                class="text-[clamp(3rem,6.4vw,6rem)] leading-[0.95] font-bold tracking-[-0.035em] text-paper"
+              >
+                Make room for
+                <span class="hero-underline block whitespace-nowrap text-orange-500"
+                  >your people.</span
+                >
+              </h1>
+              <p
+                class="mt-7 max-w-[34ch] text-[1.25rem] leading-[1.45] text-paper/85 sm:text-[1.375rem]"
+              >
+                peopl. is a private social app for the friends you actually have. Share the small
+                stuff, make plans, and talk without an audience.
+              </p>
+              <div class="mt-9">
+                <WaitlistForm id="hero" tone="dark" />
+                <p class="mt-3 text-[0.9375rem] text-paper/65">
+                  Free during early access. Invites go out city by city.
+                </p>
+              </div>
+            </div>
+
+            <motion.div
+              class="hidden items-center gap-3 self-end rounded-full bg-surface py-1.5 pr-5 pl-1.5 shadow-[0_14px_34px_-14px_oklch(22.5%_0.02_45/0.6)] lg:flex"
+              :initial="{ opacity: 0, y: 8 }"
+              :animate="{ opacity: 1, y: 0 }"
+              :transition="{ ...springs.soft, delay: 0.3 }"
+              aria-hidden="true"
+            >
+              <span class="flex">
+                <FriendAvatar
+                  v-for="(friend, index) in picnicCrew"
+                  :key="friend.id"
+                  :friend="friend"
+                  size="sm"
+                  ring
+                  :class="index > 0 && '-ml-2'"
+                />
+              </span>
+              <span class="leading-tight">
+                <span class="block text-[0.9375rem] font-semibold text-ink">Picnic, Saturday</span>
+                <span class="block text-[0.8125rem] text-muted">8 of your people went</span>
+              </span>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      <!-- What's in the app: tabs on the left, the photo for the active tab on the right -->
       <TabsRoot
+        id="how"
+        as="section"
         :model-value="screen"
         :orientation="orientation"
         activation-mode="automatic"
-        class="shell grid lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-16 xl:gap-x-24"
+        class="shell grid scroll-mt-24 gap-10 py-24 sm:py-32 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-16"
+        aria-labelledby="how-title"
         @update:model-value="onScreenChange"
       >
-        <!-- Hero -->
-        <section
-          id="top"
-          class="flex flex-col justify-center pt-12 pb-20 sm:pt-20 lg:col-start-1 lg:row-start-1 lg:min-h-[calc(100svh-4.75rem)] lg:py-16"
-          aria-labelledby="hero-title"
-        >
-          <h1
-            id="hero-title"
-            class="text-[clamp(3rem,6.4vw,6rem)] leading-[0.95] font-bold tracking-[-0.035em]"
-          >
-            Make room for
-            <span class="hero-underline block whitespace-nowrap text-orange-600">your people.</span>
-          </h1>
-          <p
-            class="mt-7 max-w-[34ch] text-[1.25rem] leading-[1.45] text-ink-soft sm:text-[1.375rem]"
-          >
-            peopl. is a private social app for the friends you actually have. Share the small stuff,
-            make plans, and talk without an audience.
-          </p>
-          <div class="mt-9">
-            <WaitlistForm id="hero" />
-            <p class="mt-3 text-[0.9375rem] text-muted">
-              Free during early access. Invites go out city by city.
-            </p>
-          </div>
-        </section>
-
-        <!-- How it works -->
-        <section
-          id="how"
-          class="scroll-mt-20 pb-10 lg:col-start-1 lg:row-start-2 lg:pt-8 lg:pb-32"
-          aria-labelledby="how-title"
-        >
+        <div>
           <h2
             id="how-title"
             class="text-[clamp(2.25rem,4.5vw,3.5rem)] font-bold tracking-[-0.03em]"
@@ -120,8 +173,8 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
             What's in the app
           </h2>
           <p class="mt-4 max-w-[40ch] text-[1.125rem] text-ink-soft">
-            Four things, made for a handful of people instead of an audience. Everything on the
-            phone works, so go ahead and tap it.
+            Four things, made for a handful of people instead of an audience. They're built to get
+            you into the same room.
           </p>
 
           <TabsList
@@ -168,29 +221,40 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
             </p>
             <p class="mt-2 text-[1.0625rem] text-ink-soft">{{ activeScreen.body }}</p>
           </div>
-        </section>
+        </div>
 
-        <!-- The phone: sits beside the hero and the tour on wide screens -->
-        <div class="flex justify-center pb-24 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:pb-0">
-          <div class="self-start lg:sticky lg:top-[max(5.5rem,calc(50svh-24.5rem))] lg:py-10">
-            <DevicePhone :screen="screen">
-              <TabsContent
-                v-for="item in screens"
-                :key="item.id"
-                :value="item.id"
-                class="h-full rounded-[inherit] focus-visible:outline-offset-[-2px]"
-                :aria-label="`${item.label} preview`"
+        <div class="lg:sticky lg:top-24 lg:self-start">
+          <div
+            class="relative aspect-[4/5] overflow-hidden rounded-xl bg-sunk sm:aspect-[4/3] lg:aspect-auto lg:h-[min(44rem,calc(100svh-8rem))]"
+          >
+            <img
+              v-for="item in screens"
+              :key="item.id"
+              :src="item.image"
+              :alt="item.id === screen ? item.alt : ''"
+              :aria-hidden="item.id !== screen"
+              decoding="async"
+              class="absolute inset-0 size-full object-cover transition-[opacity,transform] duration-700 ease-(--ease-out)"
+              :class="item.id === screen ? 'scale-100 opacity-100' : 'scale-[1.04] opacity-0'"
+              :style="{ objectPosition: item.position }"
+            />
+
+            <TabsContent
+              v-for="item in screens"
+              :key="item.id"
+              :value="item.id"
+              class="absolute inset-x-4 sm:inset-x-6"
+              :class="item.overlay === 'top' ? 'top-4 sm:top-6' : 'bottom-4 sm:bottom-6'"
+              :aria-label="`${item.label} example`"
+            >
+              <motion.div
+                :initial="switched ? { opacity: 0, y: item.overlay === 'top' ? -12 : 12 } : false"
+                :animate="{ opacity: 1, y: 0 }"
+                :transition="{ ...springs.soft, delay: 0.12 }"
               >
-                <motion.div
-                  class="h-full"
-                  :initial="switched ? { opacity: 0, y: 14 } : false"
-                  :animate="{ opacity: 1, y: 0 }"
-                  :transition="springs.soft"
-                >
-                  <component :is="item.component" />
-                </motion.div>
-              </TabsContent>
-            </DevicePhone>
+                <FeatureOverlay :screen="item.id" />
+              </motion.div>
+            </TabsContent>
           </div>
         </div>
       </TabsRoot>

@@ -90,7 +90,7 @@ function goFromMenu(hash: string) {
               class="fixed inset-0 z-50 bg-ink/30 data-[state=closed]:animate-[fade-out_180ms_var(--ease-out)] data-[state=open]:animate-[fade-in_200ms_var(--ease-out)]"
             />
             <DialogContent
-              class="fixed inset-x-3 top-3 z-50 rounded-lg border border-line bg-surface p-2 pb-3 shadow-phone data-[state=closed]:animate-[sheet-out_180ms_var(--ease-out)] data-[state=open]:animate-[sheet-in_260ms_var(--ease-out)]"
+              class="fixed inset-x-3 top-3 z-50 rounded-lg border border-line bg-surface p-2 pb-3 shadow-float data-[state=closed]:animate-[sheet-out_180ms_var(--ease-out)] data-[state=open]:animate-[sheet-in_260ms_var(--ease-out)]"
             >
               <DialogTitle class="sr-only">Menu</DialogTitle>
               <DialogDescription class="sr-only">Jump to a section of the page.</DialogDescription>

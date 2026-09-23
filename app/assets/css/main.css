@@ -44,7 +44,7 @@
   --radius-lg: 32px;
   --radius-xl: 44px;
 
-  --shadow-phone:
+  --shadow-float:
     0 1px 0 oklch(22.5% 0.02 45 / 0.04), 0 30px 60px -20px oklch(22.5% 0.02 45 / 0.28),
     0 12px 24px -12px oklch(22.5% 0.02 45 / 0.18);
 
@@ -163,35 +163,6 @@
 
   .link:hover {
     text-decoration-color: currentColor;
-  }
-
-  /* Scales the fixed 360x780 phone design down on shorter or narrower screens. */
-  .phone-scale {
-    zoom: 1;
-  }
-
-  @media (max-height: 900px) and (min-width: 1024px) {
-    .phone-scale {
-      zoom: 0.9;
-    }
-  }
-
-  @media (max-height: 800px) and (min-width: 1024px) {
-    .phone-scale {
-      zoom: 0.8;
-    }
-  }
-
-  @media (max-width: 400px) {
-    .phone-scale {
-      zoom: 0.88;
-    }
-  }
-
-  @media (max-width: 350px) {
-    .phone-scale {
-      zoom: 0.78;
-    }
   }
 
   /* Markdown pages (about, privacy, terms) */
