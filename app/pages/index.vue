@@ -115,7 +115,7 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
           <div
             class="shell grid min-h-[min(100svh,62rem)] items-center gap-12 pt-32 pb-14 sm:pb-20 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-16 lg:pt-28 lg:pb-16 xl:gap-x-24"
           >
-            <div class="self-end lg:self-center">
+            <div class="lg:self-center">
               <h1
                 id="hero-title"
                 class="text-[clamp(3rem,6.4vw,6rem)] leading-[0.95] font-bold tracking-[-0.035em] text-paper"
@@ -140,7 +140,7 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
             </div>
 
             <!-- The phone: the same app preview as before, now over the photo -->
-            <div class="hidden justify-center lg:flex" role="region" aria-label="App preview">
+            <div class="flex justify-center" role="region" aria-label="App preview">
               <DevicePhone :screen="screen">
                 <motion.div
                   :key="screen"

@@ -182,6 +182,18 @@
     }
   }
 
+  @media (max-width: 400px) {
+    .phone-scale {
+      zoom: 0.84;
+    }
+  }
+
+  @media (max-width: 350px) {
+    .phone-scale {
+      zoom: 0.76;
+    }
+  }
+
   /* Markdown pages (about, privacy, terms) */
   .prose {
     max-width: 38rem;
