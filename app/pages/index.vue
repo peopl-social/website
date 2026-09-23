@@ -1,1011 +1,211 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from "vue";
-import { useI18n } from "#imports";
-import BoardCard from "../components/BoardCard.vue";
-import type { BoardFriend } from "../components/BoardCard.vue";
-import EventBridge from "../components/EventBridge.vue";
-import GatheringCard from "../components/GatheringCard.vue";
-import LIcon from "../components/LIcon.vue";
-import MarketplacePickup from "../components/MarketplacePickup.vue";
-import PhoneMockup from "../components/PhoneMockup.vue";
-import WeeklyDeck from "../components/WeeklyDeck.vue";
+import { MotionConfig, motion } from "motion-v";
+import { TabsContent, TabsIndicator, TabsList, TabsRoot, TabsTrigger } from "reka-ui";
+import DevicePhone from "~/components/phone/DevicePhone.vue";
+import ScreenBoards from "~/components/phone/ScreenBoards.vue";
+import ScreenDoors from "~/components/phone/ScreenDoors.vue";
+import ScreenMessages from "~/components/phone/ScreenMessages.vue";
+import ScreenPlans from "~/components/phone/ScreenPlans.vue";
+import { springs, type ScreenId } from "~/utils/demo";
 
-const pageRoot = ref<HTMLElement | null>(null);
-const menuOpen = ref(false);
-const menuPanelReady = ref(false);
-const waitlistEmail = ref("");
-const isJoined = ref(false);
-const activeFriend = ref(0);
-const activeSection = ref("");
-const activeVisibility = ref("private");
-const activeStory = ref(0);
-const progressBar = ref<HTMLElement | null>(null);
-let sectionObserver: IntersectionObserver | undefined;
-let storyObserver: IntersectionObserver | undefined;
-let progressRaf = 0;
-let onScrollTick: (() => void) | undefined;
-const magnetics: Array<{
-  el: HTMLElement;
-  move: (event: MouseEvent) => void;
-  reset: () => void;
-}> = [];
+const { screen } = useDemoState();
 
-const { $getLocale, $switchLocale, $t } = useI18n();
-const currentLocale = computed(() => $getLocale());
-
-const friends: BoardFriend[] = [
+const screens = [
   {
-    name: "Mara",
-    initial: "M",
-    color: "violet",
-    status: "shared a board",
-    note: "finished the demo. feel weird about it. proud?",
-    voice: "0:12",
-    voiceNote: "late-night voice memo",
-    stickers: ["☾", "♡", "✦"],
-    updated: "2d ago",
-    visibility: "just us",
+    id: "boards",
+    label: "Boards",
+    title: "One board each, not a feed.",
+    body: "Everyone keeps a single board for notes and voice memos. Friends check in when they want to. Nothing ranks it and nothing refreshes it.",
+    component: ScreenBoards,
   },
   {
-    name: "Jules",
-    initial: "J",
-    color: "orange",
-    status: "planning friday",
-    note: "found a rooftop for friday. bring a jacket.",
-    voice: "0:31",
-    voiceNote: "rooftop playlist draft",
-    stickers: ["✷", "♫", "↗"],
-    updated: "this morning",
-    visibility: "link only",
+    id: "doors",
+    label: "Doors",
+    title: "You decide who gets in.",
+    body: "Every board has a door: just you, close friends, or anyone with the link. Change it whenever you like.",
+    component: ScreenDoors,
   },
   {
-    name: "Rae",
-    initial: "R",
-    color: "green",
-    status: "free tonight",
-    note: "made pasta. it was serious business.",
-    voice: "0:07",
-    voiceNote: "kitchen experiment №9",
-    stickers: ["✎", "✦", "□"],
-    updated: "1h ago",
-    visibility: "public",
-  },
-];
-
-const currentFriend = computed(() => friends[activeFriend.value] ?? friends[0]!);
-
-const visibilityOptions = [
-  {
-    key: "private",
-    title: "Private",
-    tag: "just yours",
-    copy: "Only you, or exactly the people you pick.",
+    id: "plans",
+    label: "Plans",
+    title: "Turn a maybe into a plan.",
+    body: "Post a time and a place. Friends tap in, and everyone can see who's coming.",
+    component: ScreenPlans,
   },
   {
-    key: "unlisted",
-    title: "Unlisted",
-    tag: "link only",
-    copy: "Share by link. Off feeds, off search.",
+    id: "messages",
+    label: "Messages",
+    title: "Talk without an audience.",
+    body: "Messages are end-to-end encrypted. Our servers pass them along without being able to read them.",
+    component: ScreenMessages,
   },
-  {
-    key: "public",
-    title: "Public",
-    tag: "come on in",
-    copy: "Anyone can wander in and look around.",
-  },
-];
+] as const;
 
-const visibilityCaption = computed(
-  () => visibilityOptions.find((option) => option.key === activeVisibility.value)?.copy ?? "",
-);
+const activeScreen = computed(() => screens.find((item) => item.id === screen.value) ?? screens[0]);
 
-const journeySteps = [
-  "Your people",
-  "What they’re sharing",
-  "Talking it out",
-  "Making plans",
-  "Meeting in real life",
-];
+// Only animate screens after the first switch, so the hero phone is visible without JS.
+const switched = ref(false);
+function onScreenChange(value: string | number) {
+  switched.value = true;
+  screen.value = value as ScreenId;
+}
 
-const nearbyPlans = [
-  { name: "film night at Rae’s", when: "friday" },
-  { name: "market run", when: "sunday morning" },
-  { name: "rooftop, bring a jacket", when: "friday" },
-];
-
-const storySteps = [
-  {
-    kicker: "Step 1 · Close",
-    title: "Mara shares a board",
-    copy: "A half-finished thought, a voice memo, three stickers. Only her people can see it — no audience, no performance.",
-  },
-  {
-    kicker: "Step 2 · Yours to open",
-    title: "She chooses the door",
-    copy: "Just us tonight. Link-only tomorrow. Every board gets a visibility, changeable whenever the feeling changes.",
-  },
-  {
-    kicker: "Step 3 · Outside",
-    title: "Jules makes a plan",
-    copy: "Sunset walk, river gate, 6:30. The gathering gets its own place — not a 300-message thread nobody can find.",
-  },
-  {
-    kicker: "Step 4 · Real life",
-    title: "Two strangers show up",
-    copy: "Ana and Theo both wanted the pottery workshop. They pair as co-attendees, sort logistics in a thread that expires — and meet at the kiln house, not in a DM.",
-  },
-];
-
-const closeMenu = () => {
-  menuPanelReady.value = false;
-  menuOpen.value = false;
-};
-
-const toggleMenu = () => {
-  if (menuOpen.value) {
-    closeMenu();
-    return;
-  }
-
-  menuOpen.value = true;
-  nextTick(() => {
-    menuPanelReady.value = true;
-  });
-};
-
-const chooseFriend = (index: number) => {
-  activeFriend.value = index;
-};
-
-const chooseVisibility = (key: string) => {
-  activeVisibility.value = key;
-};
-
-const switchLocale = () => {
-  $switchLocale(currentLocale.value === "fr" ? "en" : "fr");
-};
-
-const scrollToStory = (index: number) => {
-  activeStory.value = index;
-  const step = document.querySelector(`[data-story-index="${index}"]`);
-  if (!step) return;
-  if (window.__lenis) {
-    window.__lenis.scrollTo(step as HTMLElement, { offset: -120 });
-    return;
-  }
-  step.scrollIntoView({ behavior: "smooth", block: "center" });
-};
-
-const submitWaitlist = () => {
-  if (!waitlistEmail.value || isJoined.value) return;
-  isJoined.value = true;
-};
-
+const orientation = ref<"horizontal" | "vertical">("vertical");
+let wide: MediaQueryList | undefined;
+function syncOrientation() {
+  orientation.value = wide?.matches ? "vertical" : "horizontal";
+}
 onMounted(() => {
-  sectionObserver = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          activeSection.value = entry.target.id;
-        }
-      }
-    },
-    { rootMargin: "-40% 0px -55% 0px" },
-  );
-
-  for (const id of ["why", "features", "meet", "safety", "join"]) {
-    const section = document.getElementById(id);
-    if (section) sectionObserver.observe(section);
-  }
-
-  storyObserver = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (entry.isIntersecting) {
-          const index = Number((entry.target as HTMLElement).dataset.storyIndex);
-          if (!Number.isNaN(index)) activeStory.value = index;
-        }
-      }
-    },
-    { rootMargin: "-45% 0px -45% 0px" },
-  );
-
-  for (const step of document.querySelectorAll("[data-story-index]")) {
-    storyObserver.observe(step);
-  }
-
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  const updateProgress = () => {
-    progressRaf = 0;
-    const bar = progressBar.value;
-    if (!bar) return;
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    bar.style.transform = `scaleX(${max > 0 ? Math.min(1, window.scrollY / max) : 0})`;
-  };
-  onScrollTick = () => {
-    if (progressRaf) return;
-    progressRaf = requestAnimationFrame(updateProgress);
-  };
-  window.addEventListener("scroll", onScrollTick, { passive: true });
-  updateProgress();
-
-  if (!reduceMotion && window.matchMedia("(pointer: fine)").matches) {
-    for (const el of document.querySelectorAll<HTMLElement>(".button-primary, .nav-cta")) {
-      const move = (event: MouseEvent) => {
-        const rect = el.getBoundingClientRect();
-        const x = event.clientX - (rect.left + rect.width / 2);
-        const y = event.clientY - (rect.top + rect.height / 2);
-        el.style.transform = `translate(${(x * 0.12).toFixed(1)}px, ${(y * 0.18).toFixed(1)}px)`;
-      };
-      const reset = () => {
-        el.style.transform = "";
-      };
-      el.addEventListener("mousemove", move);
-      el.addEventListener("mouseleave", reset);
-      magnetics.push({ el, move, reset });
-    }
-  }
+  wide = window.matchMedia("(min-width: 1024px)");
+  syncOrientation();
+  wide.addEventListener("change", syncOrientation);
 });
-
-onBeforeUnmount(() => {
-  sectionObserver?.disconnect();
-  storyObserver?.disconnect();
-  if (onScrollTick) window.removeEventListener("scroll", onScrollTick);
-  if (progressRaf) cancelAnimationFrame(progressRaf);
-  for (const { el, move, reset } of magnetics) {
-    el.removeEventListener("mousemove", move);
-    el.removeEventListener("mouseleave", reset);
-  }
-  magnetics.length = 0;
-});
+onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
 </script>
 
 <template>
-  <div ref="pageRoot" class="site-shell">
-    <a class="skip-link" href="#main">Skip to content</a>
-    <div class="scroll-progress" aria-hidden="true"><span ref="progressBar" /></div>
-
-    <header class="site-header">
-      <nav class="site-nav" aria-label="Primary">
-        <a class="nav-brand" href="#top" aria-label="peopl. home" @click="closeMenu">
-          <span class="wordmark">peopl.</span>
-        </a>
-
-        <div class="nav-links">
-          <a
-            class="nav-link"
-            :class="{ 'is-active': activeSection === 'why' }"
-            :aria-current="activeSection === 'why' ? 'true' : undefined"
-            href="#why"
-            @click="closeMenu"
-            >The problem</a
-          >
-          <a
-            class="nav-link"
-            :class="{ 'is-active': activeSection === 'features' }"
-            :aria-current="activeSection === 'features' ? 'true' : undefined"
-            href="#features"
-            @click="closeMenu"
-            >How it works</a
-          >
-          <a
-            class="nav-link"
-            :class="{ 'is-active': activeSection === 'meet' }"
-            :aria-current="activeSection === 'meet' ? 'true' : undefined"
-            href="#meet"
-            @click="closeMenu"
-            >Meet IRL</a
-          >
-          <a
-            class="nav-link"
-            :class="{ 'is-active': activeSection === 'safety' }"
-            :aria-current="activeSection === 'safety' ? 'true' : undefined"
-            href="#safety"
-            @click="closeMenu"
-            >Safety</a
-          >
-        </div>
-
-        <a
-          class="nav-cta"
-          :class="{ 'is-active': activeSection === 'join' }"
-          href="#join"
-          @click="closeMenu"
-          >Get updates</a
-        >
-
-        <button
-          class="locale-switch"
-          type="button"
-          :aria-label="`Switch to ${currentLocale === 'fr' ? 'English' : 'French'}`"
-          @click="switchLocale"
-        >
-          {{ currentLocale === "fr" ? "FR" : "EN" }}
-        </button>
-
-        <button
-          class="nav-menu-button"
-          :class="{ 'is-open': menuOpen }"
-          type="button"
-          :aria-expanded="menuOpen"
-          aria-controls="mobile-menu"
-          aria-label="Toggle navigation"
-          @click="toggleMenu"
-        >
-          <span class="menu-lines" aria-hidden="true" />
-        </button>
-      </nav>
-    </header>
-
-    <Transition name="nav-drawer">
-      <div
-        v-if="menuOpen"
-        id="mobile-menu"
-        class="mobile-menu"
-        @click.self="closeMenu"
-        @keydown.esc="closeMenu"
-      >
-        <div class="mobile-menu-panel" :class="{ 'is-ready': menuPanelReady }">
-          <a class="mobile-menu-link" href="#why" @click="closeMenu">The problem</a>
-          <a class="mobile-menu-link" href="#features" @click="closeMenu">How it works</a>
-          <a class="mobile-menu-link" href="#meet" @click="closeMenu">Meet IRL</a>
-          <a class="mobile-menu-link" href="#safety" @click="closeMenu">Safety & FAQ</a>
-          <a class="mobile-menu-link" href="#join" @click="closeMenu">Join the early list</a>
-        </div>
-      </div>
-    </Transition>
+  <MotionConfig reduced-motion="user">
+    <a
+      href="#main"
+      class="fixed top-3 left-3 z-50 -translate-y-20 rounded-sm bg-ink px-4 py-2 text-paper focus:translate-y-0"
+      >Skip to content</a
+    >
+    <SiteNav />
 
     <main id="main">
-      <section id="top" class="hero section-shell" aria-labelledby="hero-title">
-        <div class="hero-copy">
-          <p class="section-kicker hero-kicker hero-reveal">
-            Early access &middot; private first, real life always
-          </p>
-
-          <h1 id="hero-title" class="hero-title hero-reveal">
-            Make room for <span class="accent-word">your people.</span>
+      <TabsRoot
+        :model-value="screen"
+        :orientation="orientation"
+        activation-mode="automatic"
+        class="shell grid lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-16 xl:gap-x-24"
+        @update:model-value="onScreenChange"
+      >
+        <!-- Hero -->
+        <section
+          id="top"
+          class="flex flex-col justify-center pt-12 pb-20 sm:pt-20 lg:col-start-1 lg:row-start-1 lg:min-h-[calc(100svh-4rem)] lg:py-16"
+          aria-labelledby="hero-title"
+        >
+          <h1
+            id="hero-title"
+            class="text-[clamp(3rem,6.4vw,6rem)] leading-[0.95] font-bold tracking-[-0.035em]"
+          >
+            Make room for
+            <span class="hero-underline block whitespace-nowrap text-orange-600">your people.</span>
           </h1>
-
-          <p class="hero-lead hero-reveal">
-            {{ $t("hero.lead") }}
+          <p
+            class="mt-7 max-w-[34ch] text-[1.25rem] leading-[1.45] text-ink-soft sm:text-[1.375rem]"
+          >
+            peopl. is a private social app for the friends you actually have. Share the small stuff,
+            make plans, and talk without an audience.
           </p>
-
-          <div class="hero-actions hero-reveal">
-            <form class="signup-form" @submit.prevent="submitWaitlist">
-              <label class="sr-only" for="hero-email">Email address</label>
-              <input
-                id="hero-email"
-                v-model="waitlistEmail"
-                class="signup-input"
-                type="email"
-                name="email"
-                autocomplete="email"
-                inputmode="email"
-                placeholder="you@email.com"
-                :disabled="isJoined"
-                required
-              />
-              <button class="button-primary" type="submit" :disabled="isJoined">
-                {{ isJoined ? "You’re in" : "Join the early list" }}
-              </button>
-            </form>
-            <p id="hero-reassurance" class="signup-reassurance">
-              No spam. Just early-access invites and peopl. updates.
-            </p>
-            <p v-if="isJoined" class="signup-status" role="status">
-              You’re on the list. We’ll keep it lovely.
+          <div class="mt-9">
+            <WaitlistForm id="hero" />
+            <p class="mt-3 text-[0.9375rem] text-muted">
+              Free during early access. Invites go out city by city.
             </p>
           </div>
-        </div>
+        </section>
 
-        <div class="hero-visual">
-          <div class="hero-wash" aria-hidden="true" />
-
-          <div class="hero-phone-wrap">
-            <div class="hero-phone">
-              <span class="hero-notch" aria-hidden="true" />
-              <div class="hero-screen">
-                <p class="hero-screen-top"><span>9:41</span><span>peopl.</span></p>
-                <Transition name="board-swap" mode="out-in">
-                  <BoardCard :key="currentFriend.name" :friend="currentFriend" size="sm" />
-                </Transition>
-                <div class="hero-screen-plan">
-                  <span>THU 6:30 &middot; RIVER GATE</span>
-                  <strong>sunset walk + something cold</strong>
-                  <em>5 going — you too</em>
-                </div>
-              </div>
-            </div>
-
-            <div class="board-tabs hero-tabs" role="group" aria-label="Preview a friend's board">
-              <button
-                v-for="(friend, index) in friends"
-                :key="friend.name"
-                class="board-tab"
-                :class="[`is-${friend.color}`, { 'is-active': activeFriend === index }]"
-                type="button"
-                :aria-pressed="activeFriend === index"
-                @click="chooseFriend(index)"
-              >
-                <span class="board-tab-avatar" aria-hidden="true">{{ friend.initial }}</span>
-                {{ friend.name }}
-              </button>
-            </div>
-          </div>
-
-          <p class="hero-note">this is the whole app. <em>no feed.</em></p>
-        </div>
-      </section>
-
-      <div class="ticker" aria-hidden="true">
-        <div class="ticker-track">
-          <div v-for="copy in [1, 2]" :key="copy" class="ticker-group">
-            <span>life drawing</span><i>&#10022;</i> <span>pottery workshops</span><i>&#10022;</i>
-            <span>film screenings</span><i>&#10022;</i> <span>gallery openings</span><i>&#10022;</i>
-            <span>trail runs</span><i>&#10022;</i> <span>sourdough pickup</span><i>&#10022;</i>
-            <span>sunrise yoga</span><i>&#10022;</i> <span>music festivals</span><i>&#10022;</i>
-          </div>
-        </div>
-      </div>
-
-      <section id="why" class="problem section-shell" aria-labelledby="problem-title">
-        <div class="problem-content">
-          <p class="section-kicker">The problem</p>
-          <h2 id="problem-title" class="problem-title reveal">
-            Too much social. <span>Not enough close.</span>
+        <!-- How it works -->
+        <section
+          id="how"
+          class="scroll-mt-20 pb-10 lg:col-start-1 lg:row-start-2 lg:pt-8 lg:pb-32"
+          aria-labelledby="how-title"
+        >
+          <h2
+            id="how-title"
+            class="text-[clamp(2.25rem,4.5vw,3.5rem)] font-bold tracking-[-0.03em]"
+          >
+            What's in the app
           </h2>
-
-          <p class="problem-body reveal">
-            Social apps got big. Your circle didn&rsquo;t. Feeds chase attention, group chats bury
-            the plan, and the things you&rsquo;d only tell five people end up sitting next to public
-            posts.
+          <p class="mt-4 max-w-[40ch] text-[1.125rem] text-ink-soft">
+            Four things, made for a handful of people instead of an audience. Everything on the
+            phone works, so go ahead and tap it.
           </p>
 
-          <ul class="problem-ledger reveal">
-            <li class="ledger-row">
-              <span class="ledger-old">Feeds optimize for attention</span>
-              <span class="ledger-arrow" aria-hidden="true"><LIcon name="arrow-right" /></span>
-              <span class="ledger-new">Boards your friends actually fill</span>
-            </li>
-            <li class="ledger-row">
-              <span class="ledger-old">Plans get buried in chat</span>
-              <span class="ledger-arrow" aria-hidden="true"><LIcon name="arrow-right" /></span>
-              <span class="ledger-new">Gatherings with their own place</span>
-            </li>
-            <li class="ledger-row">
-              <span class="ledger-old">Private moments next to public posts</span>
-              <span class="ledger-arrow" aria-hidden="true"><LIcon name="arrow-right" /></span>
-              <span class="ledger-new">Visibility you choose, per board</span>
-            </li>
-            <li class="ledger-row">
-              <span class="ledger-old">An audience of strangers</span>
-              <span class="ledger-arrow" aria-hidden="true"><LIcon name="arrow-right" /></span>
-              <span class="ledger-new">The handful who actually know you</span>
-            </li>
-          </ul>
-
-          <p class="problem-close reveal">
-            peopl. is deliberately built for a much smaller graph — the people you&rsquo;d actually
-            call. Private first. And when you want more than your circle, every new meeting starts
-            in real life: a public event, a shared table — never a stranger&rsquo;s DMs.
-          </p>
-        </div>
-
-        <div class="problem-intro">
-          <PhoneMockup class="problem-phone" />
-        </div>
-      </section>
-
-      <section id="features" class="features section-shell" aria-labelledby="features-title">
-        <header class="features-header">
-          <div>
-            <p class="section-kicker">How it works · private first</p>
-            <h2 id="features-title" class="features-title reveal">Start close. Then be brave.</h2>
-          </div>
-          <p class="features-intro reveal">
-            Four ideas for your inner circle — boards, doors, gatherings, private messages. Then,
-            when you&rsquo;re ready, three gentle ways to meet new people. One arc: less scrolling,
-            more showing up.
-          </p>
-        </header>
-
-        <ol class="journey reveal" aria-label="How peopl. fits together">
-          <li v-for="(step, index) in journeySteps" :key="step" class="journey-step">
-            <span class="journey-index" aria-hidden="true">{{ index + 1 }}</span>
-            <span class="journey-label">{{ step }}</span>
-            <span v-if="index < journeySteps.length - 1" class="journey-arrow" aria-hidden="true"
-              ><LIcon name="arrow-right"
-            /></span>
-          </li>
-        </ol>
-
-        <article class="chapter chapter-board" aria-labelledby="chapter-board-title">
-          <div class="chapter-copy">
-            <h3 id="chapter-board-title">Moodboards, not feeds.</h3>
-            <p>
-              Each person has one active board — text, voice notes, stickers, the occasional
-              half-finished thought. It changes when they change it. No algorithm, no infinite
-              scroll, no performing for strangers.
-            </p>
-            <ul class="chapter-points">
-              <li>one active board each</li>
-              <li>text &middot; stickers &middot; voice notes</li>
-              <li>nothing ranked, nothing endless</li>
-            </ul>
-          </div>
-
-          <div class="chapter-demo">
-            <div class="board-tabs" role="group" aria-label="Choose whose board to view">
-              <button
-                v-for="(friend, index) in friends"
-                :key="friend.name"
-                class="board-tab"
-                :class="[`is-${friend.color}`, { 'is-active': activeFriend === index }]"
-                type="button"
-                :aria-pressed="activeFriend === index"
-                @click="chooseFriend(index)"
-              >
-                <span class="board-tab-avatar" aria-hidden="true">{{ friend.initial }}</span>
-                {{ friend.name }}
-              </button>
-            </div>
-
-            <Transition name="board-swap" mode="out-in">
-              <BoardCard :key="`lg-${currentFriend.name}`" :friend="currentFriend" size="lg" />
-            </Transition>
-
-            <p class="chapter-demo-caption">an active board, exactly as your friend left it</p>
-          </div>
-        </article>
-
-        <article class="chapter chapter-doors" aria-labelledby="chapter-doors-title">
-          <div class="chapter-copy">
-            <h3 id="chapter-doors-title">Choose the door.</h3>
-            <p>
-              Every board gets a visibility setting, and you can change it whenever. Share the
-              feeling at whatever pace feels right.
-            </p>
-            <p class="doors-caption" aria-live="polite">{{ visibilityCaption }}</p>
-          </div>
-
-          <div class="door-row" role="group" aria-label="Board visibility options">
-            <button
-              v-for="option in visibilityOptions"
-              :key="option.key"
-              class="door"
-              :class="{ 'is-active': activeVisibility === option.key }"
-              type="button"
-              :aria-pressed="activeVisibility === option.key"
-              @click="chooseVisibility(option.key)"
+          <TabsList
+            class="relative mt-8 flex gap-1 overflow-x-auto rounded-md bg-sunk p-1 lg:mt-12 lg:flex-col lg:gap-0 lg:overflow-visible lg:rounded-none lg:bg-transparent lg:p-0"
+            aria-label="App features"
+          >
+            <TabsIndicator
+              class="absolute top-1 left-0 h-[calc(100%-0.5rem)] w-(--reka-tabs-indicator-size) translate-x-(--reka-tabs-indicator-position) rounded-sm bg-surface shadow-[0_1px_2px_oklch(22.5%_0.02_45/0.12)] transition-[width,transform] duration-300 ease-(--ease-out) lg:hidden"
+            />
+            <TabsTrigger
+              v-for="item in screens"
+              :key="item.id"
+              :value="item.id"
+              class="group relative z-10 flex-1 rounded-sm px-3 py-2 text-center font-display text-[0.9375rem] font-semibold whitespace-nowrap text-muted lg:whitespace-normal transition-colors data-[state=active]:text-ink lg:rounded-none lg:border-t lg:border-line lg:py-6 lg:pr-4 lg:pl-6 lg:text-left lg:last:border-b"
             >
-              <span class="door-title">{{ option.title }}</span>
-              <span class="door-tag">{{ option.tag }}</span>
-              <span class="door-copy">{{ option.copy }}</span>
-            </button>
-          </div>
-        </article>
-
-        <article class="chapter chapter-events" aria-labelledby="chapter-events-title">
-          <div class="chapter-copy">
-            <h3 id="chapter-events-title">Make it in-person.</h3>
-            <p>
-              Create a gathering, see what your people are up to this week, and join the plans that
-              pull you outside. peopl. is supposed to end in real life — more walks, less scrolling.
-            </p>
-            <div class="nearby-plans">
-              <p class="fragment-title">this week nearby</p>
-              <ul>
-                <li v-for="plan in nearbyPlans" :key="plan.name">
-                  <span>{{ plan.name }}</span>
-                  <small>{{ plan.when }}</small>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="chapter-demo">
-            <GatheringCard size="lg" />
-            <p class="chapter-demo-caption">one tap and the plan is on your calendar-aware radar</p>
-          </div>
-        </article>
-
-        <article class="chapter chapter-messaging" aria-labelledby="chapter-messaging-title">
-          <div class="chapter-copy">
-            <h3 id="chapter-messaging-title">Keep it between you.</h3>
-            <p class="messaging-lead">Your conversations stay between the people in them.</p>
-            <p>
-              Messages are end-to-end encrypted and travel through a relay that carries them without
-              being able to read them.
-            </p>
-
-            <details class="messaging-details">
-              <summary>How the relay works</summary>
-              <p>
-                Messages are encrypted on your device and only decrypted on your friend&rsquo;s. In
-                between, they pass through a plaintext-blind relay — our server routes the encrypted
-                traffic but never holds a readable copy. We can&rsquo;t read your conversations, and
-                neither can anyone else.
-              </p>
-            </details>
-          </div>
-
-          <div class="chapter-demo">
-            <div class="messaging-thread" aria-label="Example of a private conversation">
-              <div class="message-bubble is-incoming">did you get home ok?</div>
-              <div class="message-bubble is-outgoing">
-                yes. telling you the whole story tomorrow
-              </div>
-              <p class="thread-tag"><LIcon name="check" /> end-to-end encrypted</p>
-            </div>
-
-            <div class="relay" aria-label="How messages travel">
-              <span class="relay-node">you</span>
-              <span class="relay-line" aria-hidden="true" />
-              <span class="relay-node is-relay"
-                >peopl. relay<em>carries, can&rsquo;t read</em></span
-              >
-              <span class="relay-line" aria-hidden="true" />
-              <span class="relay-node">them</span>
-            </div>
-          </div>
-        </article>
-      </section>
-
-      <section id="story" class="story section-shell" aria-labelledby="story-title">
-        <header class="story-header">
-          <div>
-            <p class="section-kicker">One evening on peopl.</p>
-            <h2 id="story-title" class="story-title reveal">Watch a Thursday happen.</h2>
-          </div>
-          <p class="story-intro reveal">
-            Private first, brave second — the whole arc in four moments. Scroll slowly.
-          </p>
-        </header>
-
-        <div class="story-layout">
-          <div class="story-visual">
-            <div class="story-scenes" aria-hidden="true">
-              <div class="story-scene" :class="{ 'is-active': activeStory === 0 }">
-                <p class="story-scene-kicker">Mara&rsquo;s board · just us</p>
-                <p class="story-scene-note">finished the demo. feel weird about it. proud?</p>
-                <p class="story-scene-sub">☾ ♡ ✦ · late-night voice memo 0:12</p>
-              </div>
-              <div class="story-scene" :class="{ 'is-active': activeStory === 1 }">
-                <p class="story-scene-kicker">the door · link only</p>
-                <p class="story-scene-note">Share by link. Off feeds, off search.</p>
-                <p class="story-scene-sub">change it whenever · it&rsquo;s yours</p>
-              </div>
-              <div class="story-scene" :class="{ 'is-active': activeStory === 2 }">
-                <p class="story-scene-kicker">gathering · thu 6:30 PM</p>
-                <p class="story-scene-note">sunset walk + something cold</p>
-                <p class="story-scene-sub">river gate · 5 going — you too</p>
-              </div>
-              <div class="story-scene" :class="{ 'is-active': activeStory === 3 }">
-                <p class="story-scene-kicker">co-attendees · kiln house</p>
-                <p class="story-scene-note">Ana + Theo · pottery, Sat 11 AM</p>
-                <p class="story-scene-sub">thread expires after the workshop ✓</p>
-              </div>
-            </div>
-            <div class="story-dots" role="group" aria-label="Jump to a story moment">
-              <button
-                v-for="(step, index) in storySteps"
-                :key="step.title"
-                class="story-dot"
-                :class="{ 'is-active': activeStory === index }"
-                type="button"
-                :aria-label="`${step.kicker}: ${step.title}`"
-                :aria-current="activeStory === index ? 'true' : undefined"
-                @click="scrollToStory(index)"
+              <motion.span
+                v-if="screen === item.id"
+                layout-id="tour-bar"
+                class="absolute top-6 bottom-6 left-0 hidden w-[3px] rounded-full bg-violet-500 lg:block"
+                :transition="springs.snappy"
+                aria-hidden="true"
               />
-            </div>
+              <span class="lg:hidden">{{ item.label }}</span>
+              <span class="hidden lg:block">
+                <span
+                  class="block text-[1.625rem] leading-tight tracking-[-0.02em] text-ink/45 transition-colors group-hover:text-ink/75 group-data-[state=active]:text-ink"
+                  >{{ item.title }}</span
+                >
+                <span
+                  class="mt-2 block max-w-[46ch] font-sans text-[1.0625rem] leading-normal font-normal text-muted transition-colors group-data-[state=active]:text-ink-soft"
+                  >{{ item.body }}</span
+                >
+              </span>
+            </TabsTrigger>
+          </TabsList>
+
+          <div class="mt-6 lg:hidden" aria-live="polite">
+            <p class="font-display text-[1.5rem] leading-tight font-semibold tracking-[-0.02em]">
+              {{ activeScreen.title }}
+            </p>
+            <p class="mt-2 text-[1.0625rem] text-ink-soft">{{ activeScreen.body }}</p>
           </div>
+        </section>
 
-          <ol class="story-steps">
-            <li
-              v-for="(step, index) in storySteps"
-              :key="step.title"
-              class="story-step"
-              :class="{ 'is-active': activeStory === index }"
-              :data-story-index="index"
-            >
-              <span class="story-step-kicker">{{ step.kicker }}</span>
-              <h3>{{ step.title }}</h3>
-              <p>{{ step.copy }}</p>
-            </li>
-          </ol>
-        </div>
-      </section>
-
-      <section id="meet" class="features section-shell" aria-labelledby="meet-title">
-        <header class="features-header">
-          <div>
-            <p class="section-kicker">Be brave · dating, events, marketplace</p>
-            <h2 id="meet-title" class="features-title reveal">Less swiping. More showing up.</h2>
-          </div>
-          <p class="features-intro reveal">
-            peopl. starts with close friends — then gives you three low-pressure ways to meet new
-            people in real life. No endless feed, no stranger-DMs at 2 AM.
-          </p>
-        </header>
-
-        <article class="chapter chapter-deck" aria-labelledby="chapter-deck-title">
-          <div class="chapter-copy">
-            <p class="pillar-tag">01 · Slow dating</p>
-            <h3 id="chapter-deck-title">Ten profiles a week. Then the deck locks.</h3>
-            <p>
-              Every week you unlock a hand-picked batch of 10. Read them properly, keep the ones
-              that feel right — then the dating deck locks until next cycle. Scarcity on purpose.
-            </p>
-            <ul class="chapter-points">
-              <li>10 profiles, weekly — no infinite swipe</li>
-              <li>invite a match to a public event, skip bar small-talk</li>
-              <li>
-                optional verified-socials link, so there&rsquo;s a safe familiar place to connect
-              </li>
-            </ul>
-          </div>
-          <div class="chapter-demo">
-            <WeeklyDeck />
-            <p class="chapter-demo-caption">a weekly deck — read with intention, then go outside</p>
-          </div>
-        </article>
-
-        <article class="chapter chapter-bridge" aria-labelledby="chapter-bridge-title">
-          <div class="chapter-copy">
-            <p class="pillar-tag">02 · Event-first matching</p>
-            <h3 id="chapter-bridge-title">From matches to co-attendees.</h3>
-            <p>
-              Life drawing, pottery, film screenings, gallery openings, trail runs, festivals — pick
-              what you&rsquo;d go to anyway. When two people want the same event, they pair as
-              co-attendees with a temporary thread for logistics only.
-            </p>
-            <ul class="chapter-points">
-              <li>universal spectrum — not just sports</li>
-              <li>joint-attendee bridge on shared interest</li>
-              <li>context chat: where to meet, transit, tickets — then it expires</li>
-            </ul>
-          </div>
-          <div class="chapter-demo">
-            <EventBridge />
-            <p class="chapter-demo-caption">a plan first, a conversation with a reason</p>
-          </div>
-        </article>
-
-        <article class="chapter chapter-market" aria-labelledby="chapter-market-title">
-          <div class="chapter-copy">
-            <p class="pillar-tag">03 · Hyper-local marketplace</p>
-            <h3 id="chapter-market-title">Buy the bread. Meet the baker.</h3>
-            <p>
-              Trainers, yoga teachers, art instructors and guides list sessions. Neighbours list
-              sourdough, kombucha, ceramics, spare tickets. Pickup happens at community meetups —
-              the transaction becomes a touchpoint.
-            </p>
-            <ul class="chapter-points">
-              <li>services &amp; coaching, listed on the event map</li>
-              <li>artisanal &amp; second-hand goods, pickup only</li>
-              <li>e.g. sourdough pickup at the Saturday coffee &amp; sketch walk</li>
-            </ul>
-          </div>
-          <div class="chapter-demo">
-            <MarketplacePickup />
-            <p class="chapter-demo-caption">no shipping — just neighbours and shared tables</p>
-          </div>
-        </article>
-      </section>
-
-      <section id="safety" class="safety section-shell" aria-labelledby="safety-title">
-        <header class="safety-header">
-          <div>
-            <p class="section-kicker">Safety · by design, not by policy page</p>
-            <h2 id="safety-title" class="safety-title reveal">
-              Brave doesn&rsquo;t mean reckless.
-            </h2>
-          </div>
-          <p class="safety-intro reveal">
-            Meeting new people takes guts. So the risky parts are designed out — not warned about
-            afterwards.
-          </p>
-        </header>
-
-        <ul class="safety-grid reveal">
-          <li class="safety-card">
-            <span class="safety-card-icon" aria-hidden="true"><LIcon name="map-pin" /></span>
-            <strong>Public first meets</strong>
-            <p>Dates and handoffs start at events and meetups — never a private address.</p>
-          </li>
-          <li class="safety-card">
-            <span class="safety-card-icon" aria-hidden="true"><LIcon name="message-circle" /></span>
-            <strong>No stranger DMs</strong>
-            <p>New threads are scoped to one event and expire after it. No 2 AM cold messages.</p>
-          </li>
-          <li class="safety-card">
-            <span class="safety-card-icon" aria-hidden="true"><LIcon name="link" /></span>
-            <strong>Verified socials, optional</strong>
-            <p>
-              Link profiles you already have, so there&rsquo;s a familiar place to connect — only if
-              you want.
-            </p>
-          </li>
-          <li class="safety-card">
-            <span class="safety-card-icon" aria-hidden="true"><LIcon name="shopping-bag" /></span>
-            <strong>Pickup, not post</strong>
-            <p>
-              Marketplace deals happen at community meetups. No shipping, no doorsteps, no strangers
-              at your door.
-            </p>
-          </li>
-          <li class="safety-card">
-            <span class="safety-card-icon" aria-hidden="true"><LIcon name="eye" /></span>
-            <strong>You hold the doors</strong>
-            <p>Per-board visibility, block and report one tap away. Change your mind anytime.</p>
-          </li>
-          <li class="safety-card">
-            <span class="safety-card-icon" aria-hidden="true"><LIcon name="lock" /></span>
-            <strong>Encrypted underneath</strong>
-            <p>
-              Messages travel through a relay that carries them without being able to read them.
-            </p>
-          </li>
-        </ul>
-
-        <div class="faq">
-          <h3 class="faq-title reveal">Asked already</h3>
-          <details class="faq-item reveal">
-            <summary>Is peopl. a dating app?</summary>
-            <p>
-              It&rsquo;s a private social app with a slow-dating corner. Ten profiles a week, the
-              deck locks, and matches meet at public events — never in a DM thread that goes
-              nowhere.
-            </p>
-          </details>
-          <details class="faq-item reveal">
-            <summary>When can I get in — and where?</summary>
-            <p>
-              We&rsquo;re opening city by city during early access. Join the list and we&rsquo;ll
-              invite you when your neighbourhood lights up.
-            </p>
-          </details>
-          <details class="faq-item reveal">
-            <summary>Which platforms? Does it cost anything?</summary>
-            <p>
-              iOS and Android are the plan, and the waitlist keeps you posted. Early access is free.
-            </p>
-          </details>
-          <details class="faq-item reveal">
-            <summary>Who runs the events?</summary>
-            <p>
-              Hosts from the community — instructors, guides, neighbours. Public places, attendee
-              caps, and reporting built in from the start.
-            </p>
-          </details>
-          <details class="faq-item reveal">
-            <summary>What happens to my data?</summary>
-            <p>
-              Your email is only used for early-access invites and peopl. updates. Messages are
-              end-to-end encrypted. The rest is in the privacy policy — short, readable, honest.
-            </p>
-          </details>
-        </div>
-      </section>
-
-      <section id="trust" class="trust section-shell" aria-labelledby="trust-title">
-        <div class="trust-inner">
-          <p class="section-kicker">The fine print</p>
-          <h2 id="trust-title">Early, and honest about it.</h2>
-          <p class="trust-body">
-            peopl. is in early access. Right now the waitlist is all there is — it stores your email
-            and uses it for peopl. updates and early-access invites. Nothing else.
-          </p>
-          <p class="trust-links">
-            <NuxtLink class="trust-link" to="/privacy">Read the privacy policy</NuxtLink>
-            <span aria-hidden="true">&middot;</span>
-            <NuxtLink class="trust-link" to="/terms">Early-access terms</NuxtLink>
-          </p>
-        </div>
-      </section>
-
-      <section id="join" class="waitlist" aria-labelledby="waitlist-title">
-        <div class="waitlist-inner section-shell">
-          <div class="waitlist-copy">
-            <p class="section-kicker is-violet">Come a little closer</p>
-            <h2 id="waitlist-title" class="waitlist-title reveal">
-              Your people are <span class="waitlist-accent">waiting.</span>
-            </h2>
-            <p class="waitlist-lead reveal">
-              Leave your email and we&rsquo;ll send the good kind of update — early-access invites
-              first.
-            </p>
-
-            <form
-              class="signup-form is-violet"
-              aria-label="Join the early list"
-              @submit.prevent="submitWaitlist"
-            >
-              <label class="sr-only" for="cta-email">Email address</label>
-              <input
-                id="cta-email"
-                v-model="waitlistEmail"
-                class="signup-input"
-                type="email"
-                name="email"
-                autocomplete="email"
-                inputmode="email"
-                placeholder="you@email.com"
-                :disabled="isJoined"
-                required
-              />
-              <button class="button-primary" type="submit" :disabled="isJoined">
-                {{ isJoined ? "You’re in" : "Join the early list" }}
-              </button>
-            </form>
-            <p class="signup-reassurance is-violet">
-              No spam. Just early-access invites and peopl. updates.
-            </p>
-            <p v-if="isJoined" class="signup-status is-violet" role="status">
-              You’re on the list. We’ll keep it lovely.
-            </p>
-          </div>
-
-          <div class="waitlist-sticker" aria-hidden="true">
-            <span class="sticker-spark">&#10033;</span>
-            <span class="sticker-copy">stay close, softly.</span>
+        <!-- The phone: sits beside the hero and the tour on wide screens -->
+        <div class="flex justify-center pb-24 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:pb-0">
+          <div class="self-start lg:sticky lg:top-[max(5.5rem,calc(50svh-24.5rem))] lg:py-10">
+            <DevicePhone :screen="screen">
+              <TabsContent
+                v-for="item in screens"
+                :key="item.id"
+                :value="item.id"
+                class="h-full rounded-[inherit] focus-visible:outline-offset-[-2px]"
+                :aria-label="`${item.label} preview`"
+              >
+                <motion.div
+                  class="h-full"
+                  :initial="switched ? { opacity: 0, y: 14 } : false"
+                  :animate="{ opacity: 1, y: 0 }"
+                  :transition="springs.soft"
+                >
+                  <component :is="item.component" />
+                </motion.div>
+              </TabsContent>
+            </DevicePhone>
           </div>
         </div>
-      </section>
+      </TabsRoot>
+
+      <SafetySection />
+      <FaqSection />
+      <JoinSection />
     </main>
 
-    <footer class="site-footer">
-      <div class="footer-inner section-shell">
-        <div class="footer-brand">
-          <span class="wordmark">peopl.</span>
-          <p class="footer-tagline">made for the in-between</p>
-          <p class="footer-fineprint">
-            &copy; 2026 peopl. &middot; peopl.social &middot; early access
-          </p>
-        </div>
-
-        <nav class="footer-links" aria-label="Footer">
-          <div class="footer-group">
-            <p class="footer-heading">Explore</p>
-            <a class="footer-link" href="#why">The problem</a>
-            <a class="footer-link" href="#features">How it works</a>
-            <a class="footer-link" href="#meet">Meet IRL</a>
-            <a class="footer-link" href="#safety">Safety</a>
-            <a class="footer-link" href="#join">Get updates</a>
-          </div>
-          <div class="footer-group">
-            <p class="footer-heading">Legal</p>
-            <NuxtLink class="footer-link" to="/privacy">Privacy policy</NuxtLink>
-            <NuxtLink class="footer-link" to="/terms">Terms</NuxtLink>
-          </div>
-          <div class="footer-group">
-            <p class="footer-heading">Contact</p>
-            <a class="footer-link" href="mailto:support@peopl.social">support@peopl.social</a>
-          </div>
-        </nav>
-      </div>
-    </footer>
-
-    <div class="page-grain" aria-hidden="true" />
-  </div>
+    <SiteFooter />
+  </MotionConfig>
 </template>
 
-<style>
-.board-swap-enter-active,
-.board-swap-leave-active {
-  transition:
-    opacity 320ms var(--ease-out),
-    transform 380ms var(--ease-out);
-}
-
-.board-swap-enter-from {
-  opacity: 0;
-  transform: translateY(0.5rem) rotate(-1deg);
-}
-
-.board-swap-leave-to {
-  opacity: 0;
-  transform: translateY(-0.35rem) rotate(1deg);
+<style scoped>
+.hero-underline {
+  text-decoration-line: underline;
+  text-decoration-color: var(--color-violet-500);
+  text-decoration-thickness: 0.075em;
+  text-underline-offset: 0.12em;
+  text-decoration-skip-ink: none;
 }
 </style>

@@ -1,74 +1,64 @@
+import tailwindcss from "@tailwindcss/vite";
+
+const description =
+  "peopl. is a private space for the friends you actually have. Share the small stuff, make plans, and talk without an audience. Join the early list.";
+
 export default defineNuxtConfig({
   compatibilityDate: "2026-09-03",
   devtools: { enabled: false },
-  modules: ["nuxt-i18n-micro", "@comark/nuxt"],
-  i18n: {
-    locales: [
-      { code: "en", iso: "en-US", dir: "ltr", displayName: "English" },
-      { code: "fr", iso: "fr-FR", dir: "ltr", displayName: "Français" },
-    ],
-    defaultLocale: "en",
-    translationDir: "locales",
-    localeCookie: "user-locale",
-    meta: true,
-  },
+  modules: ["@comark/nuxt", "@nuxt/fonts", "reka-ui/nuxt", "motion-v/nuxt"],
   css: ["~/assets/css/main.css"],
+  vite: {
+    plugins: [tailwindcss()],
+  },
+  fonts: {
+    defaults: {
+      styles: ["normal"],
+      subsets: ["latin", "latin-ext"],
+    },
+    families: [
+      { name: "Geologica", provider: "google", weights: ["500 700"] },
+      { name: "Afacad Flux", provider: "google", weights: ["400 600"] },
+    ],
+  },
   app: {
     head: {
-      htmlAttrs: {
-        lang: "en",
-      },
-      title: "peopl. — a private social app for your actual friends",
+      htmlAttrs: { lang: "en" },
+      title: "peopl. · make room for your people",
       meta: [
-        {
-          name: "description",
-          content:
-            "peopl. is a private social app for your actual friends — not followers. Share boards, plan gatherings, message privately — then meet new people in real life. Join the early list.",
-        },
-        { name: "theme-color", content: "#fff2ec" },
+        { name: "description", content: description },
+        { name: "theme-color", content: "#faf6f1" },
         { name: "color-scheme", content: "light" },
         { property: "og:site_name", content: "peopl." },
         { property: "og:type", content: "website" },
         { property: "og:url", content: "https://peopl.social" },
-        { property: "og:title", content: "peopl. — make room for your people" },
-        {
-          property: "og:description",
-          content:
-            "A private social app for your actual friends — not followers. Boards, gatherings, and private messages — then slow dating, shared events, and neighbours you'll actually see. Join the early list.",
-        },
+        { property: "og:title", content: "peopl. · make room for your people" },
+        { property: "og:description", content: description },
         { property: "og:image", content: "https://peopl.social/og.png" },
         { property: "og:image:width", content: "1200" },
         { property: "og:image:height", content: "630" },
         {
           property: "og:image:alt",
           content:
-            "peopl. — make room for your people. A private social app for your actual friends.",
+            "peopl. Make room for your people. A private social app for your actual friends.",
         },
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:title", content: "peopl. — make room for your people" },
-        {
-          name: "twitter:description",
-          content:
-            "A private social app for your actual friends — not followers. Boards, gatherings, private messages — then slow dating, shared events, and neighbours you'll actually see.",
-        },
+        { name: "twitter:title", content: "peopl. · make room for your people" },
+        { name: "twitter:description", content: description },
         { name: "twitter:image", content: "https://peopl.social/og.png" },
       ],
       link: [
         { rel: "canonical", href: "https://peopl.social" },
-        { rel: "preconnect", href: "https://fonts.googleapis.com" },
-        { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
-        {
-          rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=Afacad+Flux:slnt,wght@0,100..1000;1,100..1000&family=Caveat:wght@500;600;700&family=Geologica:wght@100..900&display=swap",
-        },
         { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
       ],
-      script: [{ src: "/vendor/lenis.min.js", defer: true }],
     },
   },
   nitro: {
     prerender: {
       routes: ["/", "/about", "/privacy", "/terms"],
+    },
+    storage: {
+      waitlist: { driver: "fs", base: "./.data/waitlist" },
     },
   },
 });

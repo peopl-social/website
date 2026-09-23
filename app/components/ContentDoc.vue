@@ -13,9 +13,7 @@ const props = defineProps<{
 
 const { data: page, error } = await useFetch<ContentFile<ContentPageData>>(
   `/api/content/${props.slug}`,
-  {
-    key: `content-${props.slug}`,
-  },
+  { key: `content-${props.slug}` },
 );
 
 if (error.value) {
@@ -26,41 +24,44 @@ if (error.value) {
 }
 
 if (!page.value) {
-  throw createError({
-    statusCode: 404,
-    statusMessage: "Content page not found",
-  });
+  throw createError({ statusCode: 404, statusMessage: "Content page not found" });
 }
 
 const contentPage = computed(() => page.value as ContentFile<ContentPageData>);
 
 useSeoMeta({
-  title: () => contentPage.value.data.title ?? props.fallbackTitle ?? "peopl.",
+  title: () => `${contentPage.value.data.title ?? props.fallbackTitle ?? "peopl."} · peopl.`,
   description: () =>
-    contentPage.value.data.description ?? "peopl. — a private social app for your actual friends.",
+    contentPage.value.data.description ?? "peopl. is a private social app for your actual friends.",
 });
 </script>
 
 <template>
-  <div class="site-shell content-page-shell">
-    <section class="section-shell content-page">
-      <NuxtLink class="content-page-brand wordmark" to="/" aria-label="peopl. home"
-        >peopl.</NuxtLink
+  <div class="min-h-svh">
+    <header class="shell flex h-16 items-center justify-between">
+      <NuxtLink to="/" class="rounded-xs text-[1.625rem] leading-none" aria-label="peopl. home">
+        <Wordmark />
+      </NuxtLink>
+      <NuxtLink to="/#join" class="btn btn-primary min-h-10 px-4 text-[0.9375rem]"
+        >Join the list</NuxtLink
       >
+    </header>
 
-      <header class="content-page-header">
-        <p class="section-kicker">peopl.</p>
-        <h1>{{ contentPage.data.title }}</h1>
-        <p v-if="contentPage.data.description">{{ contentPage.data.description }}</p>
-      </header>
+    <main class="shell pt-16 pb-24 sm:pt-24">
+      <h1 class="text-[clamp(2.5rem,6vw,4.5rem)] font-bold tracking-[-0.035em]">
+        {{ contentPage.data.title }}
+      </h1>
+      <p v-if="contentPage.data.description" class="mt-4 max-w-[44ch] text-[1.25rem] text-ink-soft">
+        {{ contentPage.data.description }}
+      </p>
 
-      <article class="content-prose" aria-label="Page content">
+      <article class="prose mt-12 border-t border-line pt-10">
         <MarkdownDocument :value="{ nodes: contentPage.nodes }" />
       </article>
 
-      <footer class="content-footer">
-        <NuxtLink class="content-back" to="/">&larr; back to peopl.</NuxtLink>
-      </footer>
-    </section>
+      <NuxtLink to="/" class="link mt-16 inline-block">Back to peopl.</NuxtLink>
+    </main>
+
+    <SiteFooter />
   </div>
 </template>

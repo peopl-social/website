@@ -1,20 +1,29 @@
 # peopl. / marketing site
 
-A Nuxt 4 landing page for peopl., built around the supplied brand sheet: Geologica for display type, Afacad Flux for body copy, and the orange / violet / warm cream palette.
+The landing page for peopl., a private social app for your actual friends.
 
 ## Stack
 
-- Nuxt `4.5.2` + Vue `3.5.42`
-- Motion for Vue (`motion-v`) for declarative entry transitions
-- GSAP `3.15.0` + ScrollTrigger for the scroll-led story sequence
-- Anime.js `4.5.0` for the waitlist confirmation micro-interaction
-- [21st.dev's Vue card collection](https://21st.dev/community/components/explore/vue-card-component) and [scroll-animation catalog](https://21st.dev/community/components/s/21st-dev) adapted into local Vue components
+- Nuxt `4.5.2` + Vue `3.5.42`, on the Vite+ toolchain (`vp`)
+- Tailwind CSS v4. The design tokens live in the `@theme` block in `app/assets/css/main.css`, and the stock Tailwind palette is turned off.
+- Reka UI for accessible primitives (tabs, accordion, dialog, toggle group)
+- Motion for Vue (`motion-v`) for springy interactions inside the phone preview
+- Lenis for smooth scrolling (off when reduced motion is on)
+- `@lucide/vue` icons
+- `@nuxt/fonts` self-hosts the two fonts: Geologica (headings) and Afacad Flux (body)
+
+## Structure
+
+- `app/pages/index.vue`: hero, the "What's in the app" tabs, and the sticky phone
+- `app/components/phone/`: the phone frame and its four screens (Boards, Doors, Plans, Messages). Demo state lives in `useDemoState`, so it survives switching tabs.
+- `app/composables/useWaitlist.ts`: shared state for the waitlist forms. It posts to `server/api/waitlist.post.ts`.
+- `content/*.md`: the About, Privacy and Terms pages
 
 ## Run locally
 
 ```bash
-pnpm install
-pnpm dev
+vp install
+vp dev
 ```
 
-The device frame is the free, transparent iPhone 16 mockup from [Mobile FIRST](https://www.webmobilefirst.com/en/mockups/apple-iphone-16-2024/), layered over the in-page app previews.
+Run `vp check` and `vp run build` before committing.
