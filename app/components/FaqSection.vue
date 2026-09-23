@@ -38,21 +38,19 @@ const questions = [
 
 <template>
   <section id="faq" class="scroll-mt-20" aria-labelledby="faq-title">
-    <div
-      class="shell grid gap-10 py-20 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-20 lg:py-28"
-    >
-      <div>
+    <div class="shell-narrow py-20 lg:py-28">
+      <div class="text-center">
         <h2 id="faq-title" class="text-[clamp(2.25rem,4.5vw,3.5rem)] font-bold tracking-[-0.03em]">
           Questions
         </h2>
-        <p class="mt-4 max-w-[34ch] text-[1.125rem] text-ink-soft">
+        <p class="mx-auto mt-4 max-w-[40ch] text-[1.125rem] text-ink-soft">
           Something else on your mind? Email
           <a class="link" href="mailto:support@peopl.social">support@peopl.social</a> and a person
           will answer.
         </p>
       </div>
 
-      <AccordionRoot type="single" collapsible class="flex flex-col gap-2">
+      <AccordionRoot type="single" collapsible class="mt-10 flex flex-col gap-2 lg:mt-12">
         <AccordionItem
           v-for="(item, index) in questions"
           :key="item.q"

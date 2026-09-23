@@ -96,11 +96,7 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
 
     <main id="main">
       <!-- Hero: photo card below the nav, sized to end just above the bottom of the screen -->
-      <section
-        id="top"
-        class="mx-auto max-w-[90rem] px-3 pt-3 sm:px-5"
-        aria-labelledby="hero-title"
-      >
+      <section id="top" class="shell-wide pt-3" aria-labelledby="hero-title">
         <div class="relative isolate overflow-hidden rounded-xl bg-ink">
           <img
             src="/people/picnic.jpg"

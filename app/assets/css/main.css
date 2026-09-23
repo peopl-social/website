@@ -116,6 +116,28 @@
     padding-inline: clamp(1.25rem, 4vw, 2.5rem);
   }
 
+  /* Wide bands (hero, safety, join): nearly edge to edge with a small gutter. */
+  .shell-wide {
+    width: 100%;
+    max-width: 90rem;
+    margin-inline: auto;
+    padding-inline: 0.75rem;
+  }
+
+  @media (min-width: 640px) {
+    .shell-wide {
+      padding-inline: 1.25rem;
+    }
+  }
+
+  /* Narrow column for reading (FAQ). */
+  .shell-narrow {
+    width: 100%;
+    max-width: 52rem;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+  }
+
   /* Primary action. Ink on orange keeps AA contrast at every size. */
   .btn {
     display: inline-flex;
