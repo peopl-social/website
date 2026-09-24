@@ -120,17 +120,19 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
             <div class="lg:self-center">
               <h1
                 id="hero-title"
-                class="text-[clamp(3rem,6.4vw,6rem)] leading-[0.95] font-bold tracking-[-0.035em] text-paper"
+                class="text-[clamp(3rem,5.8vw,5.5rem)] leading-[0.95] font-bold tracking-[-0.035em] text-paper"
               >
-              Real people<span class="hero-underline block whitespace-nowrap text-orange-500"
-                  >.</span> Real plans<span class="hero-underline block whitespace-nowrap text-orange-500"
-                  >.</span> Real life<span class="hero-underline block whitespace-nowrap text-orange-500"
-                  >.</span>
+                <span class="block">Real people<span class="text-orange-500">.</span></span>
+                <span class="block">Real plans<span class="text-orange-500">.</span></span>
+                <span class="hero-underline block w-fit whitespace-nowrap text-orange-500"
+                  >Real life.</span
+                >
               </h1>
               <p
-                class="mt-7 max-w-[34ch] text-[1.25rem] leading-[1.45] text-paper/85 sm:text-[1.375rem]"
+                class="mt-7 max-w-[36ch] text-[1.25rem] leading-[1.45] text-paper/85 sm:text-[1.375rem]"
               >
-   The social app that gets you off your screen and into the same room. Verified humans, shared events, and a neighborhood marketplace. All in one place.
+                The social app that gets you off your screen and into the same room. Verified
+                humans, shared events, and a neighborhood marketplace. All in one place.
               </p>
               <div class="mt-9">
                 <WaitlistForm id="hero" tone="dark" />
@@ -197,7 +199,8 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
             Dating apps broke meeting people.
           </h2>
           <p class="mt-4 max-w-[40ch] text-[1.125rem] text-ink-soft">
-            Swipe fatigue, ghosting, bots, and endless chats that never become anything. Sound familiar?
+            Swipe fatigue, ghosting, bots, and endless chats that never become anything. Sound
+            familiar?
           </p>
         </div>
 
