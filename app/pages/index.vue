@@ -89,14 +89,20 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
   <MotionConfig reduced-motion="user">
     <a
       href="#main"
+      data-native-anchor
       class="fixed top-3 left-3 z-50 -translate-y-20 rounded-full bg-ink px-5 py-2 text-paper focus:translate-y-0"
       >Skip to content</a
     >
     <SiteNav />
 
     <main id="main">
-      <!-- Hero: photo card below the nav, sized to end just above the bottom of the screen -->
-      <section id="top" class="shell-wide pt-3" aria-labelledby="hero-title">
+      <!-- Hero: photo card below the nav. On wide screens it stops short of the fold,
+           so the start of the next section shows underneath. -->
+      <section
+        id="top"
+        class="mx-auto w-full max-w-[100rem] px-2 pt-3 sm:px-3"
+        aria-labelledby="hero-title"
+      >
         <div class="relative isolate overflow-hidden rounded-xl bg-ink">
           <img
             src="/people/picnic.jpg"
@@ -109,7 +115,7 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
           <div class="absolute inset-0 -z-10 bg-ink/55" aria-hidden="true" />
 
           <div
-            class="shell grid items-center gap-12 py-12 sm:py-16 lg:h-[calc(100svh-6.25rem)] lg:min-h-[34rem] lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-16 lg:py-8 xl:gap-x-24"
+            class="shell grid items-center gap-12 py-12 sm:py-16 lg:h-[calc(100svh-13rem)] lg:min-h-[34rem] lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-16 lg:py-6 xl:gap-x-24"
           >
             <div class="lg:self-center">
               <h1
@@ -152,6 +158,26 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
         </div>
       </section>
 
+      <!-- The problem: short, and close enough to the hero to peek above the fold -->
+      <section
+        id="problem"
+        class="shell grid gap-6 pt-12 pb-4 sm:pt-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-end lg:gap-16"
+        aria-labelledby="problem-title"
+      >
+        <h2
+          id="problem-title"
+          class="text-[clamp(2.5rem,5.5vw,4.5rem)] leading-[0.98] font-bold tracking-[-0.035em]"
+        >
+          Too much social.
+          <span class="block text-orange-600">Not enough close.</span>
+        </h2>
+        <p class="max-w-[42ch] text-[1.1875rem] leading-[1.5] text-ink-soft lg:pb-2">
+          Feeds are built for audiences, so the people who matter get buried between ads and
+          strangers. Plans stall in the group chat, and "we should catch up" never turns into a
+          date.
+        </p>
+      </section>
+
       <!-- What's in the app: tabs on the left, the photo for the active tab on the right -->
       <TabsRoot
         id="how"
@@ -159,11 +185,11 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
         :model-value="screen"
         :orientation="orientation"
         activation-mode="automatic"
-        class="shell grid scroll-mt-24 gap-10 py-24 sm:py-32 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-16"
+        class="shell grid gap-10 py-24 sm:py-32 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-x-16 lg:gap-y-12"
         aria-labelledby="how-title"
         @update:model-value="onScreenChange"
       >
-        <div>
+        <div class="lg:col-span-2">
           <h2
             id="how-title"
             class="text-[clamp(2.25rem,4.5vw,3.5rem)] font-bold tracking-[-0.03em]"
@@ -173,9 +199,11 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
           <p class="mt-4 max-w-[40ch] text-[1.125rem] text-ink-soft">
             Swipe fatigue, ghosting, bots, and endless chats that never become anything. Sound familiar?
           </p>
+        </div>
 
+        <div>
           <TabsList
-            class="relative mt-8 flex gap-1 overflow-x-auto rounded-full bg-sunk p-1 lg:mt-12 lg:flex-col lg:gap-2 lg:overflow-visible lg:rounded-none lg:bg-transparent lg:p-0"
+            class="relative flex gap-1 overflow-x-auto rounded-full bg-sunk p-1 lg:flex-col lg:gap-2 lg:overflow-visible lg:rounded-none lg:bg-transparent lg:p-0"
             aria-label="App features"
           >
             <TabsIndicator
@@ -220,9 +248,10 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
           </div>
         </div>
 
-        <div class="lg:sticky lg:top-24 lg:self-start">
+        <!-- Same height as the tab list, so the photo lines up with it at every scroll position -->
+        <div>
           <div
-            class="relative aspect-[4/5] overflow-hidden rounded-xl bg-sunk sm:aspect-[4/3] lg:aspect-auto lg:h-[min(44rem,calc(100svh-8rem))]"
+            class="relative aspect-[4/5] overflow-hidden rounded-xl bg-sunk sm:aspect-[4/3] lg:aspect-auto lg:h-full lg:min-h-[32rem]"
           >
             <img
               v-for="item in screens"
@@ -257,6 +286,7 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
       </TabsRoot>
 
       <SafetySection />
+      <LaunchSection />
       <FaqSection />
       <JoinSection />
     </main>

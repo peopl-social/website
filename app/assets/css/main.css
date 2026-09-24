@@ -57,7 +57,7 @@
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
-    scroll-padding-top: 5.5rem;
+    scroll-padding-top: 6.5rem;
   }
 
   body {
@@ -188,34 +188,40 @@
   }
 
   /*
-   * Scales the fixed 360x780 phone design so it fits inside the hero,
-   * which is the screen height minus the nav and a small gap on wide screens.
+   * Scales the fixed 360x780 phone design so it fits inside the hero on wide screens.
+   * The hero is the screen height minus 13rem (nav above, a peek of the next section below).
    */
   .phone-scale {
     zoom: 1;
   }
 
+  @media (min-width: 1024px) and (max-height: 1100px) {
+    .phone-scale {
+      zoom: 0.86;
+    }
+  }
+
   @media (min-width: 1024px) and (max-height: 1000px) {
     .phone-scale {
-      zoom: 0.88;
+      zoom: 0.78;
     }
   }
 
   @media (min-width: 1024px) and (max-height: 900px) {
     .phone-scale {
-      zoom: 0.8;
+      zoom: 0.7;
     }
   }
 
   @media (min-width: 1024px) and (max-height: 820px) {
     .phone-scale {
-      zoom: 0.72;
+      zoom: 0.6;
     }
   }
 
   @media (min-width: 1024px) and (max-height: 740px) {
     .phone-scale {
-      zoom: 0.64;
+      zoom: 0.54;
     }
   }
 

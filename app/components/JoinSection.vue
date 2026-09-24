@@ -1,5 +1,5 @@
 <template>
-  <section id="join" class="scroll-mt-20 pb-6 sm:pb-10" aria-labelledby="join-title">
+  <section id="join" class="pb-6 sm:pb-10" aria-labelledby="join-title">
     <div class="shell-wide">
       <div class="rounded-xl bg-ink py-16 text-paper sm:py-20 lg:py-28">
         <div class="shell grid gap-10 lg:grid-cols-2 lg:items-end lg:gap-16">

@@ -22,10 +22,6 @@ const questions = [
     a: "Three things. Slow dating, where you get a small set of profiles each week instead of endless swiping. Meeting people through events you're both going to. And a local marketplace for things like bread from a neighbour, picked up in person. None of it exists yet.",
   },
   {
-    q: "When and where does it launch?",
-    a: "We're opening one city at a time. Join the list and we'll email you when there's an invite for your city.",
-  },
-  {
     q: "Which phones, and what does it cost?",
     a: "iOS and Android are both planned. Early access is free.",
   },
@@ -37,7 +33,7 @@ const questions = [
 </script>
 
 <template>
-  <section id="faq" class="scroll-mt-20" aria-labelledby="faq-title">
+  <section id="faq" aria-labelledby="faq-title">
     <div class="shell-narrow py-20 lg:py-28">
       <div class="text-center">
         <h2 id="faq-title" class="text-[clamp(2.25rem,4.5vw,3.5rem)] font-bold tracking-[-0.03em]">
