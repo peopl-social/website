@@ -3,16 +3,24 @@ import { onBeforeUnmount, onMounted, ref } from "vue";
 
 const props = withDefaults(
   defineProps<{
-    color?: "orange" | "violet" | "green" | "sky";
+    color?: "orange" | "violet" | "green" | "sky" | "pink";
     mood?: "board" | "event" | "message";
     label?: string;
     size?: "sm" | "md" | "lg";
+    holdingPhone?: boolean;
+    decorative?: boolean;
+    expression?: "happy" | "sad" | "excited" | "soft" | "chill";
+    showBadge?: boolean;
   }>(),
   {
     color: "orange",
     mood: "board",
     label: "feature friend",
     size: "md",
+    holdingPhone: false,
+    decorative: false,
+    expression: "happy",
+    showBadge: true,
   },
 );
 
@@ -56,6 +64,7 @@ const saySomething = () => {
 };
 
 const wave = () => {
+  if (props.decorative) return;
   isWaving.value = true;
   saySomething();
   if (waveTimer) window.clearTimeout(waveTimer);
@@ -89,6 +98,7 @@ const scheduleAmbientLine = () => {
 };
 
 onMounted(() => {
+  if (props.decorative) return;
   waveTimer = window.setTimeout(wave, 2600 + Math.random() * 3600);
   ambientTimer = window.setTimeout(scheduleAmbientLine, 4000 + Math.random() * 3000);
   window.addEventListener("pointermove", handlePointerMove, { passive: true });
@@ -103,17 +113,24 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <button
+  <component
+    :is="props.decorative ? 'span' : 'button'"
     ref="root"
     class="feature-sprite"
     :class="[
       `is-${props.color}`,
       `is-${props.mood}`,
       `is-${props.size}`,
-      { 'is-waving': isWaving },
+      `expression-${props.expression}`,
+      {
+        'is-waving': isWaving,
+        'is-using-phone': props.holdingPhone,
+        'is-decorative': props.decorative,
+      },
     ]"
-    type="button"
-    :aria-label="`${props.label}. Tap to wave`"
+    :type="props.decorative ? undefined : 'button'"
+    :aria-hidden="props.decorative ? true : undefined"
+    :aria-label="props.decorative ? undefined : `${props.label}. Tap to wave`"
     @click="wave"
   >
     <span class="sprite-shadow" aria-hidden="true" />
@@ -125,17 +142,22 @@ onBeforeUnmount(() => {
         <i class="sprite-eye eye-right" />
         <i class="sprite-smile" />
       </span>
-      <span class="sprite-badge" aria-hidden="true">
+      <span v-if="!props.holdingPhone && props.showBadge" class="sprite-badge" aria-hidden="true">
         <span v-if="props.mood === 'board'">✦</span>
         <span v-else-if="props.mood === 'event'">+</span>
         <span v-else>· ·</span>
       </span>
+      <span v-if="props.holdingPhone" class="sprite-phone-grip" aria-hidden="true">
+        <span class="sprite-phone"><span /></span>
+        <span class="sprite-holding-hand" />
+        <span class="sprite-tapping-hand" />
+      </span>
     </span>
     <span class="sprite-arm arm-left" aria-hidden="true" />
     <span class="sprite-arm arm-right" aria-hidden="true" />
-    <span class="sprite-wave" aria-hidden="true">hi</span>
+    <span v-if="!props.decorative" class="sprite-wave" aria-hidden="true">hi</span>
     <span v-if="speech" class="sprite-speech" aria-live="polite">{{ speech }}</span>
-  </button>
+  </component>
 </template>
 
 <style scoped>
@@ -155,6 +177,51 @@ onBeforeUnmount(() => {
 }
 .feature-sprite.is-lg {
   transform: scale(1.24);
+}
+
+.feature-sprite.is-decorative {
+  cursor: inherit;
+  pointer-events: none;
+}
+
+.feature-sprite.is-decorative:hover .sprite-body {
+  filter: none;
+  transform: translateX(-50%) rotate(-4deg);
+}
+
+.expression-sad .sprite-smile {
+  transform: translateX(-50%) rotate(180deg);
+}
+
+.expression-sad .sprite-eye {
+  height: 0.6rem;
+  transform: rotate(-12deg);
+}
+
+.expression-excited .sprite-smile {
+  height: 0.75rem;
+  background: var(--ink);
+}
+
+.expression-soft .sprite-face::before,
+.expression-soft .sprite-face::after {
+  position: absolute;
+  top: 1.1rem;
+  width: 0.6rem;
+  height: 0.3rem;
+  border-radius: 50%;
+  background: #e86985;
+  content: "";
+}
+.expression-soft .sprite-face::before {
+  left: 0;
+}
+.expression-soft .sprite-face::after {
+  right: 0;
+}
+.expression-chill .sprite-eye {
+  height: 0.25rem;
+  top: 0.4rem;
 }
 
 .sprite-shadow {
@@ -204,6 +271,110 @@ onBeforeUnmount(() => {
 }
 .feature-sprite.is-sky {
   --sprite-color: var(--sky);
+}
+
+.feature-sprite.is-pink {
+  --sprite-color: var(--pink);
+}
+
+.is-using-phone .sprite-face {
+  transform: translate(0.24rem, 0.22rem) rotate(7deg);
+}
+
+.is-using-phone .sprite-body {
+  animation: phone-reader-breathe 4.5s ease-in-out infinite;
+}
+
+.is-using-phone .sprite-arm {
+  top: 4.8rem;
+  height: 1.15rem;
+}
+
+.is-using-phone .arm-left {
+  left: 1rem;
+  transform: rotate(-48deg);
+}
+
+.is-using-phone .arm-right {
+  right: 1rem;
+  transform: rotate(48deg);
+  animation: none;
+}
+
+.sprite-phone-grip {
+  position: absolute;
+  z-index: 2;
+  right: 0.35rem;
+  bottom: 0.55rem;
+  width: 2.2rem;
+  height: 2.05rem;
+  transform: rotate(-9deg);
+}
+
+.sprite-phone {
+  position: absolute;
+  left: 0.5rem;
+  width: 1.05rem;
+  height: 1.7rem;
+  padding: 0.13rem;
+  border: 0.12rem solid var(--ink);
+  border-radius: 0.25rem;
+  background: var(--paper);
+  box-shadow: 0.08rem 0.1rem 0 rgb(0 0 0 / 0.16);
+}
+
+.sprite-phone span {
+  display: block;
+  height: 100%;
+  background:
+    linear-gradient(var(--orange), var(--orange)) 50% 22% / 65% 0.12rem no-repeat,
+    linear-gradient(var(--green), var(--green)) 50% 50% / 80% 0.12rem no-repeat,
+    linear-gradient(var(--pink), var(--pink)) 50% 75% / 55% 0.12rem no-repeat;
+}
+
+.sprite-holding-hand,
+.sprite-tapping-hand {
+  position: absolute;
+  z-index: 1;
+  top: 0.85rem;
+  width: 0.65rem;
+  height: 0.45rem;
+  border: 0.1rem solid var(--ink);
+  border-radius: 50%;
+  background: var(--sprite-color);
+}
+
+.sprite-holding-hand {
+  right: 0.25rem;
+  transform: rotate(-25deg);
+}
+
+.sprite-tapping-hand {
+  left: 0.03rem;
+  animation: phone-reader-tap 2.8s ease-in-out infinite;
+}
+
+@keyframes phone-reader-breathe {
+  0%,
+  100% {
+    transform: translateX(-50%) rotate(-4deg);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-0.12rem) rotate(-1deg);
+  }
+}
+
+@keyframes phone-reader-tap {
+  0%,
+  30%,
+  60%,
+  100% {
+    transform: translate(0, 0) rotate(-12deg);
+  }
+  40%,
+  50% {
+    transform: translate(0.35rem, -0.28rem) rotate(-28deg);
+  }
 }
 
 .sprite-face {
@@ -379,6 +550,11 @@ onBeforeUnmount(() => {
   .sprite-speech {
     animation: none !important;
     transition: none !important;
+  }
+
+  .is-using-phone .sprite-body,
+  .sprite-tapping-hand {
+    animation: none !important;
   }
 }
 </style>

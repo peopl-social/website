@@ -9,6 +9,8 @@ import FeatureSprite from "../components/FeatureSprite.vue";
 import MoodboardSection from "../components/MoodboardSection.vue";
 import PageCat from "../components/PageCat.vue";
 import PhoneMockup from "../components/PhoneMockup.vue";
+import TrustSection from "../components/TrustSection.vue";
+import { pickReloadVariant } from "../utils/reloadVariant";
 
 const pageRoot = ref<HTMLElement | null>(null);
 const menuOpen = ref(false);
@@ -141,6 +143,7 @@ const submitWaitlist = () => {
 };
 
 onMounted(() => {
+  activePersona.value = pickReloadVariant("peopl-persona", personas.length);
   if (!pageRoot.value) return;
 
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -203,6 +206,7 @@ onBeforeUnmount(() => {
           <a class="nav-link" href="#features" @click.prevent="scrollToSection('features')"
             >Features</a
           >
+          <a class="nav-link" href="#trust" @click.prevent="scrollToSection('trust')">Trust</a>
         </div>
 
         <a class="nav-cta nav-join-link" href="#join" @click.prevent="scrollToSection('join')"
@@ -252,6 +256,7 @@ onBeforeUnmount(() => {
           <a class="mobile-menu-link" href="#why" @click="closeMenu">The problem</a>
           <a class="mobile-menu-link" href="#moodboard" @click="closeMenu">Moodboard</a>
           <a class="mobile-menu-link" href="#features" @click="closeMenu">Features</a>
+          <a class="mobile-menu-link" href="#trust" @click="closeMenu">Trust</a>
           <a class="mobile-menu-link" href="#join" @click="closeMenu">Join the list</a>
         </div>
       </div>
@@ -315,13 +320,15 @@ onBeforeUnmount(() => {
               <div class="phone-scroll-rail" aria-hidden="true">
                 <span class="phone-scroll-thumb" />
               </div>
-              <FeatureSprite
-                class="hero-scroll-buddy"
-                color="green"
-                mood="message"
-                size="sm"
-                label="tiny friend pulling the phone scroll"
-              />
+              <div class="hero-scroll-buddy-track">
+                <FeatureSprite
+                  class="hero-scroll-buddy"
+                  color="green"
+                  mood="message"
+                  size="sm"
+                  label="tiny friend pulling the phone scroll"
+                />
+              </div>
             </div>
 
             <FeatureSprite
@@ -333,14 +340,12 @@ onBeforeUnmount(() => {
             />
             <FeatureSprite
               class="hero-comment-sprite sprite-tiny-phone"
-              color="violet"
+              color="pink"
               mood="event"
               size="sm"
+              holding-phone
               label="friend using a tiny phone"
             />
-            <div class="tiny-phone-prop" aria-hidden="true">
-              <span />
-            </div>
           </div>
         </div>
       </section>
@@ -563,6 +568,8 @@ onBeforeUnmount(() => {
           </Motion>
         </div>
       </section>
+
+      <TrustSection />
 
       <section id="join" class="waitlist-section section-shell" aria-labelledby="waitlist-title">
         <div class="waitlist-copy">

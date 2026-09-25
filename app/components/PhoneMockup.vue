@@ -113,7 +113,7 @@ const userPlaceholders = [
 
             <div class="users-scroll-window">
               <div class="users-scroll-track">
-                <template v-for="loop in 2" :key="loop">
+                <div v-for="loop in 2" :key="loop" class="users-scroll-group">
                   <article
                     v-for="person in userPlaceholders"
                     :key="`${loop}-${person.initial}`"
@@ -130,7 +130,7 @@ const userPlaceholders = [
                       <em>“{{ person.comment }}”</em>
                     </span>
                   </article>
-                </template>
+                </div>
               </div>
             </div>
           </template>
@@ -664,8 +664,15 @@ const userPlaceholders = [
 .users-scroll-track {
   display: grid;
   gap: 0.9em;
-  padding: 0.2em 0.15em 1em 0;
-  animation: phone-user-scroll 8s var(--ease-soft) infinite;
+  animation: phone-user-scroll var(--phone-pull-duration, 7s) var(--phone-pull-ease, ease-in-out)
+    infinite;
+  will-change: transform;
+}
+
+.users-scroll-group {
+  display: grid;
+  gap: 0.9em;
+  padding-right: 0.15em;
 }
 
 .user-card {
@@ -1047,11 +1054,13 @@ const userPlaceholders = [
 }
 
 @keyframes phone-user-scroll {
-  from {
-    transform: translateY(-50%);
+  0%,
+  12% {
+    transform: translateY(calc(-50% - 0.45em));
   }
 
-  to {
+  64%,
+  100% {
     transform: translateY(0);
   }
 }
