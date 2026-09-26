@@ -5,8 +5,8 @@ const steps = ["First cities", "Next wave", "Everywhere"];
 </script>
 
 <template>
-  <section id="launch" aria-labelledby="launch-title">
-    <div class="shell py-4 sm:py-6">
+  <section id="launch" class="section-screen" aria-labelledby="launch-title">
+    <div class="shell">
       <div
         class="grid gap-8 rounded-xl bg-violet-50 p-7 sm:p-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-16 lg:px-14"
       >

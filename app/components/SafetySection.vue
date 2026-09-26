@@ -26,7 +26,7 @@ const rules = [
 </script>
 
 <template>
-  <section id="safety" class="py-10 sm:py-16" aria-labelledby="safety-title">
+  <section id="safety" class="section-screen" aria-labelledby="safety-title">
     <div class="shell-wide">
       <div class="rounded-xl border border-line bg-surface py-14 sm:py-20 lg:py-24">
         <div class="shell grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">

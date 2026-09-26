@@ -33,8 +33,9 @@ const questions = [
 </script>
 
 <template>
-  <section id="faq" aria-labelledby="faq-title">
-    <div class="shell-narrow py-20 lg:py-28">
+  <!-- Top-aligned so opening an answer grows the list downward instead of shifting the heading -->
+  <section id="faq" class="section-screen content-start" aria-labelledby="faq-title">
+    <div class="shell-narrow">
       <div class="text-center">
         <h2 id="faq-title" class="text-[clamp(2.25rem,4.5vw,3.5rem)] font-bold tracking-[-0.03em]">
           Questions

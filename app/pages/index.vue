@@ -96,8 +96,7 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
     <SiteNav />
 
     <main id="main">
-      <!-- Hero: photo card below the nav. On wide screens it stops short of the fold,
-           so the start of the next section shows underneath. -->
+      <!-- Hero: photo card below the nav. On wide screens it fills the rest of the first screen. -->
       <section
         id="top"
         class="mx-auto w-full max-w-[100rem] px-2 pt-3 sm:px-3"
@@ -115,7 +114,7 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
           <div class="absolute inset-0 -z-10 bg-ink/55" aria-hidden="true" />
 
           <div
-            class="shell grid items-center gap-12 py-12 sm:py-16 lg:h-[calc(100svh-13rem)] lg:min-h-[34rem] lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-16 lg:py-6 xl:gap-x-24"
+            class="shell grid items-center gap-12 py-12 sm:py-16 lg:h-[calc(100svh-6.75rem)] lg:min-h-[34rem] lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-16 lg:py-6 xl:gap-x-24"
           >
             <div class="lg:self-center">
               <h1
@@ -144,7 +143,7 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
 
             <!-- The phone: the same app preview as before, now over the photo -->
             <div class="flex justify-center" role="region" aria-label="App preview">
-              <DevicePhone :screen="screen">
+              <DevicePhone :screen="screen" @select="onScreenChange">
                 <motion.div
                   :key="screen"
                   class="h-full"
@@ -160,10 +159,10 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
         </div>
       </section>
 
-      <!-- The problem: short, and close enough to the hero to peek above the fold -->
+      <!-- The problem -->
       <section
         id="problem"
-        class="shell grid gap-6 pt-12 pb-4 sm:pt-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-end lg:gap-16"
+        class="section-screen shell grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-end lg:gap-16"
         aria-labelledby="problem-title"
       >
         <h2
@@ -187,7 +186,7 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
         :model-value="screen"
         :orientation="orientation"
         activation-mode="automatic"
-        class="shell grid gap-10 py-24 sm:py-32 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-x-16 lg:gap-y-12"
+        class="section-screen shell grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-x-16 lg:gap-y-12"
         aria-labelledby="how-title"
         @update:model-value="onScreenChange"
       >
