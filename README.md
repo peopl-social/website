@@ -15,8 +15,19 @@ The landing page for peopl., a private social app for your actual friends.
 ## Structure
 
 - `app/pages/index.vue`: the photo hero and the "What's in the app" tabs. Each tab shows a photo from `public/people/` (free Unsplash photos, no credit required) with a small interactive overlay from `FeatureOverlay.vue`.
-- `app/composables/useWaitlist.ts`: shared state for the waitlist forms. It posts to `server/api/waitlist.post.ts`.
+- `app/composables/useWaitlist.ts`: shared state for the waitlist forms. It posts to `server/api/submit.post.ts`.
+- `shared/utils/waitlist.ts`: the Valibot schema for a signup. The form and the API both validate with it.
+- `server/api/submit.post.ts`: validates the signup again and adds it to a SendPulse mailing list (`server/utils/sendpulse.ts`).
 - `content/*.md`: the About, Privacy and Terms pages
+
+## Environment
+
+Copy `.env.example` to `.env` and fill in:
+
+- `SENDPULSE_API_KEY`: from SendPulse, Settings > API > API keys
+- `SENDPULSE_ADDRESS_BOOK_ID`: the mailing list signups go to
+
+Without them, `vp dev` saves signups locally only and production returns an error.
 
 ## Run locally
 

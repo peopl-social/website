@@ -1,6 +1,7 @@
-export type WaitlistStatus = "idle" | "loading" | "joined" | "duplicate" | "invalid" | "error";
+import * as v from "valibot";
+import { waitlistSchema, type WaitlistResponse } from "#shared/utils/waitlist";
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+export type WaitlistStatus = "idle" | "loading" | "joined" | "duplicate" | "invalid" | "error";
 
 /** Shared by every waitlist form on the page so joining once updates all of them. */
 export function useWaitlist() {
@@ -24,21 +25,23 @@ export function useWaitlist() {
   async function submit() {
     if (status.value === "loading" || done.value) return;
 
-    const value = email.value.trim();
-    if (!EMAIL_PATTERN.test(value)) {
+    const parsed = v.safeParse(waitlistSchema, { email: email.value, locale: "en" });
+    if (!parsed.success) {
       status.value = "invalid";
       return;
     }
 
     status.value = "loading";
     try {
-      const response = await $fetch<{ status: "joined" | "duplicate" }>("/api/waitlist", {
+      const response = await $fetch<WaitlistResponse>("/api/submit", {
         method: "POST",
-        body: { email: value, locale: "en" },
+        body: parsed.output,
       });
       status.value = response.status;
-    } catch {
-      status.value = "error";
+    } catch (error) {
+      // The server runs the same schema, so a 422 still means the email itself is wrong.
+      const code = (error as { statusCode?: number }).statusCode;
+      status.value = code === 422 ? "invalid" : "error";
     }
   }
 
