@@ -162,7 +162,7 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
       <!-- The problem -->
       <section
         id="problem"
-        class="section-space shell grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-end lg:gap-16"
+        class="shell grid gap-6 py-24 sm:py-32 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-end lg:gap-16"
         aria-labelledby="problem-title"
       >
         <h2
