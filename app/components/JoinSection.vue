@@ -1,5 +1,5 @@
 <template>
-  <section id="join" class="section-screen" aria-labelledby="join-title">
+  <section id="join" class="section-space" aria-labelledby="join-title">
     <div class="shell-wide">
       <div class="rounded-xl bg-ink py-16 text-paper sm:py-20 lg:py-28">
         <div class="shell grid gap-10 lg:grid-cols-2 lg:items-end lg:gap-16">

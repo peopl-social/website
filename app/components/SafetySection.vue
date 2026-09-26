@@ -26,9 +26,12 @@ const rules = [
 </script>
 
 <template>
-  <section id="safety" class="section-screen" aria-labelledby="safety-title">
+  <section id="safety" class="section-space" aria-labelledby="safety-title">
     <div class="shell-wide">
-      <div class="rounded-xl border border-line bg-surface py-14 sm:py-20 lg:py-24">
+      <!-- The card itself fills roughly a screen, so the gaps around it stay the same as elsewhere -->
+      <div
+        class="grid min-h-[85svh] content-center rounded-xl border border-line bg-surface py-14 sm:py-20 lg:py-24"
+      >
         <div class="shell grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
           <div>
             <h2

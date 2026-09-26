@@ -150,6 +150,11 @@
     padding-block: clamp(4rem, 10svh, 8rem);
   }
 
+  /* Short sections and CTAs: just breathing room, no forced height. */
+  .section-space {
+    padding-block: clamp(2.5rem, 6svh, 5rem);
+  }
+
   /* Primary action. Ink on orange keeps AA contrast at every size. */
   .btn {
     display: inline-flex;
