@@ -22,12 +22,15 @@ The landing page for peopl., a private social app for your actual friends.
 
 ## Environment
 
-Copy `.env.example` to `.env` and fill in:
+Runs on Cloudflare Workers (nitro preset `cloudflare_module`, config in `wrangler.jsonc`). Workers have no `process.env`, so the server reads secrets from the Cloudflare env on each request (`event.context.cloudflare.env`).
 
 - `SENDPULSE_API_KEY`: from SendPulse, Settings > API > API keys
 - `SENDPULSE_ADDRESS_BOOK_ID`: the mailing list signups go to
 
-Without them, `vp dev` saves signups locally only and production returns an error.
+Locally, copy `.dev.vars.example` to `.dev.vars` and fill them in. `vp dev` loads it through wrangler.
+In production, set them once with `wrangler secret put SENDPULSE_API_KEY` (and the same for the list id), or under the Worker's Settings > Variables and Secrets.
+
+Without them, the signup endpoint returns an error.
 
 ## Run locally
 
@@ -35,5 +38,8 @@ Without them, `vp dev` saves signups locally only and production returns an erro
 vp install
 vp dev
 ```
+
+- `vp run preview`: build and run the real Worker locally with `wrangler dev`
+- `vp run deploy`: build and deploy with `wrangler deploy`
 
 Run `vp check` and `vp run build` before committing.

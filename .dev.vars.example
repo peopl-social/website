@@ -1,3 +1,6 @@
+# Local secrets for `nuxt dev` / `wrangler dev`. Copy to .dev.vars (gitignored).
+# In production set them with `wrangler secret put <NAME>` or in the Cloudflare dashboard.
+
 # SendPulse: Settings > API > API keys
 SENDPULSE_API_KEY=
 # The mailing list signups are added to (Email > Mailing lists, the number in the list URL)

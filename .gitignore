@@ -3,8 +3,10 @@ node_modules/
 .output/
 .data/
 dist/
+.wrangler/
 .env*
-!.env.example
+.dev.vars*
+!.dev.vars.example
 
 .vercel
 .playwright-mcp/

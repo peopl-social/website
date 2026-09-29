@@ -54,11 +54,14 @@ export default defineNuxtConfig({
     },
   },
   nitro: {
+    // Cloudflare Workers with static assets. Settings live in wrangler.jsonc.
+    // In `nuxt dev` this also loads bindings and secrets (.dev.vars) through wrangler.
+    preset: "cloudflare_module",
+    cloudflare: {
+      nodeCompat: true,
+    },
     prerender: {
       routes: ["/", "/about", "/privacy", "/terms"],
-    },
-    storage: {
-      waitlist: { driver: "fs", base: "./.data/waitlist" },
     },
   },
 });

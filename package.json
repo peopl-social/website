@@ -6,7 +6,8 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "preview": "nuxt preview",
+    "preview": "nuxt build && wrangler dev",
+    "deploy": "nuxt build && wrangler deploy",
     "typecheck": "nuxi typecheck",
     "prepare": "vp config"
   },
@@ -25,12 +26,12 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
-    "@types/node": "^22.20.4",
     "tailwindcss": "^4.3.3",
     "typescript": "5.9.3",
     "vite": "catalog:",
     "vite-plus": "catalog:",
-    "vue-tsc": "3.3.11"
+    "vue-tsc": "3.3.11",
+    "wrangler": "^4.143.0"
   },
   "devEngines": {
     "packageManager": {
