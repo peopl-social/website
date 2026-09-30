@@ -102,19 +102,26 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
         class="mx-auto w-full max-w-[100rem] px-2 pt-3 sm:px-3"
         aria-labelledby="hero-title"
       >
-        <div class="relative isolate overflow-hidden rounded-xl bg-ink">
-          <img
-            src="/people/picnic.jpg"
-            alt=""
-            class="absolute inset-0 -z-10 size-full object-cover object-[50%_72%]"
-            fetchpriority="high"
-            decoding="async"
-          />
-          <!-- Flat tint so the text stays readable over the photo -->
-          <div class="absolute inset-0 -z-10 bg-ink/55" aria-hidden="true" />
+        <div class="relative isolate lg:overflow-hidden lg:rounded-xl lg:bg-ink">
+          <!-- Photo card. On mobile it stops halfway down the phone, so the phone hangs over
+               its bottom edge instead of the photo stretching the full height behind it. -->
+          <div
+            class="absolute inset-x-0 top-0 bottom-80 -z-10 overflow-hidden rounded-xl bg-ink sm:bottom-96 lg:bottom-0 lg:rounded-none"
+            aria-hidden="true"
+          >
+            <img
+              src="/people/picnic.jpg"
+              alt=""
+              class="absolute inset-0 size-full object-cover object-[50%_72%]"
+              fetchpriority="high"
+              decoding="async"
+            />
+            <!-- Flat tint so the text stays readable over the photo -->
+            <div class="absolute inset-0 bg-ink/55" />
+          </div>
 
           <div
-            class="shell grid items-center gap-12 py-12 sm:py-16 lg:h-[calc(100svh-6.75rem)] lg:min-h-[34rem] lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-16 lg:py-6 xl:gap-x-24"
+            class="shell grid items-center gap-12 pt-12 sm:pt-16 lg:h-[calc(100svh-6.75rem)] lg:min-h-[34rem] lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-16 lg:py-6 xl:gap-x-24"
           >
             <div class="lg:self-center">
               <h1
