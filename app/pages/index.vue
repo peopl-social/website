@@ -103,27 +103,26 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
         aria-labelledby="hero-title"
       >
         <div class="relative isolate lg:overflow-hidden lg:rounded-xl lg:bg-ink">
-          <!-- Photo card. On mobile it stops halfway down the phone, so the phone hangs over
-               its bottom edge instead of the photo stretching the full height behind it. -->
           <div
-            class="absolute inset-x-0 top-0 bottom-80 -z-10 overflow-hidden rounded-xl bg-ink sm:bottom-96 lg:bottom-0 lg:rounded-none"
-            aria-hidden="true"
+            class="shell grid items-center gap-20 pt-12 sm:pt-16 lg:h-[calc(100svh-6.75rem)] lg:min-h-[34rem] lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-16 lg:py-6 xl:gap-x-24"
           >
-            <img
-              src="/people/picnic.jpg"
-              alt=""
-              class="absolute inset-0 size-full object-cover object-[50%_72%]"
-              fetchpriority="high"
-              decoding="async"
-            />
-            <!-- Flat tint so the text stays readable over the photo -->
-            <div class="absolute inset-0 bg-ink/55" />
-          </div>
-
-          <div
-            class="shell grid items-center gap-12 pt-12 sm:pt-16 lg:h-[calc(100svh-6.75rem)] lg:min-h-[34rem] lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-x-16 lg:py-6 xl:gap-x-24"
-          >
-            <div class="lg:self-center">
+            <div class="relative lg:static lg:self-center">
+              <!-- Photo card. On mobile it wraps the text only and the phone sits below it on the
+                   page. On wide screens (text block no longer positioned) it fills the whole hero. -->
+              <div
+                class="absolute -inset-x-[clamp(1.25rem,4vw,2.5rem)] -top-12 -bottom-10 -z-10 overflow-hidden rounded-xl bg-ink sm:-top-16 lg:inset-0 lg:rounded-none"
+                aria-hidden="true"
+              >
+                <img
+                  src="/people/picnic.jpg"
+                  alt=""
+                  class="absolute inset-0 size-full object-cover object-[50%_72%]"
+                  fetchpriority="high"
+                  decoding="async"
+                />
+                <!-- Flat tint so the text stays readable over the photo -->
+                <div class="absolute inset-0 bg-ink/55" />
+              </div>
               <h1
                 id="hero-title"
                 class="text-[clamp(3rem,5.8vw,5.5rem)] leading-[0.95] font-bold tracking-[-0.035em] text-paper"
