@@ -4,7 +4,7 @@ const description =
   "peopl. is a private space for the friends you actually have. Share the small stuff, make plans, and talk without an audience. Join the early list.";
 
 export default defineNuxtConfig({
-  compatibilityDate: "2026-09-03",
+  compatibilityDate: "2026-09-30",
   devtools: { enabled: false },
   modules: ["@comark/nuxt", "@nuxt/fonts", "reka-ui/nuxt", "motion-v/nuxt"],
   css: ["~/assets/css/main.css"],
