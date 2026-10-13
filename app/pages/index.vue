@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Component } from "vue";
 import { MotionConfig, motion } from "motion-v";
-import { TabsContent, TabsIndicator, TabsList, TabsRoot, TabsTrigger } from "reka-ui";
+import { TabsContent, TabsList, TabsRoot, TabsTrigger } from "reka-ui";
 import FeatureOverlay from "~/components/FeatureOverlay.vue";
 import DevicePhone from "~/components/phone/DevicePhone.vue";
 import ScreenBoards from "~/components/phone/ScreenBoards.vue";
@@ -190,7 +190,7 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
         :model-value="screen"
         :orientation="orientation"
         activation-mode="automatic"
-        class="section-screen shell grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-x-16 lg:gap-y-12"
+        class="section-screen shell grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-x-16 lg:gap-y-12"
         aria-labelledby="how-title"
         @update:model-value="onScreenChange"
       >
@@ -209,17 +209,14 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
 
         <div>
           <TabsList
-            class="relative flex gap-1 overflow-x-auto rounded-full bg-sunk p-1 lg:flex-col lg:gap-2 lg:overflow-visible lg:rounded-none lg:bg-transparent lg:p-0"
+            class="relative grid grid-cols-2 gap-1 rounded-[1.75rem] bg-sunk p-1 lg:flex lg:flex-col lg:gap-2 lg:rounded-none lg:bg-transparent lg:p-0"
             aria-label="App features"
           >
-            <TabsIndicator
-              class="absolute top-1 left-0 h-[calc(100%-0.5rem)] w-(--reka-tabs-indicator-size) translate-x-(--reka-tabs-indicator-position) rounded-full bg-surface shadow-[0_1px_3px_oklch(22.5%_0.02_45/0.14)] transition-[width,transform] duration-300 ease-(--ease-out) lg:hidden"
-            />
             <TabsTrigger
               v-for="item in screens"
               :key="item.id"
               :value="item.id"
-              class="group relative z-10 flex-1 rounded-full px-3 py-2 text-center font-display text-[0.9375rem] font-semibold whitespace-nowrap text-muted transition-colors data-[state=active]:text-ink lg:rounded-lg lg:px-7 lg:py-6 lg:text-left lg:whitespace-normal lg:hover:bg-sunk/60"
+              class="group relative z-10 rounded-full px-3 py-2.5 text-center font-display text-[0.9375rem] font-semibold text-muted transition-[color,background-color,box-shadow] data-[state=active]:bg-surface data-[state=active]:text-ink data-[state=active]:shadow-[0_1px_3px_oklch(22.5%_0.02_45/0.14)] lg:rounded-lg lg:px-7 lg:py-6 lg:text-left lg:hover:bg-sunk/60 lg:data-[state=active]:bg-transparent lg:data-[state=active]:shadow-none"
             >
               <motion.span
                 v-if="screen === item.id"
@@ -292,6 +289,7 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
       </TabsRoot>
 
       <SafetySection />
+      <TeamSection />
       <LaunchSection />
       <FaqSection />
       <JoinSection />

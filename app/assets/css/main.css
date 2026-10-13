@@ -68,6 +68,9 @@
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    /* Anything wider than the screen widens the layout viewport on phones, which pushes the
+       fixed mobile menu below the visible area. */
+    overflow-x: clip;
   }
 
   h1,
