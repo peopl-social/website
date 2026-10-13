@@ -4,23 +4,23 @@ import { EyeOff, Lock, MapPin, MessageCircleOff } from "@lucide/vue";
 const rules = [
   {
     icon: EyeOff,
-    title: "Closed until you open it.",
-    body: "New boards start private. Nothing you post is public unless you choose that door.",
+    title: "Liveness check before you can interact",
+    body: "Before anyone can message or like, they prove they're real. No bots. No catfish farms.",
   },
   {
     icon: MessageCircleOff,
-    title: "No messages from strangers.",
-    body: "Only people you've added can message you. There's no way for someone to slide in.",
+    title: "ID-verified for anyone selling time",
+    body: "Trainers, tutors, coaches go through full identity verification before listing paid services.",
   },
   {
     icon: MapPin,
-    title: "First meets happen in public.",
-    body: "When peopl. starts introducing new people, first meetings happen at events and public places, not in DMs.",
+    title: "First meets happen at public events.",
+    body: "New people meet at community events and public venues — not alone in a DM. Context first, chemistry second.",
   },
   {
     icon: Lock,
     title: "Encrypted end to end.",
-    body: "Messages are locked on your phone and unlocked on theirs. We pass them along and can't read them.",
+    body: "End-to-end encrypted messages. Your messages travel as scrambled data. Only the recipient can read them. We can't.",
   },
 ];
 </script>

@@ -23,9 +23,9 @@ const phoneScreens: Record<ScreenId, Component> = {
 const screens = [
   {
     id: "boards",
-    label: "Boards",
+    label: "Weekly Deck",
     title: "One board each, not a feed.",
-    body: "Everyone keeps a single board for notes and voice memos. Friends check in when they want to. Nothing ranks it and nothing refreshes it.",
+    body: "Every Monday, unlock 10 hand-picked profiles near you. Read them. Connect. Wait for next week. No infinite scroll.",
     image: "/people/boards.jpg",
     alt: "Three friends laughing together, close up",
     position: "50% 40%",
@@ -33,9 +33,9 @@ const screens = [
   },
   {
     id: "doors",
-    label: "Doors",
+    label: "Co-Attendees",
     title: "You decide who gets in.",
-    body: "Every board has a door: just you, close friends, or anyone with the link. Change it whenever you like.",
+    body: "Gallery nights, pottery classes, Sunday hikes. Sign up, see who else is going, meet in real life.",
     image: "/people/doors.jpg",
     alt: "Friends standing close with their arms around each other",
     position: "50% 45%",
@@ -43,9 +43,9 @@ const screens = [
   },
   {
     id: "plans",
-    label: "Plans",
+    label: "Unified",
     title: "Turn a maybe into a plan.",
-    body: "Post a time and a place. Friends tap in, and everyone can see who's coming.",
+    body: "The trainer who runs Sundays. The baker who takes photos. People aren't one thing. Your feed shows all of it.",
     image: "/people/plans.jpg",
     alt: "Friends eating and talking around a long table on a patio",
     position: "50% 55%",
@@ -53,9 +53,9 @@ const screens = [
   },
   {
     id: "messages",
-    label: "Messages",
+    label: "Verified Humans",
     title: "Talk without an audience.",
-    body: "Messages are end-to-end encrypted. Our servers pass them along without being able to read them.",
+    body: "Liveness check before messaging. ID verification for anyone selling their time. If someone charges, you know who they are.",
     image: "/people/messages.jpg",
     alt: "Three friends laughing together on a city street",
     position: "50% 35%",
@@ -142,7 +142,8 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
               <div class="mt-9">
                 <WaitlistForm id="hero" tone="dark" />
                 <p class="mt-3 text-[0.9375rem] text-paper/65">
-                  Free during early access. Invites go out city by city.
+                  Free to join. Free to meet. Starting in Czech Republic, Poland, Slovakia, Hungary,
+                  and Kosovo.
                 </p>
               </div>
             </div>
@@ -175,13 +176,13 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
           id="problem-title"
           class="text-[clamp(2.5rem,5.5vw,4.5rem)] leading-[0.98] font-bold tracking-[-0.035em]"
         >
-          Too much social.
-          <span class="block text-orange-600">Not enough close.</span>
+          Meeting people shouldn't feel like a job interview.
+          <span class="block text-orange-600"
+            >You didn't sign up for another feed. You signed up for real life.</span
+          >
         </h2>
         <p class="max-w-[42ch] text-[1.1875rem] leading-[1.5] text-ink-soft lg:pb-2">
-          Feeds are built for audiences, so the people who matter get buried between ads and
-          strangers. Plans stall in the group chat, and "we should catch up" never turns into a
-          date.
+          🔄 Swipe fatigue | 👻 Ghosting | 🤖 Bots | 💬 Dead conversations
         </p>
       </section>
 
