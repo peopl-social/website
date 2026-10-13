@@ -15,19 +15,23 @@ const questions = [
   },
   {
     q: "Is this a dating app?",
-    a: "No. It starts as a place for the friends you already have. Ways to meet new people will come later, and you can ignore them if you want.",
+    a: "It's for meeting people — dating is one way to do that. You also get a weekly deck of profiles, shared events where you meet as co-attendees, and a local marketplace of skills and goods. If romance happens, great. If you leave with a pottery buddy and a sourdough supplier, that's a win too.",
   },
   {
     q: "What's coming later?",
-    a: "Three things. Slow dating, where you get a small set of profiles each week instead of endless swiping. Meeting people through events you're both going to. And a local marketplace for things like bread from a neighbour, picked up in person. None of it exists yet.",
+    a: "First: the core app — profiles, plans, events, and messages. Then, city by city, we open up the marketplace: trainers, tutors, and makers selling their time and craft. Each city shapes what comes next.",
   },
   {
     q: "Which phones, and what does it cost?",
-    a: "iOS and Android are both planned. Early access is free.",
+    a: "iPhone and Android. Using peopl. will be free. If someone charges for their time — a trainer, a tutor — you pay them, and we take a small fee on services.",
   },
   {
     q: "What do you do with my data?",
     a: "Today we store one thing: the email you give us for the waitlist. We use it to send your invite and nothing else. Email support@peopl.social and we'll delete it.",
+  },
+  {
+    q: "Who's building this?",
+    a: "A small international team. We got tired of apps that keep you scrolling and built the one we wanted: one that ends with people in a room. Real names, real faces — see for yourself.",
   },
 ];
 </script>

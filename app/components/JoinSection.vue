@@ -21,7 +21,7 @@
           <div>
             <WaitlistForm id="join" tone="dark" />
             <p class="mt-4 max-w-md text-[0.9375rem] text-paper/60">
-              peopl. is still being built, and the waitlist is the only part that exists today. Read
+              Building actively. Early users get priority access when launching in your city. Read
               the
               <NuxtLink
                 to="/privacy"
