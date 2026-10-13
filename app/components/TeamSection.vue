@@ -1,39 +1,24 @@
 <script setup lang="ts">
 import { ArrowUpRight } from "@lucide/vue";
 
-type Member = {
-  name: string;
-  role?: string;
-  linkedin: string;
-  /** Optional photo in /public/team/. Without one, the card shows initials. */
-  photo?: string;
-};
-
-const team: Member[] = [
-  { name: "Jakub Sova", linkedin: "https://www.linkedin.com/in/jakubsova" },
-  { name: "Laurent Maxhuni", linkedin: "https://www.linkedin.com/in/laurent-maxhuni/" },
+const team = [
+  { name: "Jakub Sova", role: "Founder", linkedin: "https://www.linkedin.com/in/jakubsova" },
+  {
+    name: "Laurent Maxhuni",
+    role: "Co-founder",
+    linkedin: "https://www.linkedin.com/in/laurent-maxhuni/",
+  },
   {
     name: "Fatlum Gërxhaliu",
+    role: "Backend Engineer",
     linkedin: "https://www.linkedin.com/in/fatlum-g%C3%ABrxhaliu-053bba302/",
   },
-  { name: "Bruna Dragulin", linkedin: "https://www.linkedin.com/in/bruna-dragulin" },
+  {
+    name: "Bruna Dragulin",
+    role: "Frontend Engineer & Designer",
+    linkedin: "https://www.linkedin.com/in/bruna-dragulin",
+  },
 ];
-
-const tones = [
-  "bg-orange-100 text-orange-700",
-  "bg-violet-100 text-violet-700",
-  "bg-sunk text-ink",
-  "bg-orange-50 text-orange-700",
-];
-
-function initials(name: string) {
-  return name
-    .split(/\s+/)
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
 </script>
 
 <template>
@@ -43,43 +28,25 @@ function initials(name: string) {
         The people behind peopl.
       </h2>
       <p class="mt-4 max-w-[40ch] text-[1.125rem] text-ink-soft">
-        A small team building the app we wanted for ourselves.
+        A small international team. Building the app we wanted for ourselves.
       </p>
 
-      <ul class="mt-10 grid gap-3 sm:grid-cols-2">
+      <ul class="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <li
-          v-for="(member, index) in team"
+          v-for="member in team"
           :key="member.name"
-          class="flex items-center gap-4 rounded-lg border border-line bg-surface p-5 sm:p-6"
+          class="rounded-lg border border-line bg-surface p-5 sm:p-6"
         >
-          <img
-            v-if="member.photo"
-            :src="member.photo"
-            alt=""
-            class="size-16 shrink-0 rounded-full object-cover"
-            loading="lazy"
-            decoding="async"
-          />
-          <span
-            v-else
-            class="grid size-16 shrink-0 place-items-center rounded-full font-display text-[1.25rem] font-semibold"
-            :class="tones[index % tones.length]"
-            aria-hidden="true"
-            >{{ initials(member.name) }}</span
-          >
-          <div class="min-w-0">
-            <h3 class="text-[1.25rem] tracking-[-0.015em]">{{ member.name }}</h3>
-            <p v-if="member.role" class="mt-1 text-ink-soft">{{ member.role }}</p>
-            <a
-              :href="member.linkedin"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="link mt-2 inline-flex items-center gap-1 text-[0.9375rem]"
-              >LinkedIn<span class="sr-only">
-                profile of {{ member.name }} (opens in a new tab)</span
-              ><ArrowUpRight :size="15" :stroke-width="2" aria-hidden="true"
-            /></a>
-          </div>
+          <h3 class="text-[1.25rem] tracking-[-0.015em]">{{ member.name }}</h3>
+          <p class="mt-1 text-ink-soft">{{ member.role }}</p>
+          <a
+            :href="member.linkedin"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="link mt-3 inline-flex items-center gap-1 text-[0.9375rem]"
+            >LinkedIn<span class="sr-only"> profile of {{ member.name }} (opens in a new tab)</span
+            ><ArrowUpRight :size="15" :stroke-width="2" aria-hidden="true"
+          /></a>
         </li>
       </ul>
     </div>
