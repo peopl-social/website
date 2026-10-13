@@ -58,6 +58,31 @@
   html {
     -webkit-text-size-adjust: 100%;
     scroll-padding-top: 6.5rem;
+    scrollbar-color: var(--color-line-strong) var(--color-paper);
+  }
+
+  /* Safari (Chrome and Firefox use scrollbar-color above and ignore these) */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-paper);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border: 3px solid var(--color-paper);
+    border-radius: 999px;
+    background: var(--color-line-strong);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-muted);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: transparent;
   }
 
   body {

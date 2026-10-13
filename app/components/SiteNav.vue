@@ -18,10 +18,32 @@ function onScroll() {
   scrolled.value = window.scrollY > 8;
 }
 
+const drawer = ref<HTMLElement | null>(null);
+const scrollKeys = new Set([" ", "PageUp", "PageDown", "Home", "End", "ArrowUp", "ArrowDown"]);
+
+// Blocks page scrolling while the menu is open without hiding the scrollbar
+// (overflow: hidden and Lenis's stop() both remove it and shift the layout).
+function blockScroll(event: Event) {
+  const panel = drawer.value;
+  if (panel?.contains(event.target as Node) && panel.scrollHeight > panel.clientHeight) return;
+  if (event instanceof KeyboardEvent) {
+    if (!scrollKeys.has(event.key)) return;
+    if ((event.target as Element | null)?.closest("input, textarea, select, button")) return;
+    event.preventDefault();
+    return;
+  }
+  event.preventDefault();
+  // Keep Lenis from turning the gesture into a smooth scroll.
+  event.stopPropagation();
+}
+
+const blockOptions = { capture: true, passive: false } as const;
+
 function lockScroll(locked: boolean) {
-  document.documentElement.style.overflow = locked ? "hidden" : "";
-  if (locked) window.__lenis?.stop();
-  else window.__lenis?.start();
+  for (const type of ["wheel", "touchmove", "keydown"] as const) {
+    if (locked) window.addEventListener(type, blockScroll, blockOptions);
+    else window.removeEventListener(type, blockScroll, blockOptions);
+  }
 }
 
 function openMenu() {
@@ -144,7 +166,9 @@ function goFromMenu(hash: string) {
         <div
           v-if="menuOpen"
           id="mobile-menu"
-          class="pointer-events-auto fixed inset-x-3 bottom-3 max-h-[calc(100svh-6.5rem)] overflow-y-auto rounded-[2rem] border border-line bg-surface p-3 shadow-float md:hidden"
+          ref="drawer"
+          data-lenis-prevent
+          class="pointer-events-auto fixed inset-x-3 bottom-3 max-h-[calc(100svh-6.5rem)] overflow-y-auto overscroll-contain rounded-[2rem] border border-line bg-surface p-3 shadow-float md:hidden"
           :class="{ 'is-ready': menuReady }"
         >
           <ul class="flex flex-col">
