@@ -123,7 +123,7 @@ function goFromMenu(hash: string) {
               >
             </li>
           </ul>
-          <a href="#join" class="btn btn-primary min-h-12 px-6 text-[1.0625rem]">Join the list</a>
+          <a href="#join" class="btn btn-primary min-h-12 px-6 text-[1.0625rem]">Request Access</a>
         </div>
 
         <button
@@ -163,7 +163,7 @@ function goFromMenu(hash: string) {
               href="#join"
               class="btn btn-primary min-h-14 w-full text-[1.125rem]"
               @click.prevent="goFromMenu('#join')"
-              >Join the list</a
+              >Request Access</a
             >
           </div>
         </div>

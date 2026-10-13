@@ -10,8 +10,8 @@ import {
 
 const questions = [
   {
-    q: "Does any of this work yet?",
-    a: "Only the waitlist. Everything else on this page is what we're building. Nothing is available to download yet, and we'd rather tell you that up front.",
+    q: "Is the app ready to use?",
+    a: "Yes - we're in active development with early testers. You'll get access to the full app, not just a demo. Your feedback shapes what we build next.",
   },
   {
     q: "Is this a dating app?",

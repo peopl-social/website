@@ -24,7 +24,7 @@ const screens = [
   {
     id: "boards",
     label: "Weekly Deck",
-    title: "One board each, not a feed.",
+    title: "Ten profiles. Once a week. That's it.",
     body: "Every Monday, unlock 10 hand-picked profiles near you. Read them. Connect. Wait for next week. No infinite scroll.",
     image: "/people/boards.jpg",
     alt: "Three friends laughing together, close up",
@@ -34,7 +34,7 @@ const screens = [
   {
     id: "doors",
     label: "Co-Attendees",
-    title: "You decide who gets in.",
+    title: "Meet people through plans, not pickup lines.",
     body: "Gallery nights, pottery classes, Sunday hikes. Sign up, see who else is going, meet in real life.",
     image: "/people/doors.jpg",
     alt: "Friends standing close with their arms around each other",
@@ -43,8 +43,8 @@ const screens = [
   },
   {
     id: "plans",
-    label: "Unified",
-    title: "Turn a maybe into a plan.",
+    label: "Unified Feed",
+    title: "One person, many offers.",
     body: "The trainer who runs Sundays. The baker who takes photos. People aren't one thing. Your feed shows all of it.",
     image: "/people/plans.jpg",
     alt: "Friends eating and talking around a long table on a patio",
@@ -54,8 +54,8 @@ const screens = [
   {
     id: "messages",
     label: "Verified Humans",
-    title: "Talk without an audience.",
-    body: "Liveness check before messaging. ID verification for anyone selling their time. If someone charges, you know who they are.",
+    title: "Everyone here is real. Paid time is ID-verified.",
+    body: "Liveness check before messaging. ID verification for anyone selling their time. If someone charges, you know exactly who they are.",
     image: "/people/messages.jpg",
     alt: "Three friends laughing together on a city street",
     position: "50% 35%",
@@ -136,14 +136,12 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
               <p
                 class="mt-7 max-w-[36ch] text-[1.25rem] leading-[1.45] text-paper/85 sm:text-[1.375rem]"
               >
-                The social app that gets you off your screen and into the same room. Verified
-                humans, shared events, and a neighborhood marketplace. All in one place.
+                The social app that gets you off your screen and into the same room.
               </p>
               <div class="mt-9">
                 <WaitlistForm id="hero" tone="dark" />
                 <p class="mt-3 text-[0.9375rem] text-paper/65">
-                  Free to join. Free to meet. Starting in Czech Republic, Poland, Slovakia, Hungary,
-                  and Kosovo.
+                  Free to join. Free to meet. Invites rolling out by city.
                 </p>
               </div>
             </div>
@@ -176,13 +174,12 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
           id="problem-title"
           class="text-[clamp(2.5rem,5.5vw,4.5rem)] leading-[0.98] font-bold tracking-[-0.035em]"
         >
-          Meeting people shouldn't feel like a job interview.
-          <span class="block text-orange-600"
-            >You didn't sign up for another feed. You signed up for real life.</span
-          >
+          You didn't sign up for another feed.
+          <span class="block text-orange-600">You signed up for real life.</span>
         </h2>
         <p class="max-w-[42ch] text-[1.1875rem] leading-[1.5] text-ink-soft lg:pb-2">
-          🔄 Swipe fatigue | 👻 Ghosting | 🤖 Bots | 💬 Dead conversations
+          Swipe fatigue, ghosting, bots, and endless chats that never become anything. Sound
+          familiar?
         </p>
       </section>
 
@@ -202,11 +199,11 @@ onBeforeUnmount(() => wide?.removeEventListener("change", syncOrientation));
             id="how-title"
             class="text-[clamp(2.25rem,4.5vw,3.5rem)] font-bold tracking-[-0.03em]"
           >
-            Dating apps broke meeting people.
+            Here's how we fix it.
           </h2>
           <p class="mt-4 max-w-[40ch] text-[1.125rem] text-ink-soft">
-            Swipe fatigue, ghosting, bots, and endless chats that never become anything. Sound
-            familiar?
+            Less swiping. More showing up. Ten profiles a week, shared plans, and one feed where
+            people are just people.
           </p>
         </div>
 

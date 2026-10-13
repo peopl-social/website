@@ -5,22 +5,22 @@ const rules = [
   {
     icon: EyeOff,
     title: "Liveness check before you can interact",
-    body: "Before anyone can message or like, they prove they're real. No bots. No catfish farms.",
+    body: "Before anyone can message you, they prove they're real. No bots. No catfish farms.",
   },
   {
     icon: MessageCircleOff,
     title: "ID-verified for anyone selling time",
-    body: "Trainers, tutors, coaches go through full identity verification before listing paid services.",
+    body: "Trainers, tutors, coaches must verify their ID before selling services. You'll know who they are.",
   },
   {
     icon: MapPin,
     title: "First meets happen at public events.",
-    body: "New people meet at community events and public venues — not alone in a DM. Context first, chemistry second.",
+    body: "New people meet at community events and public venues - not alone in a DM. Context first, chemistry second.",
   },
   {
     icon: Lock,
     title: "Encrypted end to end.",
-    body: "End-to-end encrypted messages. Your messages travel as scrambled data. Only the recipient can read them. We can't.",
+    body: "Messages locked on your phone, unlocked on theirs. We pass them along. We can't read them.",
   },
 ];
 </script>
@@ -41,7 +41,7 @@ const rules = [
               Safe by default
             </h2>
             <p class="mt-4 max-w-[36ch] text-[1.125rem] text-ink-soft">
-              These are built into how the app works. They aren't settings you have to go and find.
+              These aren't settings you have to hunt for. They're how the app works.
             </p>
 
             <figure class="mt-10 max-w-sm" aria-labelledby="relay-caption">
@@ -62,8 +62,8 @@ const rules = [
                 <span class="rounded-full bg-orange-100 px-4 py-2 text-orange-700">Jules</span>
               </div>
               <figcaption id="relay-caption" class="mt-3 text-[0.9375rem] text-muted">
-                Your message travels through our relay as scrambled data. Only Jules's phone can
-                read it.
+                Your message travels through us encrypted. Only the person you sent it to can read
+                it.
               </figcaption>
             </figure>
           </div>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Globe } from "@lucide/vue";
 
-const steps = ["First cities", "Next wave", "Everywhere"];
+const steps = ["First cities (Czech Republic)", "Next wave", "Everywhere"];
 </script>
 
 <template>
@@ -25,8 +25,8 @@ const steps = ["First cities", "Next wave", "Everywhere"];
               Launching carefully
             </h2>
             <p class="mt-3 max-w-[48ch] text-[1.125rem] text-ink-soft">
-              We're launching carefully, city by city. Starting in Czech Republic. We'll learn from
-              each community, talk to real people, understand local habits.
+              We open one city at a time, and only when enough people have joined to make plans
+              worth showing up to. We learn from each community before we move to the next.
             </p>
           </div>
         </div>

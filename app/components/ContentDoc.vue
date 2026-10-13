@@ -46,7 +46,7 @@ useSeoMeta({
           <Wordmark />
         </NuxtLink>
         <NuxtLink to="/#join" class="btn btn-primary min-h-10 px-5 text-[0.9375rem]"
-          >Join the list</NuxtLink
+          >Request Access</NuxtLink
         >
       </div>
     </header>

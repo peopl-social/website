@@ -71,7 +71,7 @@ const dark = computed(() => props.tone === "dark");
             class="animate-spin"
             aria-hidden="true"
           />
-          {{ status === "loading" ? "Joining" : "Save My Spot" }}
+          {{ status === "loading" ? "Requesting" : "Request Access" }}
           <ArrowRight
             v-if="status !== 'loading'"
             :size="18"
