@@ -28,10 +28,7 @@ const rules = [
 <template>
   <section id="safety" class="section-space" aria-labelledby="safety-title">
     <div class="shell-wide">
-      <!-- The card itself fills roughly a screen, so the gaps around it stay the same as elsewhere -->
-      <div
-        class="grid min-h-[85svh] content-center rounded-xl border border-line bg-surface py-14 sm:py-20 lg:py-24"
-      >
+      <div class="rounded-xl border border-line bg-surface py-12 sm:py-14 lg:py-16">
         <div class="shell grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
           <div>
             <h2
@@ -44,7 +41,7 @@ const rules = [
               These aren't settings you have to hunt for. They're how the app works.
             </p>
 
-            <figure class="mt-10 max-w-sm" aria-labelledby="relay-caption">
+            <figure class="mt-8 max-w-sm" aria-labelledby="relay-caption">
               <div class="flex items-center text-[0.9375rem] font-semibold">
                 <span class="rounded-full bg-violet-700 px-4 py-2 text-white">You</span>
                 <span
@@ -76,7 +73,7 @@ const rules = [
               >
                 <component :is="rule.icon" :size="21" :stroke-width="2" />
               </span>
-              <h3 class="mt-5 text-[1.25rem] tracking-[-0.015em]">{{ rule.title }}</h3>
+              <h3 class="mt-4 text-[1.25rem] tracking-[-0.015em]">{{ rule.title }}</h3>
               <p class="mt-2 text-[1.0625rem] text-ink-soft">{{ rule.body }}</p>
             </li>
           </ul>
