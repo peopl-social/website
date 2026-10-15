@@ -25,7 +25,7 @@
   --color-orange-100: oklch(91% 0.06 52);
   --color-orange-500: oklch(71% 0.19 41);
   --color-orange-600: oklch(64% 0.2 39);
-  --color-orange-700: oklch(52% 0.17 38);
+  --color-orange-700: oklch(48% 0.16 38);
 
   --color-violet-50: oklch(96% 0.022 295);
   --color-violet-100: oklch(91% 0.05 293);
@@ -58,6 +58,31 @@
   html {
     -webkit-text-size-adjust: 100%;
     scroll-padding-top: 6.5rem;
+    scrollbar-color: var(--color-line-strong) var(--color-paper);
+  }
+
+  /* Safari (Chrome and Firefox use scrollbar-color above and ignore these) */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-paper);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border: 3px solid var(--color-paper);
+    border-radius: 999px;
+    background: var(--color-line-strong);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-muted);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: transparent;
   }
 
   body {
@@ -68,6 +93,9 @@
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    /* Anything wider than the screen widens the layout viewport on phones, which pushes the
+       fixed mobile menu below the visible area. */
+    overflow-x: clip;
   }
 
   h1,
