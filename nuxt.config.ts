@@ -1,4 +1,5 @@
 import tailwindcss from "@tailwindcss/vite";
+import { content } from "./server/utils/content.ts";
 
 const description =
   "peopl. is a private space for the friends you actually have. Share the small stuff, make plans, and talk without an audience. Join the early list.";
@@ -8,8 +9,13 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   modules: ["@comark/nuxt", "@nuxt/fonts", "reka-ui/nuxt", "motion-v/nuxt"],
   css: ["~/assets/css/main.css"],
-  future: {
-    compatibilityVersion: 5,
+  hooks: {
+    "prerender:routes": async (ctx) => {
+      const pages = await content.list();
+      for (const page of pages) {
+        ctx.routes.add(page.path);
+      }
+    },
   },
   vite: {
     plugins: [tailwindcss()],
@@ -54,13 +60,6 @@ export default defineNuxtConfig({
         { rel: "canonical", href: "https://peopl.social" },
         { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
       ],
-    },
-  },
-  nitro: {
-    // Cloudflare Workers with static assets. Settings live in wrangler.jsonc.
-    // In `nuxt dev` this also loads bindings and secrets (.dev.vars) through wrangler.
-    prerender: {
-      routes: ["/", "/about", "/privacy", "/terms"],
     },
   },
 });
