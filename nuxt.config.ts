@@ -8,6 +8,9 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   modules: ["@comark/nuxt", "@nuxt/fonts", "reka-ui/nuxt", "motion-v/nuxt"],
   css: ["~/assets/css/main.css"],
+  future: {
+    compatibilityVersion: 5,
+  },
   vite: {
     plugins: [tailwindcss()],
   },
@@ -56,10 +59,6 @@ export default defineNuxtConfig({
   nitro: {
     // Cloudflare Workers with static assets. Settings live in wrangler.jsonc.
     // In `nuxt dev` this also loads bindings and secrets (.dev.vars) through wrangler.
-    preset: "cloudflare_module",
-    cloudflare: {
-      nodeCompat: true,
-    },
     prerender: {
       routes: ["/", "/about", "/privacy", "/terms"],
     },
