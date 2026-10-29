@@ -9,6 +9,9 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   modules: ["@comark/nuxt", "@nuxt/fonts", "reka-ui/nuxt", "motion-v/nuxt"],
   css: ["~/assets/css/main.css"],
+  future: {
+    compatibilityVersion: 5,
+  },
   hooks: {
     "prerender:routes": async (ctx) => {
       const pages = await content.list();
